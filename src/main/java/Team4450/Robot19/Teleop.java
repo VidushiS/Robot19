@@ -81,6 +81,8 @@ class Teleop
 
 		//Example on how to track more buttons:
 		launchPad.AddControl(LaunchPadControlIDs.BUTTON_GREEN);
+		launchPad.AddControl(LaunchPadControlIDs.BUTTON_BLACK);
+		launchPad.AddControl(LaunchPadControlIDs.BUTTON_RED_RIGHT);
 		launchPad.addLaunchPadEventListener(new LaunchPadListener());
 		launchPad.Start();
 
