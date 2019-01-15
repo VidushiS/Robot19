@@ -141,8 +141,8 @@ public class Autonomous
 
 	 private void testPathfinder(){
 		//File middleTrajectoryCSV = new File("TestPath.pf1.csv");
-		File leftTrajectoryCSV = new File("TestPath.left.pf1.csv");
-		File rightTrajectoryCSV = new File("TestPath.right.pf1.csv");
+		File leftTrajectoryCSV = new File("MetricAuto.left.pf1.csv");
+		File rightTrajectoryCSV = new File("MetricAuto.right.pf1.csv");
 	 
 		//Trajectory path = Pathfinder.readFromCSV(middleTrajectoryCSV);
 		Trajectory rightPath = Pathfinder.readFromCSV(rightTrajectoryCSV);
