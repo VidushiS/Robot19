@@ -7,6 +7,11 @@ import Team4450.Robot19.Devices;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import jaci.pathfinder.Pathfinder;
+import jaci.pathfinder.Trajectory;
+import jaci.pathfinder.followers.EncoderFollower;
+
+import java.io.File;
 
 public class Autonomous
 {
@@ -15,6 +20,12 @@ public class Autonomous
 	//private int					program = (int) SmartDashboard.getNumber("AutoProgramSelect",0);
 	private int					program;
 	private final GearBox		gearBox;
+	//MAKE SURE TO INITIALIZE THIS VARIABLE FIND THE CORRECT VALUES
+	//REMEMBER EVERYTHING IS IN METERS
+
+	double wheel_diameter = 0.15;
+	double max_velocity = 2.0;
+	int encoder_counts = 4092;
 	
 	private static SendableChooser<Integer>	autoChooser;
 	
@@ -52,7 +63,7 @@ public class Autonomous
 		
 		autoChooser.setName("Auto Program");
 		autoChooser.addDefault("No Program", 0);
-		autoChooser.addDefault("Auto Program 1", 1);
+		autoChooser.addDefault("PathFinder Test", 1);
 		
 		SmartDashboard.putData(autoChooser);
 	}
@@ -94,6 +105,9 @@ public class Autonomous
 		{
 			case 0:		// No auto program.
 				break;
+			case 1:
+				testPathfinder();
+			break;
 
 		}
 		
@@ -124,6 +138,54 @@ public class Autonomous
 	 * new drive base as gear ratios and wheel configuration may require different values to stop smoothly
 	 * and accurately.
 	 */
+
+	 private void testPathfinder(){
+		//File middleTrajectoryCSV = new File("TestPath.pf1.csv");
+		File leftTrajectoryCSV = new File("TestPath.left.pf1.csv");
+		File rightTrajectoryCSV = new File("TestPath.right.pf1.csv");
+	 
+		//Trajectory path = Pathfinder.readFromCSV(middleTrajectoryCSV);
+		Trajectory rightPath = Pathfinder.readFromCSV(rightTrajectoryCSV);
+		Trajectory leftPath = Pathfinder.readFromCSV(leftTrajectoryCSV);
+
+		EncoderFollower left = new EncoderFollower(leftPath);
+		EncoderFollower right = new EncoderFollower(rightPath);
+
+		//NOTE TO SELF, MEASURE WHEEL DIAMETER
+		left.configureEncoder(Devices.leftEncoder.get(), encoder_counts, wheel_diameter);
+		right.configureEncoder(Devices.rightEncoder.get(), encoder_counts, wheel_diameter);
+
+		//NOTE TO SELF, FIND MAX VELOCITY
+		left.configurePIDVA(1.0, 0, 0, 1/max_velocity, 0.0);
+		right.configurePIDVA(1.0, 0.0, 0.0, 1/max_velocity, 0.0);
+
+		while(isAutoActive() && !left.isFinished()){
+
+			double leftSpeed = left.calculate(encoder_counts);
+			double rightSpeed = right.calculate(encoder_counts);
+			
+			double gyro_heading = Devices.navx.getHeading();
+			double segment_heading = Pathfinder.d2r(left.getHeading());
+
+			double angleDifference = Pathfinder.boundHalfDegrees((double)(segment_heading - gyro_heading));
+
+			double turn = -0.02 *angleDifference;
+
+			leftSpeed = Util.clampValue(leftSpeed + turn, 1);
+			rightSpeed = Util.clampValue(rightSpeed - turn, 1);
+			
+
+			Devices.robotDrive.tankDrive(leftSpeed, rightSpeed);
+
+			
+		}
+
+		if(left.isFinished()){
+			Util.consoleLog("The Trajectory is Complete");
+		}
+
+		
+	 }
 	private void autoDrive(double power, int encoderCounts, StopMotors stop, Brakes brakes, Pid pid, 
 						    Heading heading)
 	{

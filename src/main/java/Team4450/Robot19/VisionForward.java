@@ -20,7 +20,7 @@ public class VisionForward {
     private Devices devices;
     private Vision vision;
     
-    private class VisionGoForward extends Thread{
+   /* private class VisionGoForward extends Thread{
 
         VisionGoForward(){
             this.setName("VisionGoForward");
@@ -58,6 +58,6 @@ public class VisionForward {
 
             VisionGoForward = null;
         }
-    }
+    }*/
     
 }
