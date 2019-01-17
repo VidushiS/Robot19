@@ -23,9 +23,7 @@ public class Autonomous
 	//MAKE SURE TO INITIALIZE THIS VARIABLE FIND THE CORRECT VALUES
 	//REMEMBER EVERYTHING IS IN METERS
 
-	double wheel_diameter = 0.15;
-	double max_velocity = 2.0;
-	int encoder_counts = 4092;
+	
 	
 	private static SendableChooser<Integer>	autoChooser;
 	
@@ -140,14 +138,18 @@ public class Autonomous
 	 */
 
 	 private void testPathfinder(){
+		 Util.consoleLog("I made it this far!");
+		double wheel_diameter = 0.15;
+		double max_velocity = 2.5;
+		int encoder_counts = 4092;
 		//File middleTrajectoryCSV = new File("TestPath.pf1.csv");
-		File leftTrajectoryCSV = new File("MetricAuto.left.pf1.csv");
-		File rightTrajectoryCSV = new File("MetricAuto.right.pf1.csv");
-	 
+		File leftTrajectoryCSV = new File("/home/lvuser/output/CommonsPathAuto.left.pf1.csv");
+		File rightTrajectoryCSV = new File("/home/lvuser/output/CommonsPathAuto.right.pf1.csv");
+		Util.consoleLog("I made the CSV files into java.io files");
 		//Trajectory path = Pathfinder.readFromCSV(middleTrajectoryCSV);
 		Trajectory rightPath = Pathfinder.readFromCSV(rightTrajectoryCSV);
 		Trajectory leftPath = Pathfinder.readFromCSV(leftTrajectoryCSV);
-
+		Util.consoleLog("I read the files");
 		EncoderFollower left = new EncoderFollower(leftPath);
 		EncoderFollower right = new EncoderFollower(rightPath);
 
@@ -156,15 +158,17 @@ public class Autonomous
 		right.configureEncoder(Devices.rightEncoder.get(), encoder_counts, wheel_diameter);
 
 		//NOTE TO SELF, FIND MAX VELOCITY
-		left.configurePIDVA(1.0, 0, 0, 1/max_velocity, 0.0);
-		right.configurePIDVA(1.0, 0.0, 0.0, 1/max_velocity, 0.0);
+		left.configurePIDVA(0.01, 0, 0.0, 1/max_velocity, 0.0);
+		right.configurePIDVA(0.01, 0.0, 0.0, 1/max_velocity, 0.0);
 
 		while(isAutoActive() && !left.isFinished()){
 
 			double leftSpeed = left.calculate(encoder_counts);
 			double rightSpeed = right.calculate(encoder_counts);
+
+			Util.consoleLog("lp= %.2f rp=%.2f", leftSpeed, rightSpeed);
 			
-			double gyro_heading = Devices.navx.getHeading();
+			double gyro_heading = Devices.navx.getHeadingR();
 			double segment_heading = Pathfinder.d2r(left.getHeading());
 
 			double angleDifference = Pathfinder.boundHalfDegrees((double)(segment_heading - gyro_heading));
@@ -173,13 +177,20 @@ public class Autonomous
 
 			leftSpeed = Util.clampValue(leftSpeed + turn, 1);
 			rightSpeed = Util.clampValue(rightSpeed - turn, 1);
+			// leftSpeed = leftSpeed + turn;
+			// rightSpeed = rightSpeed - turn;
+
+			Util.consoleLog("le=%d lp=%.2f  re=%d rp=%.2f  dhdg=%.0f  hdg=%.0f ad=%.2f  turn=%.2f  time=%.3f", 
+							Devices.leftEncoder.get(), leftSpeed, Devices.rightEncoder.get(), rightSpeed, 
+							segment_heading, gyro_heading, angleDifference, turn,  Util.getElaspedTime());
+			
 			
 
 			Devices.robotDrive.tankDrive(leftSpeed, rightSpeed);
 
-			
+			Timer.delay(0.02);
 		}
-
+		Devices.robotDrive.stopMotor();
 		if(left.isFinished()){
 			Util.consoleLog("The Trajectory is Complete");
 		}
