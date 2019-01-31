@@ -1,7 +1,7 @@
 /**
- * 2018 competition robot code.
+ * 2019 competition robot code.
  *
- * For Robot "Odyssey" built for FRC game "FIRST POWER UP".
+ * For Robot "tba" built for FRC game "DESTINATION DEEP SPACE".
 */
 
 package Team4450.Robot19;
@@ -10,7 +10,7 @@ import java.util.Properties;
 
 import Team4450.Lib.*;
 import Team4450.Robot19.Devices;
-import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 @SuppressWarnings("deprecation")
 public class Robot extends SampleRobot 
 {
-  static final String  	PROGRAM_NAME = "ORF19-01.01.19-01";
+  static final String  	PROGRAM_NAME = "ORF19-01.29.19-01";
 
   public Properties		robotProperties;
   
@@ -122,7 +122,7 @@ public class Robot extends SampleRobot
 
    		// Reset PDB & PCM sticky faults.
       
-   		Devices.PDP.clearStickyFaults();
+   		Devices.pdp.clearStickyFaults();
    		Devices.compressor.clearAllPCMStickyFaults();
    		
    		// Configure motor controllers and RobotDrive.
@@ -228,7 +228,7 @@ public class Robot extends SampleRobot
     	  Devices.compressor.setClosedLoopControl(SmartDashboard.getBoolean("CompressorEnabled", true));
 
     	  // Reset persistent fault flags in control system modules.
-    	  Devices.PDP.clearStickyFaults();
+    	  Devices.pdp.clearStickyFaults();
     	  Devices.compressor.clearAllPCMStickyFaults();
              
     	  // Start autonomous process contained in the Autonomous class.
@@ -269,7 +269,7 @@ public class Robot extends SampleRobot
       	  getMatchInformation();
       	  
     	  // Reset persistent fault flags in control system modules.
-          Devices.PDP.clearStickyFaults();
+          Devices.pdp.clearStickyFaults();
           Devices.compressor.clearAllPCMStickyFaults();
 
           // This code turns off the automatic compressor management if requested by DS.
