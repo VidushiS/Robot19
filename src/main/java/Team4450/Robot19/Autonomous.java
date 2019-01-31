@@ -18,7 +18,7 @@ public class Autonomous
 	private final Robot			robot;
 	// Next statement only used with LabView dashboard.
 	//private int					program = (int) SmartDashboard.getNumber("AutoProgramSelect",0);
-	private int					program;
+	private int					program = 0;
 	private final GearBox		gearBox;
 
 	private Notifier m_follower_notifier;
@@ -63,6 +63,7 @@ public class Autonomous
 		autoChooser.setName("Auto Program");
 		autoChooser.addDefault("No Program", 0);
 		autoChooser.addDefault("PathFinder Test", 1);
+	
 		
 		SmartDashboard.putData(autoChooser);
 	}
@@ -71,7 +72,11 @@ public class Autonomous
 
 	public void execute()
 	{
-		program = autoChooser.getSelected();
+		try
+		{
+			program = autoChooser.getSelected();
+		}
+		catch (Exception e)	{ Util.logException(e); }
 		
 		Util.consoleLog("Alliance=%s, Location=%d, Program=%d, FMS=%b, msg=%s", robot.alliance.name(), robot.location, program, 
 				Devices.ds.isFMSAttached(), robot.gameMessage);
@@ -114,7 +119,7 @@ public class Autonomous
 		
 		// Update the robot heading indicator on the DS.
 
-		// Next stmt only used with labview DB.
+		// Next statement only used with labview DB.
 		//SmartDashboard.putNumber("Gyro", Devices.navx.getHeadingInt());
 		
 		SmartDashboard.updateValues();
