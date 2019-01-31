@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.followers.EncoderFollower;
-
+import edu.wpi.first.wpilibj.Notifier;
 import java.io.File;
 
 public class Autonomous
@@ -20,8 +20,9 @@ public class Autonomous
 	//private int					program = (int) SmartDashboard.getNumber("AutoProgramSelect",0);
 	private int					program;
 	private final GearBox		gearBox;
-	//MAKE SURE TO INITIALIZE THIS VARIABLE FIND THE CORRECT VALUES
-	//REMEMBER EVERYTHING IS IN METERS
+
+	private Notifier m_follower_notifier;
+	
 
 	
 	
@@ -80,8 +81,10 @@ public class Autonomous
 		Devices.robotDrive.setSafetyEnabled(false);
 
 		// Initialize wheel encoders.
-		Devices.rightEncoder.reset();
-		Devices.leftEncoder.reset();
+		Util.consoleLog("right encoder counts =%d, left encoder counts =%d", Devices.rightEncoder.get(), Devices.leftEncoder.get());
+		Devices.rightEncoder.reset(10);
+		Devices.leftEncoder.reset(10);
+		Util.consoleLog("right encoder counts =%d, left encoder counts =%d", Devices.rightEncoder.get(), Devices.leftEncoder.get());
 		
        // Set NavX yaw tracking to 0.
 		Devices.navx.resetYaw();
@@ -139,55 +142,63 @@ public class Autonomous
 
 	 private void testPathfinder(){
 		 Util.consoleLog("I made it this far!");
-		double wheel_diameter = 0.15;
-		double max_velocity = 2.5;
-		int encoder_counts = 4092;
+		double wheel_diameter = Util.inchesToMeters(5.8);
+		double max_velocity = 1.86; //1.86 m/s was the actual velocity
+		int encoder_counts = 4096;
+
 		//File middleTrajectoryCSV = new File("TestPath.pf1.csv");
-		File leftTrajectoryCSV = new File("/home/lvuser/output/CommonsPathAuto.left.pf1.csv");
-		File rightTrajectoryCSV = new File("/home/lvuser/output/CommonsPathAuto.right.pf1.csv");
+		File leftTrajectoryCSV = new File("/home/lvuser/output/PortablePath.right.pf1.csv");
+		File rightTrajectoryCSV = new File("/home/lvuser/output/PortablePath.left.pf1.csv");
 		Util.consoleLog("I made the CSV files into java.io files");
+
 		//Trajectory path = Pathfinder.readFromCSV(middleTrajectoryCSV);
 		Trajectory rightPath = Pathfinder.readFromCSV(rightTrajectoryCSV);
 		Trajectory leftPath = Pathfinder.readFromCSV(leftTrajectoryCSV);
+		
 		Util.consoleLog("I read the files");
-		EncoderFollower left = new EncoderFollower(leftPath);
-		EncoderFollower right = new EncoderFollower(rightPath);
+		EncoderFollower left = new EncoderFollower(leftPath, "left");
+		EncoderFollower right = new EncoderFollower(rightPath, "right");
 
-		//NOTE TO SELF, MEASURE WHEEL DIAMETER
+		
 		left.configureEncoder(Devices.leftEncoder.get(), encoder_counts, wheel_diameter);
 		right.configureEncoder(Devices.rightEncoder.get(), encoder_counts, wheel_diameter);
 
 		//NOTE TO SELF, FIND MAX VELOCITY
-		left.configurePIDVA(0.01, 0, 0.0, 1/max_velocity, 0.0);
-		right.configurePIDVA(0.01, 0.0, 0.0, 1/max_velocity, 0.0);
+		left.configurePIDVA(1.0, 0.0, 0.0, 1/max_velocity, 0.0);
+		right.configurePIDVA(1.0, 0.0, 0.0, 1/max_velocity, 0.0);
 
+		//Initialize segment tracker variable
+		int SegCount = 0;
 		while(isAutoActive() && !left.isFinished()){
 
-			double leftSpeed = left.calculate(encoder_counts);
-			double rightSpeed = right.calculate(encoder_counts);
-
-			Util.consoleLog("lp= %.2f rp=%.2f", leftSpeed, rightSpeed);
+			//Keeping Track of Segments
 			
-			double gyro_heading = Devices.navx.getHeadingR();
-			double segment_heading = Pathfinder.d2r(left.getHeading());
+			
+			double leftSpeed = left.calculate(Devices.leftEncoder.get(), SegCount);
+			double rightSpeed = right.calculate(Devices.rightEncoder.get(), SegCount);
 
-			double angleDifference = Pathfinder.boundHalfDegrees((double)(segment_heading - gyro_heading));
+			Util.consoleLog("lp= %.4f rp=%.4f SegCount=%d", leftSpeed, rightSpeed, SegCount);
+			
+			double gyro_heading = Devices.navx.getHeading();
+			//NOTE TO SELF, getHeadingR RETURNS THE HEADING IN RADIANS DESPITE THE DOCUMENTATION
+			double segment_heading = Pathfinder.r2d(left.getHeading());
 
-			double turn = -0.02 *angleDifference;
+			double angleDifference = Pathfinder.boundHalfDegrees(segment_heading - gyro_heading);
+
+			double turn = 0.8 *(1/80) *angleDifference;
 
 			leftSpeed = Util.clampValue(leftSpeed + turn, 1);
 			rightSpeed = Util.clampValue(rightSpeed - turn, 1);
-			// leftSpeed = leftSpeed + turn;
-			// rightSpeed = rightSpeed - turn;
 
-			Util.consoleLog("le=%d lp=%.2f  re=%d rp=%.2f  dhdg=%.0f  hdg=%.0f ad=%.2f  turn=%.2f  time=%.3f", 
-							Devices.leftEncoder.get(), leftSpeed, Devices.rightEncoder.get(), rightSpeed, 
+			Util.consoleLog("le=%.4f lp=%.2f  re==%.4f rp=%.2f  dhdg=%.0f  hdg=%.0f ad=%.2f  turn=%.5f  time=%.3f", 
+							Util.inchesToMeters(Devices.leftEncoder.getDistance()), leftSpeed, Util.inchesToMeters(Devices.rightEncoder.getDistance()), rightSpeed, 
 							segment_heading, gyro_heading, angleDifference, turn,  Util.getElaspedTime());
 			
 			
 
 			Devices.robotDrive.tankDrive(leftSpeed, rightSpeed);
 
+			SegCount++;
 			Timer.delay(0.02);
 		}
 		Devices.robotDrive.stopMotor();
