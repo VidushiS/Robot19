@@ -86,9 +86,11 @@ public class Autonomous
 		Devices.robotDrive.setSafetyEnabled(false);
 
 		// Initialize wheel encoders.
+		Devices.leftEncoder.setStatusFramePeriod(100);
+		Devices.rightEncoder.setStatusFramePeriod(100);
 		Util.consoleLog("right encoder counts =%d, left encoder counts =%d", Devices.rightEncoder.get(), Devices.leftEncoder.get());
-		Devices.rightEncoder.reset(10);
-		Devices.leftEncoder.reset(10);
+		Devices.rightEncoder.reset(2);
+		Devices.leftEncoder.reset(170);
 		Util.consoleLog("right encoder counts =%d, left encoder counts =%d", Devices.rightEncoder.get(), Devices.leftEncoder.get());
 		
        // Set NavX yaw tracking to 0.
@@ -146,7 +148,8 @@ public class Autonomous
 	 */
 
 	 private void testPathfinder(){
-		 Util.consoleLog("I made it this far!");
+		 Pathfinder.setTrace(true);
+		 Util.consoleLog("Pathfinder Trace =%b", Pathfinder.isTracing());
 		double wheel_diameter = Util.inchesToMeters(5.8);
 		double max_velocity = 1.86; //1.86 m/s was the actual velocity
 		int encoder_counts = 4096;
@@ -159,6 +162,8 @@ public class Autonomous
 		//Trajectory path = Pathfinder.readFromCSV(middleTrajectoryCSV);
 		Trajectory rightPath = Pathfinder.readFromCSV(rightTrajectoryCSV);
 		Trajectory leftPath = Pathfinder.readFromCSV(leftTrajectoryCSV);
+
+		
 		
 		Util.consoleLog("I read the files");
 		EncoderFollower left = new EncoderFollower(leftPath, "left");
@@ -174,10 +179,21 @@ public class Autonomous
 
 		//Initialize segment tracker variable
 		int SegCount = 0;
-		while(isAutoActive() && !left.isFinished()){
+		double totalTime = 0;
+		Util.consoleLog("I reset the total time");
+		Timer.delay(0.01);
+		double elapsedTime = 0;
+		double elapsedSegmentTime = 0;
+		double totalSegmentTime = 0;
+		Util.getElaspedTime();
+		while(isAutoActive() && (SegCount < leftPath.length())){
 
 			//Keeping Track of Segments
-			
+			elapsedTime = Util.getElaspedTime();
+			totalTime += elapsedTime;
+
+			elapsedSegmentTime = leftPath.get(SegCount).dt;
+			totalSegmentTime += elapsedSegmentTime;
 			
 			double leftSpeed = left.calculate(Devices.leftEncoder.get(), SegCount);
 			double rightSpeed = right.calculate(Devices.rightEncoder.get(), SegCount);
@@ -190,26 +206,31 @@ public class Autonomous
 
 			double angleDifference = Pathfinder.boundHalfDegrees(segment_heading - gyro_heading);
 
-			double turn = 0.8 *(1/80) *angleDifference;
+			double turn = 0.8 *(1.0/80.0) *angleDifference;
 
 			leftSpeed = Util.clampValue(leftSpeed + turn, 1);
 			rightSpeed = Util.clampValue(rightSpeed - turn, 1);
 
-			Util.consoleLog("le=%.4f lp=%.2f  re==%.4f rp=%.2f  dhdg=%.0f  hdg=%.0f ad=%.2f  turn=%.5f  time=%.3f", 
+			Util.consoleLog("le=%.4f lp=%.2f  re==%.4f rp=%.2f  dhdg=%.0f  hdg=%.0f ad=%.2f  turn=%.5f  time=%.3f totalelaspedtime = %.3f segmentTime = %.3f totalSegmentTime = %.3f", 
 							Util.inchesToMeters(Devices.leftEncoder.getDistance()), leftSpeed, Util.inchesToMeters(Devices.rightEncoder.getDistance()), rightSpeed, 
-							segment_heading, gyro_heading, angleDifference, turn,  Util.getElaspedTime());
+							segment_heading, gyro_heading, angleDifference, turn,  elapsedTime, totalTime, elapsedSegmentTime, totalSegmentTime);
 			
 			
 
 			Devices.robotDrive.tankDrive(leftSpeed, rightSpeed);
 
-			SegCount++;
-			Timer.delay(0.02);
+			
+				SegCount++;
+			
+			
+			Timer.delay(0.04);
+		}
+		
+		if(isAutoActive()){
+			Util.consoleLog("The Trajectory is Complete");
+			
 		}
 		Devices.robotDrive.stopMotor();
-		if(left.isFinished()){
-			Util.consoleLog("The Trajectory is Complete");
-		}
 
 		
 	 }

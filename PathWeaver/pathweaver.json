@@ -1,6 +1,6 @@
 {
   "lengthUnit": "Meter",
-  "timeStep": 0.05,
+  "timeStep": 0.1,
   "maxVelocity": 1.86,
   "maxAcceleration": 0.5,
   "maxJerk": 60.0,

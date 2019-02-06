@@ -32,7 +32,7 @@ public class Devices
 	  // Motor CAN ID/PWM port assignments (1=left-front, 2=left-rear, 3=right-front, 4=right-rear)
 	  public static WPI_TalonSRX		LFCanTalon, LRCanTalon, RFCanTalon, RRCanTalon;
 	  
-	  public static CANSparkMax			leftSpark, rightSpark;
+	 // public static CANSparkMax			leftSpark, rightSpark;
 	  
 	  public static DifferentialDrive	robotDrive;
 
@@ -44,9 +44,9 @@ public class Devices
 	  public final static Compressor	compressor = new Compressor(0);	// Compressor class represents the PCM.
 
 	  public final static ValveDA		highLowValve = new ValveDA(0);		// For gearbox.
-	  public final static ValveDA		frontLiftValve = new ValveDA(2);	// For front lift.
-	  public final static ValveDA		rearLiftValve = new ValveDA(4);		// For rear lift.
-	  public final static ValveSA		hatchKickValve = new ValveSA(1, 4);	// Kick of hatch.
+	//  public final static ValveDA		frontLiftValve = new ValveDA(2);	// For front lift.
+	  //public final static ValveDA		rearLiftValve = new ValveDA(4);		// For rear lift.
+	  //public final static ValveSA		hatchKickValve = new ValveSA(1, 4);	// Kick of hatch.
 	  
 	  public final static AnalogInput	pressureSensor = new AnalogInput(0);
 	  
@@ -121,8 +121,8 @@ public class Devices
 		  //robotDrive = new DifferentialDrive(LeftGroup, RightGroup);
 		  robotDrive = new DifferentialDrive(LRCanTalon, RRCanTalon);
 		  
-		  leftSpark = new CANSparkMax(0, MotorType.kBrushless);
-		  rightSpark = new CANSparkMax(0, MotorType.kBrushless);
+		//  leftSpark = new CANSparkMax(0, MotorType.kBrushless);
+		 // rightSpark = new CANSparkMax(0, MotorType.kBrushless);
 	  }
 
 	  // Initialize and Log status indication from CANTalon. If we see an exception

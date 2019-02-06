@@ -7,23 +7,8 @@
 
 package Team4450.Robot19;
 
-import jaci.pathfinder.Pathfinder;
-import jaci.pathfinder.Trajectory;
-
-import java.io.File;
-
-
 /**
  * Add your docs here.
  */
-public class PathFinderReadFromCSV {
-
-    File middleTrajectoryCSV = new File("TestPath.pf1.csv");
-    File leftTrajectoryCSV = new File("TestPath.left.pf1.csv");
-    File rightTrajectoryCSV = new File("TestPath.right.pf1.csv");
- 
-    Trajectory trajectory = Pathfinder.readFromCSV(middleTrajectoryCSV);
-    Trajectory right = Pathfinder.readFromCSV(rightTrajectoryCSV);
-    Trajectory left = Pathfinder.readFromCSV(leftTrajectoryCSV);
-
+public class Lift {
 }
