@@ -174,8 +174,8 @@ public class Autonomous
 		right.configureEncoder(Devices.rightEncoder.get(), encoder_counts, wheel_diameter);
 
 		//NOTE TO SELF, FIND MAX VELOCITY
-		left.configurePIDVA(1.0, 0.0, 0.0, 1/max_velocity, 0.0);
-		right.configurePIDVA(1.0, 0.0, 0.0, 1/max_velocity, 0.0);
+		left.configurePIDVA(0.6, 0.0, 0.0, 1/max_velocity, 0.0);
+		right.configurePIDVA(0.6, 0.0, 0.0, 1/max_velocity, 0.0);
 
 		//Initialize segment tracker variable
 		int SegCount = 0;
@@ -185,6 +185,10 @@ public class Autonomous
 		double elapsedTime = 0;
 		double elapsedSegmentTime = 0;
 		double totalSegmentTime = 0;
+		double averageElapsedTime = 0;
+
+		double averageTime = 0;
+		double delay = 0;
 		Util.getElaspedTime();
 		while(isAutoActive() && (SegCount < leftPath.length())){
 
@@ -220,14 +224,23 @@ public class Autonomous
 			Devices.robotDrive.tankDrive(leftSpeed, rightSpeed);
 
 			
-				SegCount++;
-			
-			
-			Timer.delay(0.04);
+			//averageTime =  
+			// totalTime/SegCount;
+			delay = totalSegmentTime - totalTime;
+			if(delay < 0.00){
+				delay = 0.00;
+			}
+			Util.consoleLog("delay =%.3f", delay);
+
+			Timer.delay(delay);
+
+			SegCount++;
 		}
 		
 		if(isAutoActive()){
 			Util.consoleLog("The Trajectory is Complete");
+			averageElapsedTime = totalTime/SegCount;
+			Util.consoleLog("averageTime =%.3f", averageElapsedTime);
 			
 		}
 		Devices.robotDrive.stopMotor();

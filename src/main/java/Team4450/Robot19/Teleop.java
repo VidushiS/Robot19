@@ -83,6 +83,10 @@ class Teleop
 		launchPad.AddControl(LaunchPadControlIDs.BUTTON_GREEN);
 		launchPad.AddControl(LaunchPadControlIDs.BUTTON_BLACK);
 		launchPad.AddControl(LaunchPadControlIDs.BUTTON_RED_RIGHT);
+		launchPad.AddControl(LaunchPadControlIDs.BUTTON_BLUE);
+		launchPad.AddControl(LaunchPadControlIDs.BUTTON_BLUE_RIGHT);
+		launchPad.AddControl(LaunchPadControlIDs.BUTTON_RED);
+		launchPad.AddControl(LaunchPadControlIDs.BUTTON_YELLOW);
 		launchPad.addLaunchPadEventListener(new LaunchPadListener());
 		launchPad.Start();
 

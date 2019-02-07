@@ -33,13 +33,13 @@ public class Devices
 	  // Motor CAN ID/PWM port assignments (1=left-front, 2=left-rear, 3=right-front, 4=right-rear)
 	  public static WPI_TalonSRX		LFCanTalon, LRCanTalon, RFCanTalon, RRCanTalon;
 	  
-	  public static WPI_VictorSPX		leftWinch, rightWinch, pickupMotor, ballSpit;	
+	//  public static WPI_VictorSPX		leftWinch, rightWinch, pickupMotor, ballSpit;	
 	  
-	  public static CANSparkMax			leftSpark, rightSpark;
+	  //public static CANSparkMax			leftSpark, rightSpark;
 	  
 	  public static DifferentialDrive		robotDrive;
-	  public static	SpeedControllerGroup 	hDrive;
-	  public static SpeedControllerGroup	winchDrive;
+	  //public static	SpeedControllerGroup 	hDrive;
+	  //public static SpeedControllerGroup	winchDrive;
 	  
 	  public final static Joystick      utilityStick = new Joystick(2);	
 	  public final static Joystick      leftStick = new Joystick(0);	
@@ -48,13 +48,13 @@ public class Devices
 
 	  public final static Compressor	compressor = new Compressor(0);	// Compressor class represents the PCM.
 
-	  public final static ValveDA		highLowValve = new ValveDA(0);		// For gearbox.
-	  public final static ValveDA		frontLiftValve = new ValveDA(2);	// For front lift.
-	  public final static ValveDA		rearLiftValve = new ValveDA(4);		// For rear lift.
-	  public final static ValveDA		pickupValve = new ValveDA(6);		// For rear lift.
-	  public final static ValveSA		hatchKickValve = new ValveSA(1, 4);	// Kick of hatch.
+	   public final static ValveDA		highLowValve = new ValveDA(0);		// For gearbox.
+	//   public final static ValveDA		frontLiftValve = new ValveDA(2);	// For front lift.
+	//   public final static ValveDA		rearLiftValve = new ValveDA(4);		// For rear lift.
+	//   public final static ValveDA		pickupValve = new ValveDA(6);		// For rear lift.
+	//   public final static ValveSA		hatchKickValve = new ValveSA(1, 4);	// Kick of hatch.
 	  
-	  public final static Servo			hatchDeployServo = new Servo(0);	// PWM port 0.
+	//  public final static Servo			hatchDeployServo = new Servo(0);	// PWM port 0.
 
 	  public final static AnalogInput	pressureSensor = new AnalogInput(0);
 	  
@@ -66,9 +66,9 @@ public class Devices
 
 	  // Encoder (regular type) is plugged into dio port 0:
 	  // orange=+5v blue=signal, dio port 1: black=gnd yellow=signal. 
-	  public final static Encoder		winchEncoder = new Encoder(0, 1, true, EncodingType.k4X);
+	  //public final static Encoder		winchEncoder = new Encoder(0, 1, true, EncodingType.k4X);
 	  
-	  public static DigitalInput		winchSwitch = new DigitalInput(0);
+	//  public static DigitalInput		winchSwitch = new DigitalInput(0);
 
 	  // SRX magnetic encoder plugged into a CAN Talon.
 	  public static SRXMagneticEncoderRelative	leftEncoder, rightEncoder;
