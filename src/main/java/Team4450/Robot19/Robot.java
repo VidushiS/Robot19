@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 @SuppressWarnings("deprecation")
 public class Robot extends SampleRobot 
 {
-  static final String  	PROGRAM_NAME = "VS19-01.21.19-07";
+  static final String  	PROGRAM_NAME = "VS19-02.08.19-08";
 //Making new edits to some stuff... etc test change 
   public Properties		robotProperties;
   

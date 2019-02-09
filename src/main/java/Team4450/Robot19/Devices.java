@@ -33,7 +33,7 @@ public class Devices
 	  // Motor CAN ID/PWM port assignments (1=left-front, 2=left-rear, 3=right-front, 4=right-rear)
 	  public static WPI_TalonSRX		LFCanTalon, LRCanTalon, RFCanTalon, RRCanTalon;
 	  
-	//  public static WPI_VictorSPX		leftWinch, rightWinch, pickupMotor, ballSpit;	
+	  //public static WPI_VictorSPX		leftWinch, rightWinch, pickupMotor, ballSpit;	
 	  
 	  //public static CANSparkMax			leftSpark, rightSpark;
 	  

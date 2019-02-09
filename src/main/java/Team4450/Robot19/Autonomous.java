@@ -63,6 +63,14 @@ public class Autonomous
 		autoChooser.setName("Auto Program");
 		autoChooser.addDefault("No Program", 0);
 		autoChooser.addDefault("PathFinder Test", 1);
+		//The naming convention is Alliance, Upper/Lower Rocket, The side of the rocket the robot is going to 
+		//from the perspective of the driver station
+		autoChooser.addDefault("Blue Upper Close", 2);
+		autoChooser.addDefault("Blue Upper Middle", 3);
+		autoChooser.addDefault("Blue Upper Far", 4);
+		autoChooser.addDefault("Blue Down Close", 5);
+		autoChooser.addDefault("Blue Down Middle", 6);
+		autoChooser.addDefault("Blue Down Far", 7);
 	
 		
 		SmartDashboard.putData(autoChooser);
@@ -113,10 +121,34 @@ public class Autonomous
 		{
 			case 0:		// No auto program.
 				break;
+
 			case 1:
 				testPathfinder();
 			break;
 
+			case 2:
+				BlueRocketUpCloseAuto();
+				break;
+
+			case 3:
+				BlueRocketUpMiddleAuto();
+				break;
+
+			case 4:
+				BlueRocketUpFarAuto();
+				break;
+			
+			case 5:
+				BlueRocketDownCloseAuto();
+				break;
+			
+			case 6:
+				BlueRocketDownMiddleAuto();
+				break;
+			case 7:
+				BlueRocketDownFarAuto();
+				break;
+				
 		}
 		
 		// Update the robot heading indicator on the DS.
@@ -157,6 +189,7 @@ public class Autonomous
 		//File middleTrajectoryCSV = new File("TestPath.pf1.csv");
 		File leftTrajectoryCSV = new File("/home/lvuser/output/PortablePath.right.pf1.csv");
 		File rightTrajectoryCSV = new File("/home/lvuser/output/PortablePath.left.pf1.csv");
+	
 		Util.consoleLog("I made the CSV files into java.io files");
 
 		//Trajectory path = Pathfinder.readFromCSV(middleTrajectoryCSV);
@@ -174,8 +207,9 @@ public class Autonomous
 		right.configureEncoder(Devices.rightEncoder.get(), encoder_counts, wheel_diameter);
 
 		//NOTE TO SELF, FIND MAX VELOCITY
-		left.configurePIDVA(0.6, 0.0, 0.0, 1/max_velocity, 0.0);
-		right.configurePIDVA(0.6, 0.0, 0.0, 1/max_velocity, 0.0);
+		left.configurePIDVA(0.5, 0.0, 0.0, 1/max_velocity, 0.0);
+		right.configurePIDVA(0.5, 0.0, 0.0, 1/max_velocity, 0.0);
+		
 
 		//Initialize segment tracker variable
 		int SegCount = 0;
@@ -187,7 +221,7 @@ public class Autonomous
 		double totalSegmentTime = 0;
 		double averageElapsedTime = 0;
 
-		double averageTime = 0;
+		//This is the delay I am setting
 		double delay = 0;
 		Util.getElaspedTime();
 		while(isAutoActive() && (SegCount < leftPath.length())){
@@ -224,16 +258,18 @@ public class Autonomous
 			Devices.robotDrive.tankDrive(leftSpeed, rightSpeed);
 
 			
-			//averageTime =  
-			// totalTime/SegCount;
+			//Difference between the total time the loop has been running and the total time the segments have been running
 			delay = totalSegmentTime - totalTime;
+			//Set the delay to be a minimum of 0, can't set the delay to be a negative number
 			if(delay < 0.00){
 				delay = 0.00;
 			}
 			Util.consoleLog("delay =%.3f", delay);
 
+			//Set the delay 
 			Timer.delay(delay);
 
+			//Increment the Segment the robot is on
 			SegCount++;
 		}
 		
@@ -246,6 +282,145 @@ public class Autonomous
 		Devices.robotDrive.stopMotor();
 
 		
+	 }
+	 private void BlueRocketUpCloseAuto(){
+		 String rightPathFile = "/home/lvuser/output/RocketUpClose.right.pf1.csv";
+		 String leftPathFile = "/home/lvuser/output/RocketUpClose.left.pf1.csv";
+		 PathfinderAuto(rightPathFile, leftPathFile);
+	 }
+	 private void BlueRocketUpMiddleAuto(){
+		String rightPathFile = "/home/lvuser/output/RocketUpMiddle.right.pf1.csv";
+		String leftPathFile = "/home/lvuser/output/RocketUpMiddle.left.pf1.csv";
+		PathfinderAuto(rightPathFile, leftPathFile);
+	}
+	private void BlueRocketUpFarAuto(){
+		String rightPathFile = "/home/lvuser/output/RocketUpFar.right.pf1.csv";
+		String leftPathFile = "/home/lvuser/output/RocketUpFar.left.pf1.csv";
+		PathfinderAuto(rightPathFile, leftPathFile);
+	}
+	private void BlueRocketDownCloseAuto(){
+		String rightPathFile = "/home/lvuser/output/RocketDownClose.right.pf1.csv";
+		String leftPathFile = "/home/lvuser/output/RocketDownClose.left.pf1.csv";
+		PathfinderAuto(rightPathFile, leftPathFile);
+	}
+	private void BlueRocketDownMiddleAuto(){
+		String rightPathFile = "/home/lvuser/output/RocketDownMiddle.right.pf1.csv";
+		String leftPathFile = "/home/lvuser/output/RocketDownMiddle.left.pf1.csv";
+		PathfinderAuto(rightPathFile, leftPathFile);
+	}
+	private void BlueRocketDownFarAuto(){
+		String rightPathFile = "/home/lvuser/output/RocketDownFar.right.pf1.csv";
+		String leftPathFile = "/home/lvuser/output/RocketDownFar.left.pf1.csv";
+		PathfinderAuto(rightPathFile, leftPathFile);
+	}
+
+	private void PathfinderAuto(String rightPathFile, String leftPathFile){
+		Pathfinder.setTrace(true);
+		Util.consoleLog("Pathfinder Trace =%b", Pathfinder.isTracing());
+	   double wheel_diameter = Util.inchesToMeters(5.8);
+	   double max_velocity = 1.86; //1.86 m/s was the actual velocity
+	   int encoder_counts = 4096;
+
+	   //File middleTrajectoryCSV = new File("TestPath.pf1.csv");
+	   //NOTE THIS ISN'T A MISTAKE, WE NEED TO INVERT THE PATHS DUE TO AN ERROR 
+	   //IN PATHFINDER
+	   File leftTrajectoryCSV = new File(rightPathFile);
+	   File rightTrajectoryCSV = new File(leftPathFile);
+   
+	   Util.consoleLog("I made the CSV files into java.io files");
+
+	   //Trajectory path = Pathfinder.readFromCSV(middleTrajectoryCSV);
+	   Trajectory rightPath = Pathfinder.readFromCSV(rightTrajectoryCSV);
+	   Trajectory leftPath = Pathfinder.readFromCSV(leftTrajectoryCSV);
+
+	   
+	   
+	   Util.consoleLog("I read the files");
+	   EncoderFollower left = new EncoderFollower(leftPath, "left");
+	   EncoderFollower right = new EncoderFollower(rightPath, "right");
+
+	   
+	   left.configureEncoder(Devices.leftEncoder.get(), encoder_counts, wheel_diameter);
+	   right.configureEncoder(Devices.rightEncoder.get(), encoder_counts, wheel_diameter);
+
+	   //NOTE TO SELF, FIND MAX VELOCITY
+	   left.configurePIDVA(0.5, 0.0, 0.0, 1/max_velocity, 0.0);
+	   right.configurePIDVA(0.5, 0.0, 0.0, 1/max_velocity, 0.0);
+	   
+
+	   //Initialize segment tracker variable
+	   int SegCount = 0;
+	   double totalTime = 0;
+	   Util.consoleLog("I reset the total time");
+	   Timer.delay(0.01);
+	   double elapsedTime = 0;
+	   double elapsedSegmentTime = 0;
+	   double totalSegmentTime = 0;
+	   double averageElapsedTime = 0;
+
+	   //This is the delay I am setting
+	   double delay = 0;
+	   Util.getElaspedTime();
+	   while(isAutoActive() && (SegCount < leftPath.length())){
+
+		   //Keeping Track of Segments
+		   elapsedTime = Util.getElaspedTime();
+		   totalTime += elapsedTime;
+
+		   elapsedSegmentTime = leftPath.get(SegCount).dt;
+		   totalSegmentTime += elapsedSegmentTime;
+		   
+		   double leftSpeed = left.calculate(Devices.leftEncoder.get(), SegCount);
+		   double rightSpeed = right.calculate(Devices.rightEncoder.get(), SegCount);
+
+		   Util.consoleLog("lp= %.4f rp=%.4f SegCount=%d", leftSpeed, rightSpeed, SegCount);
+		   
+		   double gyro_heading = Devices.navx.getHeading();
+		   //NOTE TO SELF, getHeadingR RETURNS THE HEADING IN RADIANS DESPITE THE DOCUMENTATION
+		   double segment_heading = Pathfinder.r2d(left.getHeading());
+
+		   double angleDifference = Pathfinder.boundHalfDegrees(segment_heading - gyro_heading);
+
+		   double turn = 0.8 *(1.0/80.0) *angleDifference;
+
+		   leftSpeed = Util.clampValue(leftSpeed + turn, 1);
+		   rightSpeed = Util.clampValue(rightSpeed - turn, 1);
+
+		   Util.consoleLog("le=%.4f lp=%.2f  re==%.4f rp=%.2f  dhdg=%.0f  hdg=%.0f ad=%.2f  turn=%.5f  time=%.3f totalelaspedtime = %.3f segmentTime = %.3f totalSegmentTime = %.3f", 
+						   Util.inchesToMeters(Devices.leftEncoder.getDistance()), leftSpeed, Util.inchesToMeters(Devices.rightEncoder.getDistance()), rightSpeed, 
+						   segment_heading, gyro_heading, angleDifference, turn,  elapsedTime, totalTime, elapsedSegmentTime, totalSegmentTime);
+		   
+		   
+
+		   Devices.robotDrive.tankDrive(leftSpeed, rightSpeed);
+
+		   
+		   //Difference between the total time the loop has been running and the total time the segments have been running
+		   delay = totalSegmentTime - totalTime;
+		   //Set the delay to be a minimum of 0, can't set the delay to be a negative number
+		   if(delay < 0.00){
+			   delay = 0.00;
+		   }
+		   Util.consoleLog("delay =%.3f", delay);
+
+		   //Set the delay 
+		   Timer.delay(delay);
+
+		   //Increment the Segment the robot is on
+		   SegCount++;
+	   }
+	   
+	   if(isAutoActive()){
+		   Util.consoleLog("The Trajectory is Complete");
+		   averageElapsedTime = totalTime/SegCount;
+		   Util.consoleLog("averageTime =%.3f", averageElapsedTime);
+		   
+	   }
+	   Devices.robotDrive.stopMotor();
+
+	   /*
+	   VISION STUFF WILL BE HERE IN THE NEXT UPDATE (HOPEFULLY)!
+	   */
 	 }
 	private void autoDrive(double power, int encoderCounts, StopMotors stop, Brakes brakes, Pid pid, 
 						    Heading heading)
