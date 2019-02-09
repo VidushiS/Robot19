@@ -27,3 +27,9 @@ Version 19.0
 
 R. Corn
 December 18, 2018
+****************************************************************************************************************
+# Pathfinder Updates (2/9/2019 @ 12:27 am)
+This section has images all of the plotted paths and their corresponding names so that you can read my code a little more easily...
+
+## Path No. 1: Blue Upper Close
+![BlueUpperClose](img/BlueUpperClose.PNG)
