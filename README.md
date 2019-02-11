@@ -44,7 +44,7 @@ This section has images all of the plotted paths and their corresponding names s
 ![BlueDownClose](img/BlueDownClose.PNG)
 
 ## Path No. 5: Blue Rocket Down Far
-![BlueDownFar](BlueDownFar.PNG)
+![BlueDownFar](img/BlueDownFar.PNG)
 
 ## Path No. 6: Blue Rocket Down Middle
-![BlueDownMiddle](BlueDownMiddle.PNG)
+![BlueDownMiddle](img/BlueDownMiddle.PNG)
