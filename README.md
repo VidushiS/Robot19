@@ -31,5 +31,20 @@ December 18, 2018
 # Pathfinder Updates (2/9/2019 @ 12:27 am)
 This section has images all of the plotted paths and their corresponding names so that you can read my code a little more easily...
 
-## Path No. 1: Blue Upper Close
+## Path No. 1: Blue Rocket Upper Close
 ![BlueUpperClose](img/BlueUpperClose.PNG)
+
+## Path No. 2: Blue Rocket Upper Far
+![BlueUpFar](img/BlueUpFar.PNG)
+
+## Path No. 3: Blue Rocket Upper Middle
+![BlueUpMiddle](img/BlueUpMiddle.PNG)
+
+## Path No. 4: Blue Rocket Down Close
+![BlueDownClose](img/BlueDownClose.PNG)
+
+## Path No. 5: Blue Rocket Down Far
+![BlueDownFar](BlueDownFar.PNG)
+
+## Path No. 6: Blue Rocket Down Middle
+![BlueDownMiddle](BlueDownMiddle.PNG)
