@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class HatchScoring {
 
-    Devices devices = new Devices();
     Robot robot; //Remember what this does again...
     //Make sure you have the right modifier... they can be globally accessed right now
     public boolean isExtended;

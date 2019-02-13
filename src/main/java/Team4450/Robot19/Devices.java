@@ -27,19 +27,20 @@ import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.DigitalInput;
 
+
 public class Devices
 {
 	//LOOK THROUGH THE RED DOTS BELOW AND UNCOMMENT WHEN WORKING WITH THIS YEAR'S ROBOT
 	  // Motor CAN ID/PWM port assignments (1=left-front, 2=left-rear, 3=right-front, 4=right-rear)
 	  public static WPI_TalonSRX		LFCanTalon, LRCanTalon, RFCanTalon, RRCanTalon;
 	  
-	  //public static WPI_VictorSPX		leftWinch, rightWinch, pickupMotor, ballSpit;	
+	  public static WPI_VictorSPX		leftWinch, rightWinch, pickupMotor, ballSpit;	
 	  
-	  //public static CANSparkMax			leftSpark, rightSpark;
+	  public static CANSparkMax			leftSpark, rightSpark;
 	  
 	  public static DifferentialDrive		robotDrive;
-	  //public static	SpeedControllerGroup 	hDrive;
-	  //public static SpeedControllerGroup	winchDrive;
+	  public static	SpeedControllerGroup 	hDrive;
+	  public static SpeedControllerGroup	winchDrive;
 	  
 	  public final static Joystick      utilityStick = new Joystick(2);	
 	  public final static Joystick      leftStick = new Joystick(0);	
@@ -49,12 +50,12 @@ public class Devices
 	  public final static Compressor	compressor = new Compressor(0);	// Compressor class represents the PCM.
 
 	   public final static ValveDA		highLowValve = new ValveDA(0);		// For gearbox.
-	//   public final static ValveDA		frontLiftValve = new ValveDA(2);	// For front lift.
-	//   public final static ValveDA		rearLiftValve = new ValveDA(4);		// For rear lift.
-	//   public final static ValveDA		pickupValve = new ValveDA(6);		// For rear lift.
-	//   public final static ValveSA		hatchKickValve = new ValveSA(1, 4);	// Kick of hatch.
+	   public final static ValveDA		frontLiftValve = new ValveDA(2);	// For front lift.
+	   public final static ValveDA		rearLiftValve = new ValveDA(4);		// For rear lift.
+	   public final static ValveDA		pickupValve = new ValveDA(6);		// For rear lift.
+	   public final static ValveSA		hatchKickValve = new ValveSA(1, 4);	// Kick of hatch.
 	  
-	//  public final static Servo			hatchDeployServo = new Servo(0);	// PWM port 0.
+	  public final static Servo			hatchDeployServo = new Servo(0);	// PWM port 0.
 
 	  public final static AnalogInput	pressureSensor = new AnalogInput(0);
 	  
@@ -66,9 +67,10 @@ public class Devices
 
 	  // Encoder (regular type) is plugged into dio port 0:
 	  // orange=+5v blue=signal, dio port 1: black=gnd yellow=signal. 
-	  //public final static Encoder		winchEncoder = new Encoder(0, 1, true, EncodingType.k4X);
+	  public final static Encoder		winchEncoder = new Encoder(0, 1, true, EncodingType.k4X);
 	  
-	//  public static DigitalInput		winchSwitch = new DigitalInput(0);
+	  //WILL BE USED FOR EITHER A HALL SENSOR OR LIMIT SWITCH
+	  public static DigitalInput		winchSwitch = new DigitalInput(0);
 
 	  // SRX magnetic encoder plugged into a CAN Talon.
 	  public static SRXMagneticEncoderRelative	leftEncoder, rightEncoder;
@@ -77,7 +79,7 @@ public class Devices
 	  
 	  // Private constructor prevents creation of any instances of this "static" class.
 	  //MAKE PUBLIC AGAIN
-	  public Devices() {}
+	  private Devices() {}
 	  
 	  // Initialize motor controllers, groups and encoders.
 	  
@@ -141,24 +143,24 @@ public class Devices
 
 		  //REMEMBER TO UNCOMMENT
 		  
-		//   leftSpark = new CANSparkMax(5, MotorType.kBrushless);
-		//   rightSpark = new CANSparkMax(6, MotorType.kBrushless);
+		  leftSpark = new CANSparkMax(5, MotorType.kBrushless);
+		  rightSpark = new CANSparkMax(6, MotorType.kBrushless);
 
 		  // Setup a SpeedControllerGroup for the left and right H drive motors.
-	    //   hDrive = new SpeedControllerGroup(leftSpark, rightSpark);
+	      hDrive = new SpeedControllerGroup(leftSpark, rightSpark);
 	      
-		//   leftWinch = new WPI_VictorSPX(7);
-		//   rightWinch = new WPI_VictorSPX(8);
-		//   pickupMotor = new WPI_VictorSPX(9);
-		//   ballSpit = new WPI_VictorSPX(10);
+		  leftWinch = new WPI_VictorSPX(7);
+		  rightWinch = new WPI_VictorSPX(8);
+		  pickupMotor = new WPI_VictorSPX(9);
+		  ballSpit = new WPI_VictorSPX(10);
 		  
-		//   leftWinch.setNeutralMode(NeutralMode.Brake);
-		//   rightWinch.setNeutralMode(NeutralMode.Brake);
-		//   pickupMotor.setNeutralMode(NeutralMode.Brake);
-		//   ballSpit.setNeutralMode(NeutralMode.Brake);
+		  leftWinch.setNeutralMode(NeutralMode.Brake);
+		  rightWinch.setNeutralMode(NeutralMode.Brake);
+		  pickupMotor.setNeutralMode(NeutralMode.Brake);
+		  ballSpit.setNeutralMode(NeutralMode.Brake);
 
 		  // Setup a SpeedControllerGroup for the left and right winch drive motors.
-	    //  winchDrive = new SpeedControllerGroup(leftWinch, rightWinch);
+	     winchDrive = new SpeedControllerGroup(leftWinch, rightWinch);
 	  }
 
 	  // Initialize and Log status indication from CANTalon. If we see an exception

@@ -13,9 +13,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  * Add your docs here.
  */
-public class BallPickup {
+public class FrontLift {
 
-    Devices Devices = new Devices();
+    
     public boolean isExtended;
     public boolean isRetracted;
     Robot robot;
@@ -23,7 +23,7 @@ public class BallPickup {
     //Maybe a constructor, do we need to pass in any parameters so that the class can funtion
 
     //Check with Corn why we write Util.consoleLog() and leave it blank
-    public BallPickup(Robot robot){
+    public FrontLift(Robot robot){
         Util.consoleLog(); 
         this.robot = robot;
         isExtended = true;
@@ -41,26 +41,24 @@ public class BallPickup {
     public void Extend(){
         
         if(isRetracted){
-      //      Devices.frontLiftValve.SetA();
+        Devices.frontLiftValve.SetA();
         isExtended = true;
         isRetracted = false;
         }
-        else Util.consoleLog("You are already Extended!");
+        else Util.consoleLog("The front of the robot is already extended!");
         
         
     }
     public void Retract(){
 
         if(isExtended){
-        //    Devices.frontLiftValve.SetB();
+        Devices.frontLiftValve.SetB();
         isExtended = false;
         isRetracted = true;
         }
-        else Util.consoleLog("You are already retracted");
+        else Util.consoleLog("The front of the robot is already retracted");
         
     }
-    // public boolean isExtended(){
-    //     return isExtended;
-    //     }
+    
     
 }

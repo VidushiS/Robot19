@@ -13,21 +13,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  * Add your docs here.
  */
-public class BallScoring {
+public class BackLift {
 
-    Devices devices = new Devices();
     Robot robot;
     public boolean isExtended;
     public boolean isRetracted;
 
     //REMEMBER TO SET THE BOOLEAN VALUES IN THE CONSTRUCTOR OTHERWISE FACE ERRORS
-    // public BallScoring(Robot robot){
+     public BackLift(Robot robot){
     //     this.robot = robot;
     //     isExtended = true;
     //     isRetracted = false;
     //     Retract();
         
-    // }
+     }
     //CHANGE THE CONSTRUCTOR AS NEEDED, LOOK AT MATCH SPECIFICATIONS TO SEE IF WE NEED TO RETRACT OR EXTEND
 
     public void Display(){
@@ -37,7 +36,7 @@ public class BallScoring {
     }
     public void Extend(){
         if(isRetracted){
-           // devices.rearLiftValve.SetA();
+            Devices.rearLiftValve.SetA();
             isExtended = true;
             isRetracted = false;
         }
@@ -46,7 +45,7 @@ public class BallScoring {
 
     public void Retract(){
         if(isExtended){
-            //devices.rearLiftValve.SetB();
+            Devices.rearLiftValve.SetB();
             isExtended = true;
             isRetracted = false;
         }

@@ -48,3 +48,6 @@ This section has images all of the plotted paths and their corresponding names s
 
 ## Path No. 6: Blue Rocket Down Middle
 ![BlueDownMiddle](img/BlueDownMiddle.PNG)
+
+V. Singh
+2/09/2019
