@@ -69,8 +69,7 @@ public class Devices
 	  // orange=+5v blue=signal, dio port 1: black=gnd yellow=signal. 
 	  public final static Encoder		winchEncoder = new Encoder(0, 1, true, EncodingType.k4X);
 	  
-	  //WILL BE USED FOR EITHER A HALL SENSOR OR LIMIT SWITCH
-	  public static DigitalInput		winchSwitch = new DigitalInput(0);
+	  public static DigitalInput		winchSwitch = new DigitalInput(2);
 
 	  // SRX magnetic encoder plugged into a CAN Talon.
 	  public static SRXMagneticEncoderRelative	leftEncoder, rightEncoder;
