@@ -19,7 +19,7 @@ public class Lift {
 
     Robot robot;
     private boolean isMoving = true;
-    private boolean holdingPosition, holdingHeight;
+    private boolean				holdingPosition, holdingHeight;
     private final PIDController liftPidController;
 
     private int MAXENCODERCOUNTS = 10800;
@@ -50,34 +50,28 @@ public class Lift {
     public void updateDS(){
         SmartDashboard.putBoolean("TargetLocked", holdingHeight);
     }
-    public void LiftMoveTeleOp(double power){
-        if(power <-1.0){
-            power = -1.0;
-        }
-        else if(power > 1.0){
-            power = 1.0;
-        }
-
-        if((power > 0 && Devices.winchEncoder.get() < MAXENCODERCOUNTS) || (power < 0 && !Devices.winchSwitch.get())){
-            Devices.winchDrive.set(power);
-            isMoving = true;
-        }
-        else{
-            if(Devices.winchSwitch.get()){
-                Devices.winchEncoder.reset();
-            }
-            Devices.winchDrive.set(0);
-            isMoving = false;
-        } 
-        
-        
-    }
-
-    public void LiftStop(){
-        Devices.winchDrive.set(0);
-        isMoving = false;
-    }
-
+    public void setWinchPower(double power)
+	{
+		if (isHoldingHeight()) return;
+		
+		if (Devices.winchEncoderEnabled)
+		{
+			// limit switch and hall effect sensor read in reverse so two sets of code.
+			
+				// hall effect sensor form.
+				if ((power > 0 && Devices.winchEncoder.get() < 14000) ||	// 10800
+					(power < 0 && Devices.winchSwitch.get()))
+					Devices.winchDrive.set(power);
+				else
+				{
+					if (!Devices.winchSwitch.get()) Devices.winchEncoder.reset();
+					
+					Devices.winchDrive.set(0);
+				}
+		}
+		else
+			Devices.winchDrive.set(power);
+	}
     public void setHeight(int count)
 	{
 		Util.consoleLog("%d", count);

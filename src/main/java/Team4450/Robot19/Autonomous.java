@@ -129,32 +129,89 @@ public class Autonomous
 			break;
 
 			case 2:
-				BlueRocketUpCloseAuto();
+				switch (robot.alliance.name()){
+					case "RED":
+					pathSelector(true, 1);
+					break;
+					case "BLUE":
+					pathSelector(false, 1);
+					break;
+				}
+		
 				break;
 
 			case 3:
-				BlueRocketUpMiddleAuto();
+			switch (robot.alliance.name()){
+				case "RED":
+				pathSelector(true, 2);
+				break;
+				case "BLUE":
+				pathSelector(false, 2);
+				break;
+			}
 				break;
 
 			case 4:
-				BlueRocketUpFarAuto();
+			switch (robot.alliance.name()){
+				case "RED":
+				pathSelector(true, 3);
+				break;
+				case "BLUE":
+				pathSelector(false, 3);
+				break;
+			}
 				break;
 			
 			case 5:
-				BlueRocketDownCloseAuto();
+			switch (robot.alliance.name()){
+				case "RED":
+				pathSelector(true, 4);
+				break;
+				case "BLUE":
+				pathSelector(false, 4);
+				break;
+			}
 				break;
 			
 			case 6:
-				BlueRocketDownMiddleAuto();
+			switch (robot.alliance.name()){
+				case "RED":
+				pathSelector(true, 5);
+				break;
+				case "BLUE":
+				pathSelector(false, 5);
+				break;
+			}
 				break;
 			case 7:
-				BlueRocketDownFarAuto();
+			switch (robot.alliance.name()){
+				case "RED":
+				pathSelector(true, 6);
+				break;
+				case "BLUE":
+				pathSelector(false, 6);
+				break;
+			}
 				break;
 			case 8:
-				BlueMiddleLeftAuto();
+			switch (robot.alliance.name()){
+				case "RED":
+				pathSelector(true, 7);
+				break;
+				case "BLUE":
+				pathSelector(false, 7);
+				break;
+			}
 				break;
 			case 9:
-				BlueMiddleRighttAuto();
+			switch (robot.alliance.name()){
+				case "RED":
+				pathSelector(true, 8);
+				break;
+				case "BLUE":
+				pathSelector(false, 8);
+				break;
+			}
 				break;
 
 		}
@@ -291,47 +348,57 @@ public class Autonomous
 
 		
 	 }
-	 private void BlueRocketUpCloseAuto(){
-		 String rightPathFile = "/home/lvuser/output/RocketUpClose.right.pf1.csv";
-		 String leftPathFile = "/home/lvuser/output/RocketUpClose.left.pf1.csv";
-		 PathfinderAuto(rightPathFile, leftPathFile);
-	 }
-	 private void BlueRocketUpMiddleAuto(){
-		String rightPathFile = "/home/lvuser/output/RocketUpMiddle.right.pf1.csv";
-		String leftPathFile = "/home/lvuser/output/RocketUpMiddle.left.pf1.csv";
-		PathfinderAuto(rightPathFile, leftPathFile);
-	}
-	private void BlueRocketUpFarAuto(){
-		String rightPathFile = "/home/lvuser/output/RocketUpFar.right.pf1.csv";
-		String leftPathFile = "/home/lvuser/output/RocketUpFar.left.pf1.csv";
-		PathfinderAuto(rightPathFile, leftPathFile);
-	}
-	private void BlueRocketDownCloseAuto(){
-		String rightPathFile = "/home/lvuser/output/RocketDownClose.right.pf1.csv";
-		String leftPathFile = "/home/lvuser/output/RocketDownClose.left.pf1.csv";
-		PathfinderAuto(rightPathFile, leftPathFile);
-	}
-	private void BlueRocketDownMiddleAuto(){
-		String rightPathFile = "/home/lvuser/output/RocketDownMiddle.right.pf1.csv";
-		String leftPathFile = "/home/lvuser/output/RocketDownMiddle.left.pf1.csv";
-		PathfinderAuto(rightPathFile, leftPathFile);
-	}
-	private void BlueRocketDownFarAuto(){
-		String rightPathFile = "/home/lvuser/output/RocketDownFar.right.pf1.csv";
-		String leftPathFile = "/home/lvuser/output/RocketDownFar.left.pf1.csv";
-		PathfinderAuto(rightPathFile, leftPathFile);
-	}
-	private void BlueMiddleLeftAuto(){
-		String rightPathFile = "/home/lvuser/output/RocketMiddlePathLeft.left.pf1.csv";
-		String leftPathFile = "/home/lvuser/output/RocketMiddlePathLeft.right.pf1.csv";
-		PathfinderAuto(rightPathFile, leftPathFile);
-	}
-	private void BlueMiddleRighttAuto(){
-		String rightPathFile = "/home/lvuser/output/RocketMiddlePathLeft.left.pf1.csv";
-		String leftPathFile = "/home/lvuser/output/RocketMiddlePathLeft.right.pf1.csv";
-		PathfinderAuto(rightPathFile, leftPathFile);
-	}
 
+
+	private void pathSelector(boolean red, int pathSelection){
+		String rightPathFile;
+		String leftPathFile;
+
+		String allianceColor;
+
+		if(!red){
+			allianceColor = "Blue";
+		}
+		else allianceColor = "Red";
+
+		String pathName;
+		switch (pathSelection){
+			case 1:
+				pathName = "RocketUpClose";
+			break;
+			case 2: 
+				pathName = "RocketUpMiddle";
+			break;
+			case 3:
+				pathName = "RocketUpFar";
+			break;
+			case 4:
+				pathName = "RocketDownClose";
+			break;
+			case 5:
+				pathName = "RocketDownMiddle";
+			break;
+			case 6:
+				pathName = "RocketDownFar";
+			break;
+			case 7:
+				pathName = "RocketMiddlePathRight";
+			break;
+			case 8:
+				pathName = "RocketMiddlePathLeft";
+			break;
+			default:
+				pathName = "RocketMiddlePathRight";
+				break;
+		}
+
+		rightPathFile = "/home/lvuser/output/" + allianceColor + pathName + ".left.pf1.csv";
+		leftPathFile = "/home/lvuser/output/" + allianceColor + pathName + ".right.pf1.csv";
+
+		PathfinderAuto(rightPathFile, leftPathFile);
+		
+
+	}
 	private void PathfinderAuto(String rightPathFile, String leftPathFile){
 		Pathfinder.setTrace(true);
 		Util.consoleLog("Pathfinder Trace =%b", Pathfinder.isTracing());

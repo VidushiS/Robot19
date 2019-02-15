@@ -25,6 +25,7 @@ public class HatchScoring {
         isExtended = true;
         isRetracted = false;
         HatchKickIn();
+        Util.consoleLog("The Hatch Has been created");
     }
     //AGAIN DOUBLE CHECK FOR THIS ONE IF IT WILL BE SUITABLE TO KICK IN THE HATCH DURING TELEOP AND AUTO OR IF WE NEED IT
 
@@ -51,5 +52,16 @@ public class HatchScoring {
         }
         else Util.consoleLog("The Hatch Kicker is already in");
 
+    }
+    //CHANGE THIS UP COMPLETELY
+    public void Climbing(double power){
+        if(power > 1){
+            power = 1;
+        }
+        else if(power < -1){
+            power = -1;
+        }
+
+        Devices.hatchMotor.set(power);
     }
 }

@@ -14,6 +14,7 @@ import Team4450.Lib.ValveDA;
 import Team4450.Lib.ValveSA;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
@@ -27,14 +28,12 @@ import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.DigitalInput;
 
-
 public class Devices
 {
-	//LOOK THROUGH THE RED DOTS BELOW AND UNCOMMENT WHEN WORKING WITH THIS YEAR'S ROBOT
 	  // Motor CAN ID/PWM port assignments (1=left-front, 2=left-rear, 3=right-front, 4=right-rear)
 	  public static WPI_TalonSRX		LFCanTalon, LRCanTalon, RFCanTalon, RRCanTalon;
 	  
-	  public static WPI_VictorSPX		leftWinch, rightWinch, pickupMotor, ballSpit;	
+	  public static WPI_VictorSPX		leftWinch, rightWinch, pickupMotor, ballSpit, hatchMotor;	
 	  
 	  public static CANSparkMax			leftSpark, rightSpark;
 	  
@@ -49,11 +48,11 @@ public class Devices
 
 	  public final static Compressor	compressor = new Compressor(0);	// Compressor class represents the PCM.
 
-	   public final static ValveDA		highLowValve = new ValveDA(0);		// For gearbox.
-	   public final static ValveDA		frontLiftValve = new ValveDA(2);	// For front lift.
-	   public final static ValveDA		rearLiftValve = new ValveDA(4);		// For rear lift.
-	   public final static ValveDA		pickupValve = new ValveDA(6);		// For rear lift.
-	   public final static ValveSA		hatchKickValve = new ValveSA(1, 4);	// Kick of hatch.
+	  public final static ValveDA		highLowValve = new ValveDA(0);		// For gearbox.
+	  public final static ValveDA		frontClimbValve = new ValveDA(2);	// For front lift.
+	  public final static ValveDA		rearClimbValve = new ValveDA(4);	// For rear lift.
+	  public final static ValveDA		pickupValve = new ValveDA(6);		// For pickup arm.
+	  public final static ValveSA		hatchKickValve = new ValveSA(1, 4);	// Kick of hatch.
 	  
 	  public final static Servo			hatchDeployServo = new Servo(0);	// PWM port 0.
 
@@ -65,11 +64,15 @@ public class Devices
 
 	  public static NavX				navx;
 
-	  // Encoder (regular type) is plugged into dio port 0:
-	  // orange=+5v blue=signal, dio port 1: black=gnd yellow=signal. 
-	  public final static Encoder		winchEncoder = new Encoder(0, 1, true, EncodingType.k4X);
+	  // Touchless Encoder uses single channel on dio port 0.
+	  public final static Counter		winchEncoder = new Counter(0);
+	  public static boolean				winchEncoderEnabled = true;
+
+	  // Encoder (regular type) is plugged into dio port n:
+	  // orange=+5v blue=signal, dio port n+1: black=gnd yellow=signal. 
+	  public final static Encoder		hatchEncoder = new Encoder(1, 2, true, EncodingType.k4X);
 	  
-	  public static DigitalInput		winchSwitch = new DigitalInput(2);
+	  public static DigitalInput		winchSwitch = new DigitalInput(3);
 
 	  // SRX magnetic encoder plugged into a CAN Talon.
 	  public static SRXMagneticEncoderRelative	leftEncoder, rightEncoder;
@@ -77,7 +80,7 @@ public class Devices
 	  private static boolean			talonBrakeMode;
 	  
 	  // Private constructor prevents creation of any instances of this "static" class.
-	  //MAKE PUBLIC AGAIN
+	  
 	  private Devices() {}
 	  
 	  // Initialize motor controllers, groups and encoders.
@@ -120,6 +123,9 @@ public class Devices
 		  // talon is set to some setpoint and will move to that point using the encoder or
 	      // you set a velocity setpoint and talon will run at that velocity. This is
 		  // onboard PID control.
+	      
+	      // For 2019 robot, put rear talons into a differential drive object and set the
+	      // front talons to follow the rears. Not going to get to closed loop control...
 		  
 		  LFCanTalon.set(ControlMode.Follower, LRCanTalon.getDeviceID());
 		  RFCanTalon.set(ControlMode.Follower, RRCanTalon.getDeviceID());
@@ -139,13 +145,10 @@ public class Devices
 		  
 		  //robotDrive = new DifferentialDrive(LeftGroup, RightGroup);
 		  robotDrive = new DifferentialDrive(LRCanTalon, RRCanTalon);
-
-		  //REMEMBER TO UNCOMMENT
 		  
 		  leftSpark = new CANSparkMax(5, MotorType.kBrushless);
 		  rightSpark = new CANSparkMax(6, MotorType.kBrushless);
 
-		  //INVERT THE MOTOR, THERE ARE TWO PER GEARBOX
 		  rightSpark.setInverted(true);
 
 		  // Setup a SpeedControllerGroup for the left and right H drive motors.
@@ -155,11 +158,17 @@ public class Devices
 		  rightWinch = new WPI_VictorSPX(8);
 		  pickupMotor = new WPI_VictorSPX(9);
 		  ballSpit = new WPI_VictorSPX(10);
+
+		  //Faking it... This is just a place holder dont worry about it
+		  hatchMotor = new WPI_VictorSPX(11);
+		  hatchMotor.setNeutralMode(NeutralMode.Brake);
+		  //Would do you good to comment the two lines above
 		  
 		  leftWinch.setNeutralMode(NeutralMode.Brake);
 		  rightWinch.setNeutralMode(NeutralMode.Brake);
-
+		  
 		  rightWinch.setInverted(true);
+
 		  pickupMotor.setNeutralMode(NeutralMode.Brake);
 		  ballSpit.setNeutralMode(NeutralMode.Brake);
 

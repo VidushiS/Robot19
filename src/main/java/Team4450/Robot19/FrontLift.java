@@ -39,7 +39,7 @@ public class FrontLift {
         isExtended = true;
         isRetracted = false;
         Retract();
-        Util.consoleLog("Front Lift created");
+        Util.consoleLog("The front climb pistons have been created");
     }
 
     //REWRITE CONSTRUCTOR BECAUSE I CAN FORESEE SOME ISSUES WITH THE USE OF DISPLAY AND RETRACT CLASSES
@@ -52,7 +52,7 @@ public class FrontLift {
     public void Extend(){
         
         if(isRetracted){
-        Devices.frontLiftValve.SetA();
+        Devices.frontClimbValve.SetA();
         isExtended = true;
         isRetracted = false;
         }
@@ -63,7 +63,7 @@ public class FrontLift {
     public void Retract(){
 
         if(isExtended){
-        Devices.frontLiftValve.SetB();
+        Devices.frontClimbValve.SetB();
         isExtended = false;
         isRetracted = true;
         }

@@ -36,6 +36,7 @@ public class BackLift {
         isExtended = true;
         isRetracted = false;
         Retract();
+        Util.consoleLog("The rear climb pistons have been created");
         
      }
     //CHANGE THE CONSTRUCTOR AS NEEDED, LOOK AT MATCH SPECIFICATIONS TO SEE IF WE NEED TO RETRACT OR EXTEND
@@ -47,7 +48,7 @@ public class BackLift {
     }
     public void Extend(){
         if(isRetracted){
-            Devices.rearLiftValve.SetA();
+            Devices.rearClimbValve.SetA();
             isExtended = true;
             isRetracted = false;
         }
@@ -56,7 +57,7 @@ public class BackLift {
 
     public void Retract(){
         if(isExtended){
-            Devices.rearLiftValve.SetB();
+            Devices.rearClimbValve.SetB();
             isExtended = true;
             isRetracted = false;
         }
