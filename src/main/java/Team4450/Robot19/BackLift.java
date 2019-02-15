@@ -13,18 +13,29 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  * Add your docs here.
  */
+
+//THIS CLASS IS FOR THE EXTENSION OF THE PISTONS TO RAISE THE ROBOT OFF THE GROUND FOR ENDGAME 
 public class BackLift {
 
     Robot robot;
     public boolean isExtended;
     public boolean isRetracted;
 
+    public static BackLift backLift = null;
+
+    public static BackLift getInstance(Robot robot){
+        if(backLift == null){
+            backLift = new BackLift(robot);
+        }
+        return backLift;
+    }
+
     //REMEMBER TO SET THE BOOLEAN VALUES IN THE CONSTRUCTOR OTHERWISE FACE ERRORS
-     public BackLift(Robot robot){
-    //     this.robot = robot;
-    //     isExtended = true;
-    //     isRetracted = false;
-    //     Retract();
+     private BackLift(Robot robot){
+        this.robot = robot;
+        isExtended = true;
+        isRetracted = false;
+        Retract();
         
      }
     //CHANGE THE CONSTRUCTOR AS NEEDED, LOOK AT MATCH SPECIFICATIONS TO SEE IF WE NEED TO RETRACT OR EXTEND

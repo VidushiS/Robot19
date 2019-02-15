@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  * Add your docs here.
  */
+
+//THIS CLASS IS FOR THE EXTENSION OF THE PISTONS TO RAISE THE ROBOT OFF THE GROUND FOR ENDGAME
 public class FrontLift {
 
     
@@ -20,15 +22,24 @@ public class FrontLift {
     public boolean isRetracted;
     Robot robot;
 
+    public static FrontLift frontLift = null;
+
     //Maybe a constructor, do we need to pass in any parameters so that the class can funtion
 
-    //Check with Corn why we write Util.consoleLog() and leave it blank
-    public FrontLift(Robot robot){
+    public static FrontLift getInstance(Robot robot){
+        if(frontLift == null){
+            frontLift = new FrontLift(robot);
+        }
+        return frontLift;
+    }
+    
+    private FrontLift(Robot robot){
         Util.consoleLog(); 
         this.robot = robot;
         isExtended = true;
         isRetracted = false;
         Retract();
+        Util.consoleLog("Front Lift created");
     }
 
     //REWRITE CONSTRUCTOR BECAUSE I CAN FORESEE SOME ISSUES WITH THE USE OF DISPLAY AND RETRACT CLASSES

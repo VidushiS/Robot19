@@ -20,12 +20,12 @@ public class HatchScoring {
     public boolean isExtended;
     public boolean isRetracted;
 
-    // public HatchScoring(Robot robot){
-    //     this.robot = robot;
-    //     isExtended = true;
-    //     isRetracted = false;
-    //     HatchKickIn();
-    // }
+    public HatchScoring(Robot robot){
+        this.robot = robot;
+        isExtended = true;
+        isRetracted = false;
+        HatchKickIn();
+    }
     //AGAIN DOUBLE CHECK FOR THIS ONE IF IT WILL BE SUITABLE TO KICK IN THE HATCH DURING TELEOP AND AUTO OR IF WE NEED IT
 
     public void Display(){
@@ -35,7 +35,7 @@ public class HatchScoring {
     }
     public void HatchKickOut(){
         if(isRetracted){
-            //devices.hatchKickValve.Open();
+            Devices.hatchKickValve.Open();
             isExtended = true;
             isRetracted = false;
         }
@@ -45,7 +45,7 @@ public class HatchScoring {
     public void HatchKickIn(){
 
         if(isExtended){
-            //devices.hatchKickValve.Close();
+            Devices.hatchKickValve.Close();
             isExtended = false;
             isRetracted = true;
         }

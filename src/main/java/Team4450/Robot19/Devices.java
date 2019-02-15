@@ -145,6 +145,9 @@ public class Devices
 		  leftSpark = new CANSparkMax(5, MotorType.kBrushless);
 		  rightSpark = new CANSparkMax(6, MotorType.kBrushless);
 
+		  //INVERT THE MOTOR, THERE ARE TWO PER GEARBOX
+		  rightSpark.setInverted(true);
+
 		  // Setup a SpeedControllerGroup for the left and right H drive motors.
 	      hDrive = new SpeedControllerGroup(leftSpark, rightSpark);
 	      
@@ -155,6 +158,8 @@ public class Devices
 		  
 		  leftWinch.setNeutralMode(NeutralMode.Brake);
 		  rightWinch.setNeutralMode(NeutralMode.Brake);
+
+		  rightWinch.setInverted(true);
 		  pickupMotor.setNeutralMode(NeutralMode.Brake);
 		  ballSpit.setNeutralMode(NeutralMode.Brake);
 

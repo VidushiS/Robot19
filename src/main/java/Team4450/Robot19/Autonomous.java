@@ -71,6 +71,8 @@ public class Autonomous
 		autoChooser.addDefault("Blue Down Close", 5);
 		autoChooser.addDefault("Blue Down Middle", 6);
 		autoChooser.addDefault("Blue Down Far", 7);
+		autoChooser.addDefault("Blue Middle Left", 8);
+		autoChooser.addDefault("Blue Middle Right", 9);
 	
 		
 		SmartDashboard.putData(autoChooser);
@@ -148,7 +150,13 @@ public class Autonomous
 			case 7:
 				BlueRocketDownFarAuto();
 				break;
-				
+			case 8:
+				BlueMiddleLeftAuto();
+				break;
+			case 9:
+				BlueMiddleRighttAuto();
+				break;
+
 		}
 		
 		// Update the robot heading indicator on the DS.
@@ -311,6 +319,16 @@ public class Autonomous
 	private void BlueRocketDownFarAuto(){
 		String rightPathFile = "/home/lvuser/output/RocketDownFar.right.pf1.csv";
 		String leftPathFile = "/home/lvuser/output/RocketDownFar.left.pf1.csv";
+		PathfinderAuto(rightPathFile, leftPathFile);
+	}
+	private void BlueMiddleLeftAuto(){
+		String rightPathFile = "/home/lvuser/output/RocketMiddlePathLeft.left.pf1.csv";
+		String leftPathFile = "/home/lvuser/output/RocketMiddlePathLeft.right.pf1.csv";
+		PathfinderAuto(rightPathFile, leftPathFile);
+	}
+	private void BlueMiddleRighttAuto(){
+		String rightPathFile = "/home/lvuser/output/RocketMiddlePathLeft.left.pf1.csv";
+		String leftPathFile = "/home/lvuser/output/RocketMiddlePathLeft.right.pf1.csv";
 		PathfinderAuto(rightPathFile, leftPathFile);
 	}
 
