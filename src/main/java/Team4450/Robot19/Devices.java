@@ -33,10 +33,10 @@ public class Devices
 	  // Motor CAN ID/PWM port assignments (1=left-front, 2=left-rear, 3=right-front, 4=right-rear)
 	  public static WPI_TalonSRX		LFCanTalon, LRCanTalon, RFCanTalon, RRCanTalon;
 	  
-	  // static WPI_VictorSPX		leftWinch, rightWinch, pickupMotor, ballSpit, hatchMotor;	
-	  
+	  // static WPI_VictorSPX		leftWinch, rightWinch;	
+	  //static WPI_VictorSPX pickupMotor, ballSpit;
 	  //public static CANSparkMax			leftSpark, rightSpark;
-	  
+	  public static Talon				hatchWinch;
 	  public static DifferentialDrive		robotDrive;
 	//   public static	SpeedControllerGroup 	hDrive;
 	//   public static SpeedControllerGroup	winchDrive;
@@ -70,11 +70,13 @@ public class Devices
 
 	  // Encoder (regular type) is plugged into dio port n:
 	  // orange=+5v blue=signal, dio port n+1: black=gnd yellow=signal. 
-	  public final static Encoder		hatchEncoder = new Encoder(1, 2, true, EncodingType.k4X);
+	  public final static Encoder		hatchEncoder = new Encoder(2, 3, true, EncodingType.k4X);
 	  
-	 // public static DigitalInput		winchSwitch = new DigitalInput(3);
-
+	 
+	//  public static DigitalInput		winchSwitch = new DigitalInput(4);
+	//  public static DigitalInput		ballSwitch = new DigitalInput(5);
 	  // SRX magnetic encoder plugged into a CAN Talon.
+	  
 	  public static SRXMagneticEncoderRelative	leftEncoder, rightEncoder;
 	  
 	  private static boolean			talonBrakeMode;
@@ -159,10 +161,11 @@ public class Devices
 		//   pickupMotor = new WPI_VictorSPX(9);
 		//   ballSpit = new WPI_VictorSPX(10);
 
-		  //Faking it... This is just a place holder dont worry about it
-		//   hatchMotor = new WPI_VictorSPX(11);
-		//   hatchMotor.setNeutralMode(NeutralMode.Brake);
-		  //Would do you good to comment the two lines above
+		
+
+		//   hatchWinch = new Talon(0);
+
+		
 		  
 		//   leftWinch.setNeutralMode(NeutralMode.Brake);
 		//   rightWinch.setNeutralMode(NeutralMode.Brake);

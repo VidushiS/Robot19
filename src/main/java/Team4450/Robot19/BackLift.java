@@ -47,21 +47,22 @@ public class BackLift {
         SmartDashboard.putBoolean("Back Lift Retracted", isRetracted);
     }
     public void Extend(){
-        if(isRetracted){
+        
           //  Devices.rearClimbValve.SetA();
             isExtended = true;
             isRetracted = false;
-        }
-        else Util.consoleLog("The back lift is already extended");
+        
+        Display();
     }
 
     public void Retract(){
-        if(isExtended){
+        
           //  Devices.rearClimbValve.SetB();
             isExtended = true;
             isRetracted = false;
-        }
-        else Util.consoleLog("The back lift is already retracted");
+        
+        
+        Display();
 
     }
 }
