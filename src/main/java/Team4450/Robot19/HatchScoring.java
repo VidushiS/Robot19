@@ -16,94 +16,94 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class HatchScoring {
 
-    Robot robot; 
-    //Make sure you have the right modifier... they can be globally accessed right now
-    private boolean isExtended;
-    private boolean isRetracted;
-    //private boolean				holdingPosition, holdingHeight;
-    private boolean hatchHoldingHeight;
+    // Robot robot; 
+    // //Make sure you have the right modifier... they can be globally accessed right now
+    // private boolean isExtended;
+    // private boolean isRetracted;
+    // //private boolean				holdingPosition, holdingHeight;
+    // private boolean hatchHoldingHeight;
 
-    private final PIDController hatchPidController;
-    HatchScoring hatchScoring;
+    // private final PIDController hatchPidController;
+    // HatchScoring hatchScoring;
 
-    public HatchScoring getInstance(Robot robot){
-        if(hatchScoring == null){
-            hatchScoring = new HatchScoring(robot);
-        }
-        return hatchScoring;
-    }
+    // public HatchScoring getInstance(Robot robot){
+    //     if(hatchScoring == null){
+    //         hatchScoring = new HatchScoring(robot);
+    //     }
+    //     return hatchScoring;
+    // }
 
-    public void dispose(){
-        Util.consoleLog();
-        hatchPidController.disable();
-        hatchPidController.close();
+    // public void dispose(){
+    //     Util.consoleLog();
+    //     hatchPidController.disable();
+    //     hatchPidController.close();
 
-        hatchScoring = null;
-    }
-    private HatchScoring(Robot robot){
-        this.robot = robot;
-        hatchPidController = new PIDController(0.0, 0.0, 0.0, Devices.hatchEncoder, Devices.hatchWinch);
-        isExtended = true;
-        isRetracted = false;
+    //     hatchScoring = null;
+    // }
+    // private HatchScoring(Robot robot){
+    //     this.robot = robot;
+    //     hatchPidController = new PIDController(0.0, 0.0, 0.0, Devices.hatchEncoder, Devices.hatchWinch);
+    //     isExtended = true;
+    //     isRetracted = false;
         
-        HatchKickIn();
-        Util.consoleLog("The Hatch Has been created");
-    }
-    //AGAIN DOUBLE CHECK FOR THIS ONE IF IT WILL BE SUITABLE TO KICK IN THE HATCH DURING TELEOP AND AUTO OR IF WE NEED IT
+    //     HatchKickIn();
+    //     Util.consoleLog("The Hatch Has been created");
+    // }
+    // //AGAIN DOUBLE CHECK FOR THIS ONE IF IT WILL BE SUITABLE TO KICK IN THE HATCH DURING TELEOP AND AUTO OR IF WE NEED IT
 
-    public void Display(){
-        // Util.consoleLog("IstheHatchOut =%b IstheHatchIn =%b", isExtended, isRetracted);
-        // SmartDashboard.putBoolean("HatchExtended", isExtended);
-        // SmartDashboard.putBoolean("HatchRetracted", isRetracted);
+    // public void Display(){
+    //     // Util.consoleLog("IstheHatchOut =%b IstheHatchIn =%b", isExtended, isRetracted);
+    //     // SmartDashboard.putBoolean("HatchExtended", isExtended);
+    //     // SmartDashboard.putBoolean("HatchRetracted", isRetracted);
 
-        //COME UP WITH A BETTER NAME...
-        SmartDashboard.putBoolean("Hatch Set Position", hatchHoldingHeight);
-    }
-    public void HatchKickOut(){
-           // Devices.hatchKickValve.Open();
-            isExtended = true;
-            isRetracted = false;
+    //     //COME UP WITH A BETTER NAME...
+    //     SmartDashboard.putBoolean("Hatch Set Position", hatchHoldingHeight);
+    // }
+    // public void HatchKickOut(){
+    //        // Devices.hatchKickValve.Open();
+    //         isExtended = true;
+    //         isRetracted = false;
         
         
-        Display();
+    //     Display();
         
-    }
-    public void HatchKickIn(){
+    // }
+    // public void HatchKickIn(){
 
         
-          //  Devices.hatchKickValve.Close();
-            isExtended = false;
-            isRetracted = true;
+    //       //  Devices.hatchKickValve.Close();
+    //         isExtended = false;
+    //         isRetracted = true;
 
-        Display();
+    //     Display();
 
-    }
-    //CHANGE THIS UP COMPLETELY
-    public void setHeight(int count)
-	{
-		Util.consoleLog("%d", count);
+    // }
+    // //CHANGE THIS UP COMPLETELY
+    // public void setHeight(int count)
+	// {
+	// 	Util.consoleLog("%d", count);
 		
-		if (count >= 0)
-		{			
-			// p,i,d values are a guess.
-			// f value is the motor power to apply to move to encoder target count.
-			// Setpoint is the target encoder count.
-			// The idea is that the difference between the current encoder count and the
-			// target count will apply power to bring the two counts together and stay there.
-			hatchPidController.setPID(0.0003, 0.00001, 0.0003, 0.0);
-			//liftPidController.setPID(0.0003, 0.0, 0.0, 0.0);
-			hatchPidController.setOutputRange(-1, 1);
-			hatchPidController.setSetpoint(count);
-			hatchPidController.setPercentTolerance(1);	// % error.
-			hatchPidController.enable();
-			hatchHoldingHeight = true;
-		}
-		else
-		{
-			hatchPidController.disable();
-			hatchHoldingHeight = false;
-		}
+	// 	if (count >= 0)
+	// 	{			
+	// 		// p,i,d values are a guess.
+	// 		// f value is the motor power to apply to move to encoder target count.
+	// 		// Setpoint is the target encoder count.
+	// 		// The idea is that the difference between the current encoder count and the
+	// 		// target count will apply power to bring the two counts together and stay there.
+	// 		hatchPidController.setPID(0.0003, 0.00001, 0.0003, 0.0);
+	// 		//liftPidController.setPID(0.0003, 0.0, 0.0, 0.0);
+	// 		hatchPidController.setOutputRange(-1, 1);
+	// 		hatchPidController.setSetpoint(count);
+	// 		hatchPidController.setPercentTolerance(1);	// % error.
+	// 		hatchPidController.enable();
+	// 		hatchHoldingHeight = true;
+	// 	}
+	// 	else
+	// 	{
+	// 		hatchPidController.disable();
+	// 		hatchHoldingHeight = false;
+	// 	}
 		
-		 Display();
-	}
+	// 	 Display();
+	// }
 }

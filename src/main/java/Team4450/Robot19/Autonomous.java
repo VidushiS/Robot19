@@ -89,10 +89,10 @@ public class Autonomous
 		}
 		catch (Exception e)	{ Util.logException(e); }
 		
-		Util.consoleLog("Alliance=%s, Location=%d, Program=%d, FMS=%b, msg=%s", robot.alliance.name(), robot.location, program, 
+		Util.consoleLog("Alliance=%s, Location=%d, Program=%s, FMS=%b, msg=%s", robot.alliance.name(), robot.location, program.name(), 
 				Devices.ds.isFMSAttached(), robot.gameMessage);
-		LCD.printLine(2, "Alliance=%s, Location=%d, FMS=%b, Program=%d, msg=%s", robot.alliance.name(), robot.location, 
-				Devices.ds.isFMSAttached(), program, robot.gameMessage);
+		LCD.printLine(2, "Alliance=%s, Location=%d, FMS=%b, Program=%s, msg=%s", robot.alliance.name(), robot.location, 
+				Devices.ds.isFMSAttached(), program.name(), robot.gameMessage);
 		
 		Devices.robotDrive.setSafetyEnabled(false);
 

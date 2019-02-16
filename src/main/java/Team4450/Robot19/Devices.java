@@ -36,7 +36,7 @@ public class Devices
 	  // static WPI_VictorSPX		leftWinch, rightWinch;	
 	  //static WPI_VictorSPX pickupMotor, ballSpit;
 	  //public static CANSparkMax			leftSpark, rightSpark;
-	  public static Talon				hatchWinch;
+	//  public static Talon				hatchWinch;
 	  public static DifferentialDrive		robotDrive;
 	//   public static	SpeedControllerGroup 	hDrive;
 	//   public static SpeedControllerGroup	winchDrive;
@@ -70,7 +70,7 @@ public class Devices
 
 	  // Encoder (regular type) is plugged into dio port n:
 	  // orange=+5v blue=signal, dio port n+1: black=gnd yellow=signal. 
-	  public final static Encoder		hatchEncoder = new Encoder(2, 3, true, EncodingType.k4X);
+	//s  public final static Encoder		hatchEncoder = new Encoder(2, 3, true, EncodingType.k4X);
 	  
 	 
 	//  public static DigitalInput		winchSwitch = new DigitalInput(4);
