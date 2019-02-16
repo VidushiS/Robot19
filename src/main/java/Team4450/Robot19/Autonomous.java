@@ -62,18 +62,17 @@ public class Autonomous
 		
 		autoChooser.setName("Auto Program");
 		autoChooser.addDefault("No Program", 0);
-		autoChooser.addDefault("PathFinder Test", 1);
 		//The naming convention is Alliance, Upper/Lower Rocket, The side of the rocket the robot is going to 
 		//from the perspective of the driver station
-		autoChooser.addDefault("Upper Close", 2);
-		autoChooser.addDefault("Upper Middle", 3);
-		autoChooser.addDefault("Upper Far", 4);
-		autoChooser.addDefault("Down Close", 5);
-		autoChooser.addDefault("Down Middle", 6);
-		autoChooser.addDefault("Down Far", 7);
-		autoChooser.addDefault("Middle Left", 8);
-		autoChooser.addDefault("Middle Right", 9);
-	
+		autoChooser.addDefault("Upper Close", 1);
+		autoChooser.addDefault("Upper Middle", 2);
+		autoChooser.addDefault("Upper Far", 3);
+		autoChooser.addDefault("Down Close", 4);
+		autoChooser.addDefault("Down Middle", 5);
+		autoChooser.addDefault("Down Far", 6);
+		autoChooser.addDefault("Middle Left", 7);
+		autoChooser.addDefault("Middle Right", 8);
+		autoChooser.addDefault("PathFinder Test", 9);
 		
 		SmartDashboard.putData(autoChooser);
 	}
@@ -123,95 +122,93 @@ public class Autonomous
 		{
 			case 0:		// No auto program.
 				break;
-
 			case 1:
-				testPathfinder();
-			break;
-
-			case 2:
 				switch (robot.alliance.name()){
 					case "Red":
-					pathSelector(true, 1);
+					pathSelector(true, 1, PathName.RocketUpClose, AllianceColor.Red);
 					break;
 					case "Blue":
-					pathSelector(false, 1);
+					pathSelector(false, 1, PathName.RocketUpClose, AllianceColor.Blue);
 					break;
 				}
 		
 				break;
 
-			case 3:
+			case 2:
 			switch (robot.alliance.name()){
-				case "Red":
-				pathSelector(true, 2);
-				break;
-				case "Blue":
-				pathSelector(false, 2);
-				break;
+					case "Red":
+					pathSelector(true, 2, PathName.RocketUpMiddle, AllianceColor.Red);
+					break;
+					case "Blue":
+					pathSelector(false, 2, PathName.RocketUpMiddle, AllianceColor.Blue);
+					break;
 			}
 				break;
 
+			case 3:
+			switch (robot.alliance.name()){
+					case "Red":
+					pathSelector(true, 3, PathName.RocketUpFar, AllianceColor.Red);
+					break;
+					case "Blue":
+					pathSelector(false, 3, PathName.RocketUpFar, AllianceColor.Blue);
+					break;
+			}
+				break;
+			
 			case 4:
 			switch (robot.alliance.name()){
-				case "Red":
-				pathSelector(true, 3);
-				break;
-				case "Blue":
-				pathSelector(false, 3);
-				break;
+					case "Red":
+					pathSelector(true, 4, PathName.RocketDownClose, AllianceColor.Red);
+					break;
+					case "Blue":
+					pathSelector(false, 4, PathName.RocketDownClose, AllianceColor.Blue);
+					break;
 			}
 				break;
 			
 			case 5:
 			switch (robot.alliance.name()){
-				case "Red":
-				pathSelector(true, 4);
-				break;
-				case "Blue":
-				pathSelector(false, 4);
-				break;
+					case "Red":
+					pathSelector(true, 5, PathName.RocketDownMiddle, AllianceColor.Red);
+					break;
+					case "Blue":
+					pathSelector(false, 5, PathName.RocketDownMiddle, AllianceColor.Blue);
+					break;
 			}
 				break;
-			
 			case 6:
 			switch (robot.alliance.name()){
-				case "Red":
-				pathSelector(true, 5);
-				break;
-				case "Blue":
-				pathSelector(false, 5);
-				break;
+					case "Red":
+					pathSelector(true, 6, PathName.RocketDownFar, AllianceColor.Red);
+					break;
+					case "Blue":
+					pathSelector(false, 6, PathName.RocketDownFar, AllianceColor.Blue);
+					break;
 			}
 				break;
 			case 7:
 			switch (robot.alliance.name()){
-				case "Red":
-				pathSelector(true, 6);
-				break;
-				case "Blue":
-				pathSelector(false, 6);
-				break;
+					case "Red":
+					pathSelector(true, 7 , PathName.RocketMiddlePathLeft, AllianceColor.Red);
+					break;
+					case "Blue":
+					pathSelector(false, 7, PathName.RocketMiddlePathLeft, AllianceColor.Blue);
+					break;
 			}
 				break;
 			case 8:
 			switch (robot.alliance.name()){
-				case "Red":
-				pathSelector(true, 7);
-				break;
-				case "Blue":
-				pathSelector(false, 7);
-				break;
+					case "Red":
+					pathSelector(true, 8, PathName.RocketMiddlePathRight, AllianceColor.Red);
+					break;
+					case "Blue":
+					pathSelector(false, 8, PathName.RocketMiddlePathRight, AllianceColor.Blue);
+					break;
 			}
 				break;
 			case 9:
-			switch (robot.alliance.name()){
-				case "Red":
-				pathSelector(true, 8);
-				break;
-				case "Blue":
-				pathSelector(false, 8);
-				break;
-			}
+					testPathfinder();
 				break;
 
 		}
@@ -348,18 +345,18 @@ public class Autonomous
 	 }
 
 
-	private void pathSelector(boolean isRed, int pathSelection){
+	private void pathSelector(boolean isRed, int pathSelection, PathName pathName, AllianceColor allianceColor){
 		String rightPathFile;
 		String leftPathFile;
 
-		String allianceColor;
+		//String allianceColor;
 
-		if(!isRed){
-			allianceColor = "Blue";
-		}
-		else allianceColor = "Red";
+		// if(!isRed){
+		// 	allianceColor = "Blue";
+		// }
+		// else allianceColor = "Red";
 
-		String pathName;
+	/*	String pathName;
 		switch (pathSelection){
 			case 1:
 				pathName = "RocketUpClose";
@@ -388,14 +385,15 @@ public class Autonomous
 			default:
 				pathName = "RocketMiddlePathRight";
 				break;
-		}
+		}*/
 
 		//I REALIZED THAT THE DIRECTORIES ARE THE SAME FOR EVERY PATH
 		//SO GUESS WHAT I AM ADDING ALL THE STRINGS TOGETHER INSTEAD TO SAVE ME SOME TIME
-		Util.consoleLog("Path chose =%s", pathName);
-		rightPathFile = "/home/lvuser/output/" + allianceColor + pathName + ".left.pf1.csv";
-		leftPathFile = "/home/lvuser/output/" + allianceColor + pathName + ".right.pf1.csv";
-
+		Util.consoleLog("Path chose =%s");
+		//rightPathFile = "/home/lvuser/output/" + allianceColor + pathName + ".left.pf1.csv";
+		//leftPathFile = "/home/lvuser/output/" + allianceColor + pathName + ".right.pf1.csv";
+		rightPathFile = "/home/lvuser/output/" + allianceColor.toString() + pathName.toString()+ ".left.pf1.csv";
+		leftPathFile = "/home/lvuser/output/" + allianceColor.toString() + pathName.toString() + ".right.pf1.csv";
 		PathfinderAuto(rightPathFile, leftPathFile);
 		
 
@@ -979,5 +977,19 @@ public class Autonomous
 	{
 		dontStop,
 		stop
+	}
+	private enum PathName{
+		RocketUpClose,
+		RocketUpMiddle,
+		RocketUpFar,
+		RocketDownClose,
+		RocketDownMiddle,
+		RocketDownFar,
+		RocketMiddlePathLeft,
+		RocketMiddlePathRight
+	}
+	private enum AllianceColor{
+		Blue,
+		Red
 	}
 }
