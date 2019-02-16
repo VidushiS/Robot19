@@ -14,16 +14,16 @@ import Team4450.Lib.Util;
  */
 public class IntakeAndSpit {
 
-    Robot robot;
+    // Robot robot;
 
-    public static IntakeAndSpit intakeSpit = null;
+    // public static IntakeAndSpit intakeSpit = null;
 
-    public static IntakeAndSpit getInstance(Robot robot){
-        if(intakeSpit == null) intakeSpit = new IntakeAndSpit(robot);
-        return intakeSpit;
-    }
-    private IntakeAndSpit(Robot robot){
-        this.robot = robot;
-        Util.consoleLog();
-    }
+    // public static IntakeAndSpit getInstance(Robot robot){
+    //     if(intakeSpit == null) intakeSpit = new IntakeAndSpit(robot);
+    //     return intakeSpit;
+    // }
+    // private IntakeAndSpit(Robot robot){
+    //     this.robot = robot;
+    //     Util.consoleLog();
+    // }
 }

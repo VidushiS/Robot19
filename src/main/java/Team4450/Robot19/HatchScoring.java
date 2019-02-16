@@ -36,7 +36,7 @@ public class HatchScoring {
     }
     public void HatchKickOut(){
         if(isRetracted){
-            Devices.hatchKickValve.Open();
+           // Devices.hatchKickValve.Open();
             isExtended = true;
             isRetracted = false;
         }
@@ -46,7 +46,7 @@ public class HatchScoring {
     public void HatchKickIn(){
 
         if(isExtended){
-            Devices.hatchKickValve.Close();
+          //  Devices.hatchKickValve.Close();
             isExtended = false;
             isRetracted = true;
         }
@@ -62,6 +62,6 @@ public class HatchScoring {
             power = -1;
         }
 
-        Devices.hatchMotor.set(power);
+       // Devices.hatchMotor.set(power);
     }
 }

@@ -93,6 +93,13 @@ class Teleop
 		leftStick = new JoyStick(Devices.leftStick, "LeftStick", JoyStickButtonIDs.TRIGGER, this);
 		//Example on how to track button:
 		//leftStick.AddButton(JoyStickButtonIDs.BUTTON_NAME_HERE);
+		leftStick.AddButton(JoyStickButtonIDs.TRIGGER);
+		leftStick.AddButton(JoyStickButtonIDs.TOP_RIGHT);
+		leftStick.AddButton(JoyStickButtonIDs.TOP_MIDDLE);
+		leftStick.AddButton(JoyStickButtonIDs.TOP_LEFT);
+		leftStick.AddButton(JoyStickButtonIDs.TOP_RIGHT);
+		leftStick.AddButton(JoyStickButtonIDs.TOP_BACK);
+		leftStick.AddButton(JoyStickButtonIDs.RIGHT_REAR);
 		leftStick.addJoyStickEventListener(new LeftStickListener());
 		leftStick.Start();
 
@@ -105,6 +112,13 @@ class Teleop
 		utilityStick = new JoyStick(Devices.utilityStick, "UtilityStick", JoyStickButtonIDs.TRIGGER, this);
 		//Example on how to track button:
 		//utilityStick.AddButton(JoyStickButtonIDs.TOP_MIDDLE);
+		utilityStick.AddButton(JoyStickButtonIDs.TRIGGER);
+		utilityStick.AddButton(JoyStickButtonIDs.TOP_RIGHT);
+		utilityStick.AddButton(JoyStickButtonIDs.TOP_MIDDLE);
+		utilityStick.AddButton(JoyStickButtonIDs.TOP_LEFT);
+		utilityStick.AddButton(JoyStickButtonIDs.TOP_RIGHT);
+		utilityStick.AddButton(JoyStickButtonIDs.TOP_BACK);
+		utilityStick.AddButton(JoyStickButtonIDs.RIGHT_REAR);
 		utilityStick.addJoyStickEventListener(new UtilityStickListener());
 		utilityStick.Start();
 
@@ -172,38 +186,42 @@ class Teleop
 				if (altDriveMode)
 				{	// normal tank with straight drive assist when sticks within 10% of each other and
 					// right stick power is greater than 50%.
-					if (isLeftRightEqual(leftY, rightY, 10) && Math.abs(rightY) > .50)
-					{
-						// Reset angle measurement when entering this code first time after mode is enabled.
-						if (!steeringAssistMode) Devices.navx.resetYaw();
+					//NEW CODE FOR H-DRIVE RIGHT HERE
+					//Devices.hDrive.set(speed);
 
-						// Angle is negative if robot veering left, positive if veering right when going forward.
-						// It is opposite when going backward.
+					// if (isLeftRightEqual(leftY, rightY, 10) && Math.abs(rightY) > .50)
+					// {
+					// 	// Reset angle measurement when entering this code first time after mode is enabled.
+					// 	if (!steeringAssistMode) Devices.navx.resetYaw();
 
-						angle = (int) Devices.navx.getYaw();
+					// 	// Angle is negative if robot veering left, positive if veering right when going forward.
+					// 	// It is opposite when going backward.
 
-						LCD.printLine(5, "angle=%d", angle);
+					// 	angle = (int) Devices.navx.getYaw();
 
-						// Invert angle for backwards movemment.
+					// 	LCD.printLine(5, "angle=%d", angle);
 
-						if (rightY < 0) angle = -angle;
+					// 	// Invert angle for backwards movemment.
 
-						//Util.consoleLog("angle=%d", angle);
+					// 	if (rightY < 0) angle = -angle;
 
-						// Note we invert sign on the angle because we want the robot to turn in the opposite
-						// direction than it is currently going to correct it. So a + angle says robot is veering
-						// right so we set the turn value to - because - is a turn left which corrects our right
-						// drift.
+					// 	//Util.consoleLog("angle=%d", angle);
+
+					// 	// Note we invert sign on the angle because we want the robot to turn in the opposite
+					// 	// direction than it is currently going to correct it. So a + angle says robot is veering
+					// 	// right so we set the turn value to - because - is a turn left which corrects our right
+					// 	// drift.
 						
-						Devices.robotDrive.curvatureDrive(rightY, -angle * gain, false);
+					// 	Devices.robotDrive.curvatureDrive(rightY, -angle * gain, false);
+						
 
-						steeringAssistMode = true;
-					}
-					else
-					{
-						steeringAssistMode = false;
-						Devices.robotDrive.tankDrive(leftY, rightY);		// Normal tank drive.
-					}
+					// 	steeringAssistMode = true;
+					// }
+					// else
+					// {
+					// 	steeringAssistMode = false;
+					// 	Devices.robotDrive.tankDrive(leftY, rightY);		// Normal tank drive.
+					// }
 
 					SmartDashboard.putBoolean("SteeringAssist", steeringAssistMode);
 				}

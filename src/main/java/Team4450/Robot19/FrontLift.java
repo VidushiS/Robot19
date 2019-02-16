@@ -52,7 +52,7 @@ public class FrontLift {
     public void Extend(){
         
         if(isRetracted){
-        Devices.frontClimbValve.SetA();
+       // Devices.frontClimbValve.SetA();
         isExtended = true;
         isRetracted = false;
         }
@@ -63,7 +63,7 @@ public class FrontLift {
     public void Retract(){
 
         if(isExtended){
-        Devices.frontClimbValve.SetB();
+      //  Devices.frontClimbValve.SetB();
         isExtended = false;
         isRetracted = true;
         }

@@ -65,14 +65,14 @@ public class Autonomous
 		autoChooser.addDefault("PathFinder Test", 1);
 		//The naming convention is Alliance, Upper/Lower Rocket, The side of the rocket the robot is going to 
 		//from the perspective of the driver station
-		autoChooser.addDefault("Blue Upper Close", 2);
-		autoChooser.addDefault("Blue Upper Middle", 3);
-		autoChooser.addDefault("Blue Upper Far", 4);
-		autoChooser.addDefault("Blue Down Close", 5);
-		autoChooser.addDefault("Blue Down Middle", 6);
-		autoChooser.addDefault("Blue Down Far", 7);
-		autoChooser.addDefault("Blue Middle Left", 8);
-		autoChooser.addDefault("Blue Middle Right", 9);
+		autoChooser.addDefault("Upper Close", 2);
+		autoChooser.addDefault("Upper Middle", 3);
+		autoChooser.addDefault("Upper Far", 4);
+		autoChooser.addDefault("Down Close", 5);
+		autoChooser.addDefault("Down Middle", 6);
+		autoChooser.addDefault("Down Far", 7);
+		autoChooser.addDefault("Middle Left", 8);
+		autoChooser.addDefault("Middle Right", 9);
 	
 		
 		SmartDashboard.putData(autoChooser);
@@ -130,10 +130,10 @@ public class Autonomous
 
 			case 2:
 				switch (robot.alliance.name()){
-					case "RED":
+					case "Red":
 					pathSelector(true, 1);
 					break;
-					case "BLUE":
+					case "Blue":
 					pathSelector(false, 1);
 					break;
 				}
@@ -142,10 +142,10 @@ public class Autonomous
 
 			case 3:
 			switch (robot.alliance.name()){
-				case "RED":
+				case "Red":
 				pathSelector(true, 2);
 				break;
-				case "BLUE":
+				case "Blue":
 				pathSelector(false, 2);
 				break;
 			}
@@ -153,10 +153,10 @@ public class Autonomous
 
 			case 4:
 			switch (robot.alliance.name()){
-				case "RED":
+				case "Red":
 				pathSelector(true, 3);
 				break;
-				case "BLUE":
+				case "Blue":
 				pathSelector(false, 3);
 				break;
 			}
@@ -164,10 +164,10 @@ public class Autonomous
 			
 			case 5:
 			switch (robot.alliance.name()){
-				case "RED":
+				case "Red":
 				pathSelector(true, 4);
 				break;
-				case "BLUE":
+				case "Blue":
 				pathSelector(false, 4);
 				break;
 			}
@@ -175,40 +175,40 @@ public class Autonomous
 			
 			case 6:
 			switch (robot.alliance.name()){
-				case "RED":
+				case "Red":
 				pathSelector(true, 5);
 				break;
-				case "BLUE":
+				case "Blue":
 				pathSelector(false, 5);
 				break;
 			}
 				break;
 			case 7:
 			switch (robot.alliance.name()){
-				case "RED":
+				case "Red":
 				pathSelector(true, 6);
 				break;
-				case "BLUE":
+				case "Blue":
 				pathSelector(false, 6);
 				break;
 			}
 				break;
 			case 8:
 			switch (robot.alliance.name()){
-				case "RED":
+				case "Red":
 				pathSelector(true, 7);
 				break;
-				case "BLUE":
+				case "Blue":
 				pathSelector(false, 7);
 				break;
 			}
 				break;
 			case 9:
 			switch (robot.alliance.name()){
-				case "RED":
+				case "Red":
 				pathSelector(true, 8);
 				break;
-				case "BLUE":
+				case "Blue":
 				pathSelector(false, 8);
 				break;
 			}
@@ -345,18 +345,16 @@ public class Autonomous
 			
 		}
 		Devices.robotDrive.stopMotor();
-
-		
 	 }
 
 
-	private void pathSelector(boolean red, int pathSelection){
+	private void pathSelector(boolean isRed, int pathSelection){
 		String rightPathFile;
 		String leftPathFile;
 
 		String allianceColor;
 
-		if(!red){
+		if(!isRed){
 			allianceColor = "Blue";
 		}
 		else allianceColor = "Red";
@@ -382,16 +380,19 @@ public class Autonomous
 				pathName = "RocketDownFar";
 			break;
 			case 7:
-				pathName = "RocketMiddlePathRight";
+				pathName = "RocketMiddlePathLeft";
 			break;
 			case 8:
-				pathName = "RocketMiddlePathLeft";
+				pathName = "RocketMiddlePathRight";
 			break;
 			default:
 				pathName = "RocketMiddlePathRight";
 				break;
 		}
 
+		//I REALIZED THAT THE DIRECTORIES ARE THE SAME FOR EVERY PATH
+		//SO GUESS WHAT I AM ADDING ALL THE STRINGS TOGETHER INSTEAD TO SAVE ME SOME TIME
+		Util.consoleLog("Path chose =%s", pathName);
 		rightPathFile = "/home/lvuser/output/" + allianceColor + pathName + ".left.pf1.csv";
 		leftPathFile = "/home/lvuser/output/" + allianceColor + pathName + ".right.pf1.csv";
 
@@ -409,8 +410,8 @@ public class Autonomous
 	   //File middleTrajectoryCSV = new File("TestPath.pf1.csv");
 	   //NOTE THIS ISN'T A MISTAKE, WE NEED TO INVERT THE PATHS DUE TO AN ERROR 
 	   //IN PATHFINDER
-	   File leftTrajectoryCSV = new File(rightPathFile);
-	   File rightTrajectoryCSV = new File(leftPathFile);
+	   File leftTrajectoryCSV = new File(leftPathFile);
+	   File rightTrajectoryCSV = new File(rightPathFile);
    
 	   Util.consoleLog("I made the CSV files into java.io files");
 
