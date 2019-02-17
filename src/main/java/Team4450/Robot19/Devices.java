@@ -34,7 +34,7 @@ public class Devices
 	  public static WPI_TalonSRX		LFCanTalon, LRCanTalon, RFCanTalon, RRCanTalon;
 	  
 	  // static WPI_VictorSPX		leftWinch, rightWinch;	
-	  //static WPI_VictorSPX pickupMotor, ballSpit;
+	//  static WPI_VictorSPX pickupMotor, ballSpit;
 	  //public static CANSparkMax			leftSpark, rightSpark;
 	//  public static Talon				hatchWinch;
 	  public static DifferentialDrive		robotDrive;
@@ -74,7 +74,7 @@ public class Devices
 	  
 	 
 	//  public static DigitalInput		winchSwitch = new DigitalInput(4);
-	//  public static DigitalInput		ballSwitch = new DigitalInput(5);
+	  public static DigitalInput		ballSwitch = new DigitalInput(5);
 	  // SRX magnetic encoder plugged into a CAN Talon.
 	  
 	  public static SRXMagneticEncoderRelative	leftEncoder, rightEncoder;
@@ -158,8 +158,8 @@ public class Devices
 	      
 		//   leftWinch = new WPI_VictorSPX(7);
 		//   rightWinch = new WPI_VictorSPX(8);
-		//   pickupMotor = new WPI_VictorSPX(9);
-		//   ballSpit = new WPI_VictorSPX(10);
+		//  pickupMotor = new WPI_VictorSPX(9);
+		//  ballSpit = new WPI_VictorSPX(10);
 
 		
 

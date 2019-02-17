@@ -439,10 +439,9 @@ public class Autonomous
 	   Util.consoleLog("I reset the total time");
 	   Timer.delay(0.01);
 	   double elapsedTime = 0;
-	   double elapsedSegmentTime = 0;
 	   double totalSegmentTime = 0;
 	   double averageElapsedTime = 0;
-
+	   double elapsedSegmentTime = leftPath.get(SegCount).dt;
 	   //This is the delay I am setting
 	   double delay = 0;
 	   Util.getElaspedTime();
@@ -452,7 +451,7 @@ public class Autonomous
 		   elapsedTime = Util.getElaspedTime();
 		   totalTime += elapsedTime;
 
-		   elapsedSegmentTime = leftPath.get(SegCount).dt;
+		   
 		   totalSegmentTime += elapsedSegmentTime;
 		   
 		   double leftSpeed = left.calculate(Devices.leftEncoder.get(), SegCount);

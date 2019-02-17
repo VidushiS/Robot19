@@ -24,7 +24,7 @@ public class HatchScoring {
     // private boolean hatchHoldingHeight;
 
     // private final PIDController hatchPidController;
-    // HatchScoring hatchScoring;
+    // HatchScoring hatchScoring = null;
 
     // public HatchScoring getInstance(Robot robot){
     //     if(hatchScoring == null){
