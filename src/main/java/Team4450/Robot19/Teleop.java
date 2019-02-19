@@ -7,6 +7,11 @@ import Team4450.Lib.*;
 import Team4450.Lib.JoyStick.*;
 import Team4450.Lib.LaunchPad.*;
 import Team4450.Robot19.Devices;
+import Team4450.Robot19.BackLift;
+import Team4450.Robot19.FrontLift;
+import Team4450.Robot19.IntakeAndSpit;
+import Team4450.Robot19.Lift;
+import Team4450.Robot19.HatchScoring;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -19,7 +24,11 @@ class Teleop
 	private boolean				autoTarget, altDriveMode;
 	private Vision				vision;
 	private GearBox				gearBox;
-
+	private BackLift			backLift;
+	private FrontLift			frontLift;
+	private IntakeAndSpit		intakeSpit;
+	private Lift				lift;
+//	private HatchScoring		hatch;
 	// Constructor.
 
 	Teleop(Robot robot)
@@ -32,6 +41,11 @@ class Teleop
 		this.robot = robot;
 
 		gearBox = new  GearBox(robot);
+		backLift = BackLift.getInstance(robot);
+		frontLift = FrontLift.getInstance(robot);
+		intakeSpit = IntakeAndSpit.getInstance(robot);
+		lift = Lift.getInstance(robot);
+	//	hatch = HatchScoring.getInstance(robot);
 		
 		vision = Vision.getInstance(robot);
 	}
@@ -47,6 +61,10 @@ class Teleop
 		if (utilityStick != null) utilityStick.dispose();
 		if (launchPad != null) launchPad.dispose();
 		if (gearBox != null) gearBox.dispose();
+		if(intakeSpit != null) intakeSpit.dispose();
+	//	if(hatch != null) hatch.dispose();
+		if(backLift != null) backLift.dispose();
+		if(frontLift != null) frontLift.dispose();
 	}
 
 	void OperatorControl() throws Exception
@@ -87,6 +105,7 @@ class Teleop
 		launchPad.AddControl(LaunchPadControlIDs.BUTTON_BLUE_RIGHT);
 		launchPad.AddControl(LaunchPadControlIDs.BUTTON_RED);
 		launchPad.AddControl(LaunchPadControlIDs.BUTTON_YELLOW);
+		
 		launchPad.addLaunchPadEventListener(new LaunchPadListener());
 		launchPad.Start();
 
@@ -106,6 +125,7 @@ class Teleop
 		rightStick = new JoyStick(Devices.rightStick, "RightStick", JoyStickButtonIDs.TRIGGER, this);
 		//Example on how to track button:
 		//rightStick.AddButton(JoyStickButtonIDs.BUTTON_NAME_HERE);
+		rightStick.AddButton(JoyStickButtonIDs.TRIGGER);
 		rightStick.addJoyStickEventListener(new RightStickListener());
 		rightStick.Start();
 
@@ -166,8 +186,10 @@ class Teleop
 			leftX = stickLogCorrection(leftStick.GetX());	// left/right
 
 			utilY = utilityStick.GetY();
-
-			LCD.printLine(3, "leftY=%.3f  rightY=%.3f  utilY=%.3f", leftStick.GetY(), rightStick.GetY(), utilY);
+			lift.setWinchPower(utilY);
+			
+			LCD.printLine(3, "leftenc=%d  rightenc=%d" , Devices.leftEncoder.get(), Devices.rightEncoder.get());
+			//LCD.printLine(3, "leftY=%.3f  rightY=%.3f  utilY=%.3f", leftStick.GetY(), rightStick.GetY(), utilY);
 			LCD.printLine(4, "leftY=%.3f  rightY=%.3f  utilY=%.3f", leftY, rightY, utilY);
 			LCD.printLine(5, "yaw=%.2f, total=%.2f, rate=%.2f, hdng=%.2f", Devices.navx.getYaw(), 
 					Devices.navx.getTotalYaw(), Devices.navx.getYawRate(), Devices.navx.getHeading());
@@ -181,10 +203,10 @@ class Teleop
 
 			// Two drive modes, full tank and alternate. Switch on right stick trigger.
 
-			if (!autoTarget) 
-			{
-				if (altDriveMode)
-				{	// normal tank with straight drive assist when sticks within 10% of each other and
+			// if (!autoTarget) 
+			// {
+			// 	if (altDriveMode)
+			// 	{	// normal tank with straight drive assist when sticks within 10% of each other and
 					// right stick power is greater than 50%.
 					//NEW CODE FOR H-DRIVE RIGHT HERE
 					//Devices.hDrive.set(speed);
@@ -223,14 +245,19 @@ class Teleop
 					// 	Devices.robotDrive.tankDrive(leftY, rightY);		// Normal tank drive.
 					// }
 
-					SmartDashboard.putBoolean("SteeringAssist", steeringAssistMode);
+				// 	SmartDashboard.putBoolean("SteeringAssist", steeringAssistMode);
+				// }
+				// else
+				if(rightStick.GetCurrentState(JoyStickButtonIDs.TRIGGER)){
+					Devices.hDrive.set(rightX);
 				}
-				else
-					Devices.robotDrive.tankDrive(leftY, rightY);		// Normal tank drive.
+				else {Devices.hDrive.set(0);}
+
+				Devices.robotDrive.tankDrive(leftY, rightY);		// Normal tank drive.
 				
 					// This shows how to use curvature drive mode, toggled by trigger (for testing).
 					//Devices.robotDrive.curvatureDrive(rightY, rightX, rightStick.GetLatchedState(JoyStickButtonIDs.TRIGGER));
-			}
+		//	}
 
 			// Update the robot heading indicator on the DS. Only for labview DB.
 
@@ -243,14 +270,16 @@ class Teleop
 			// End of driving loop.
 
 			Timer.delay(.020);	// wait 20ms for update from driver station.
-		}
+		//}
 
 		// End of teleop mode.
 
 		// ensure we start next time in low gear.
+	}
 		gearBox.lowSpeed();
 		
 		Util.consoleLog("end");
+					
 	}
 
 	private boolean isLeftRightEqual(double left, double right, double percent)
@@ -307,6 +336,19 @@ class Teleop
 					Devices.leftEncoder.reset();
 					Devices.rightEncoder.reset();
 					break;
+				// case BUTTON_BLUE:
+				// 	if(!backLift.isExtended){
+				// 		backLift.Extend();
+				// 	}
+				// 	else backLift.Retract();
+				// 	break;
+				// case BUTTON_RED_RIGHT:
+				// 	if(!frontLift.isExtended){
+				// 		frontLift.Extend();
+				// 	}
+				// 	else frontLift.Retract();
+				// 	break;
+				
 					
 				default:
 					break;
@@ -360,7 +402,7 @@ class Teleop
 			switch(button.id)
 			{
 				case TRIGGER:
-					altDriveMode = !altDriveMode;
+					autoTarget = !autoTarget;
 					break;
 
 			//Example of Joystick Button case:
@@ -427,6 +469,25 @@ class Teleop
 
 			switch(button.id)
 			{
+				case TOP_LEFT:
+					if (!intakeSpit.isIntaking()){
+						intakeSpit.Intake(0.8);
+					}
+					else intakeSpit.StopIntake();
+					break;
+
+				case TOP_RIGHT:
+					if(!intakeSpit.isSpitting()){
+						intakeSpit.Spit(0.3);
+					}
+					else intakeSpit.StopSpit();
+					break;
+				/*case TRIGGER:
+					if(!hatch.isMoving()){
+						hatch.testHatchMotor(0.1);
+					}
+					else hatch.stopHatch();
+					break;*/
 				default:
 					break;
 			}

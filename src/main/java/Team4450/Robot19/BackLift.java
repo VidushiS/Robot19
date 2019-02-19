@@ -30,12 +30,16 @@ public class BackLift {
         return backLift;
     }
 
+    public void dispose(){
+        Util.consoleLog();
+        backLift = null;
+    }
     //REMEMBER TO SET THE BOOLEAN VALUES IN THE CONSTRUCTOR OTHERWISE FACE ERRORS
      private BackLift(Robot robot){
         this.robot = robot;
-        isExtended = true;
-        isRetracted = false;
-        Retract();
+        isExtended = false;
+        isRetracted = true;
+        /*Retract();*/
         Util.consoleLog("The rear climb pistons have been created");
         
      }
@@ -58,8 +62,8 @@ public class BackLift {
     public void Retract(){
         
           //  Devices.rearClimbValve.SetB();
-            isExtended = true;
-            isRetracted = false;
+            isExtended = false;
+            isRetracted = true;
         
         
         Display();

@@ -19,6 +19,8 @@ public class Autonomous
 	private final Robot			robot;
 	// Next statement only used with LabView dashboard.
 	//private int					program = (int) SmartDashboard.getNumber("AutoProgramSelect",0);
+	
+	//Not an integer anymore, we are using the enum AutoProgram instead
 	private AutoProgram					program;
 	private final GearBox		gearBox;
 
@@ -26,7 +28,7 @@ public class Autonomous
 	
 
 	
-	
+	//Create an autoChooser from the SendableChooser funtion using the AutoProgram enum as a parameter
 	private static SendableChooser<AutoProgram>	autoChooser;
 	
 	Autonomous(Robot robot)
@@ -59,13 +61,18 @@ public class Autonomous
 	{
 		Util.consoleLog();
 		
+		//init autoChooser.
 		autoChooser = new SendableChooser<AutoProgram>();
 		
 		autoChooser.setName("Auto Program");
 		autoChooser.addDefault("No Program", AutoProgram.NoProgram);
-		//The naming convention is Alliance, Upper/Lower Rocket, The side of the rocket the robot is going to 
+
+		//The naming convention is Upper/Lower Rocket and The side of the rocket the robot is going to 
 		//from the perspective of the driver station
 		
+		//Instead of numbers we are using the constants within the enum now
+		//If you want to add another option, make sure to add in the name of the choice into
+		//the AutoProgram enum
 		autoChooser.addOption("Upper Close", AutoProgram.RocketUpClose);
 		autoChooser.addOption("Upper Middle", AutoProgram.RocketUpMiddle);
 		autoChooser.addOption("Upper Far", AutoProgram.RocketUpFar);
@@ -133,6 +140,7 @@ public class Autonomous
 					pathSelector(AutoProgram.RocketUpClose, DriverStation.Alliance.Blue);
 					break;
 					case Invalid:
+					Util.consoleLog("Could not find alliance color!");
 					break;
 				}
 		
@@ -147,6 +155,7 @@ public class Autonomous
 					pathSelector(AutoProgram.RocketUpMiddle, DriverStation.Alliance.Blue);
 					break;
 					case Invalid:
+					Util.consoleLog("Could not find alliance color!");
 					break;
 			}
 				break;
@@ -395,10 +404,9 @@ public class Autonomous
 		leftPathFile = "/home/lvuser/output/" + allianceColor.toString() + pathName.toString() + ".right.pf1.csv";
 		
 		Util.consoleLog("Left Path chose =%s Right Path chose =%s", leftPathFile, rightPathFile);
-		PathfinderAuto(rightPathFile, leftPathFile);
-		
-
+		PathfinderAuto(rightPathFile, leftPathFile);	
 	}
+
 	private void PathfinderAuto(String rightPathFile, String leftPathFile){
 		Pathfinder.setTrace(true);
 		Util.consoleLog("Pathfinder Trace =%b", Pathfinder.isTracing());
@@ -406,7 +414,6 @@ public class Autonomous
 	   double max_velocity = 1.86; //1.86 m/s was the actual velocity
 	   int encoder_counts = 4096;
 
-	   //File middleTrajectoryCSV = new File("TestPath.pf1.csv");
 	   //NOTE THIS ISN'T A MISTAKE, WE NEED TO INVERT THE PATHS DUE TO AN ERROR 
 	   //IN PATHFINDER
 	   File leftTrajectoryCSV = new File(leftPathFile);
@@ -504,6 +511,7 @@ public class Autonomous
 
 	   /*
 	   VISION STUFF WILL BE HERE IN THE NEXT UPDATE (HOPEFULLY)!
+	   THEN AFTERWARDS WE WILL PUT IN FUNCTIONS REGARDING THE MOVEMENT OF THE MOTORS
 	   */
 	 }
 	private void autoDrive(double power, int encoderCounts, StopMotors stop, Brakes brakes, Pid pid, 
@@ -955,6 +963,7 @@ public class Autonomous
 		autoCurve(power, curve, saveHeading, StopMotors.stop, Brakes.on, Pid.on, Heading.heading);
 	}
 	
+	//Enums section for this class
 	private enum Brakes
 	{
 		off,

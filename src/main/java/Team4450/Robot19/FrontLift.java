@@ -38,36 +38,37 @@ public class FrontLift {
         this.robot = robot;
         isExtended = true;
         isRetracted = false;
-        Retract();
+        // Retract();
         Util.consoleLog("The front climb pistons have been created");
+    }
+    public void dispose(){
+        Util.consoleLog();
+        frontLift = null;
     }
 
     //REWRITE CONSTRUCTOR BECAUSE I CAN FORESEE SOME ISSUES WITH THE USE OF DISPLAY AND RETRACT CLASSES
 
     public void Display(){
-        // Util.consoleLog("IsExtended =%b IsRetracted =%b", isExtended, isRetracted);
-        // SmartDashboard.putBoolean("Extended", isExtended);
-        // SmartDashboard.putBoolean("Retracted", isRetracted);
+        Util.consoleLog("IsExtended =%b IsRetracted =%b", isExtended, isRetracted);
+        SmartDashboard.putBoolean("Extended", isExtended);
+        SmartDashboard.putBoolean("Retracted", isRetracted);
     }
     public void Extend(){
         
-        if(isRetracted){
-       // Devices.frontClimbValve.SetA();
+        
+        //Devices.frontClimbValve.SetA();
         isExtended = true;
         isRetracted = false;
-        }
-        else Util.consoleLog("The front of the robot is already extended!");
-        
+        Display();
         
     }
     public void Retract(){
 
-        if(isExtended){
-      //  Devices.frontClimbValve.SetB();
+        
+        //Devices.frontClimbValve.SetB();
         isExtended = false;
         isRetracted = true;
-        }
-        else Util.consoleLog("The front of the robot is already retracted");
+        Display();
         
     }
     

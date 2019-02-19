@@ -33,13 +33,13 @@ public class Devices
 	  // Motor CAN ID/PWM port assignments (1=left-front, 2=left-rear, 3=right-front, 4=right-rear)
 	  public static WPI_TalonSRX		LFCanTalon, LRCanTalon, RFCanTalon, RRCanTalon;
 	  
-	  // static WPI_VictorSPX		leftWinch, rightWinch;	
-	//  static WPI_VictorSPX pickupMotor, ballSpit;
-	  //public static CANSparkMax			leftSpark, rightSpark;
-	//  public static Talon				hatchWinch;
+	   static WPI_VictorSPX		leftWinch, rightWinch;	
+	  static WPI_VictorSPX pickupMotor, ballSpit;
+		public static CANSparkMax			leftSpark, rightSpark; //Be careful, the firmware needs updating
+	  //public static Talon				hatchWinch;
 	  public static DifferentialDrive		robotDrive;
-	//   public static	SpeedControllerGroup 	hDrive;
-	//   public static SpeedControllerGroup	winchDrive;
+	   public static	SpeedControllerGroup 	hDrive;
+	   public static SpeedControllerGroup	winchDrive;
 	  
 	  public final static Joystick      utilityStick = new Joystick(2);	
 	  public final static Joystick      leftStick = new Joystick(0);	
@@ -49,12 +49,12 @@ public class Devices
 	  public final static Compressor	compressor = new Compressor(0);	// Compressor class represents the PCM.
 
 	  public final static ValveDA		highLowValve = new ValveDA(0);		// For gearbox.
-	//   public final static ValveDA		frontClimbValve = new ValveDA(2);	// For front lift.
-	//   public final static ValveDA		rearClimbValve = new ValveDA(4);	// For rear lift.
-	//   public final static ValveDA		pickupValve = new ValveDA(6);		// For pickup arm.
-	//   public final static ValveSA		hatchKickValve = new ValveSA(1, 4);	// Kick of hatch.
+	  public final static ValveDA		frontClimbValve = new ValveDA(2);	// For front lift.
+	  public final static ValveDA		rearClimbValve = new ValveDA(4);	// For rear lift.
+	  public final static ValveDA		pickupValve = new ValveDA(6);		// For pickup arm.
+	  public final static ValveSA		hatchKickValve = new ValveSA(1, 4);	// Kick of hatch.
 	  
-	 // public final static Servo			hatchDeployServo = new Servo(0);	// PWM port 0.
+	  public final static Servo			hatchDeployServo = new Servo(0);	// PWM port 0.
 
 	  public final static AnalogInput	pressureSensor = new AnalogInput(0);
 	  
@@ -65,16 +65,16 @@ public class Devices
 	  public static NavX				navx;
 
 	  // Touchless Encoder uses single channel on dio port 0.
-	//   public final static Counter		winchEncoder = new Counter(0);
-	//   public static boolean				winchEncoderEnabled = true;
+	  public final static Counter		winchEncoder = new Counter(0);
+	  public static boolean				winchEncoderEnabled = true;
 
 	  // Encoder (regular type) is plugged into dio port n:
 	  // orange=+5v blue=signal, dio port n+1: black=gnd yellow=signal. 
-	//s  public final static Encoder		hatchEncoder = new Encoder(2, 3, true, EncodingType.k4X);
+	// public final static Encoder		hatchEncoder = new Encoder(2, 3, true, EncodingType.k4X);
 	  
 	 
-	//  public static DigitalInput		winchSwitch = new DigitalInput(4);
-	  public static DigitalInput		ballSwitch = new DigitalInput(5);
+	 // public static DigitalInput		winchSwitch = new DigitalInput(4);
+	//  public static DigitalInput		ballSwitch = new DigitalInput(5);
 	  // SRX magnetic encoder plugged into a CAN Talon.
 	  
 	  public static SRXMagneticEncoderRelative	leftEncoder, rightEncoder;
@@ -93,8 +93,8 @@ public class Devices
 
 		  LFCanTalon = new WPI_TalonSRX(1);
 		  LRCanTalon = new WPI_TalonSRX(2);
-		  RFCanTalon = new WPI_TalonSRX(4);	
-		  RRCanTalon = new WPI_TalonSRX(3);	
+		  RFCanTalon = new WPI_TalonSRX(3);	
+		  RRCanTalon = new WPI_TalonSRX(4);	
 		  
 	      // Initialize CAN Talons and write status to log so we can verify
 	      // all the Talons are connected.
@@ -117,8 +117,8 @@ public class Devices
 	      // Groups allow 4 motors to be used with DifferentialDrive. You can also
 	      // use follower mode where one motor on a side follows the other on the
 	      // same side.
-	      //SpeedControllerGroup LeftGroup = new SpeedControllerGroup(LFCanTalon, LRCanTalon);
-		  //SpeedControllerGroup RightGroup = new SpeedControllerGroup(RFCanTalon, RRCanTalon);
+	    //   SpeedControllerGroup LeftGroup = new SpeedControllerGroup(LFCanTalon, LRCanTalon);
+		//   SpeedControllerGroup RightGroup = new SpeedControllerGroup(RFCanTalon, RRCanTalon);
 		  
 		  // Since encoder is on rear motor talon, set front talons to follow the rears when
 		  // we do closed loop control using the rear talons. In closed loop control the
@@ -148,35 +148,36 @@ public class Devices
 		  //robotDrive = new DifferentialDrive(LeftGroup, RightGroup);
 		  robotDrive = new DifferentialDrive(LRCanTalon, RRCanTalon);
 		  
-		//   leftSpark = new CANSparkMax(5, MotorType.kBrushless);
-		//   rightSpark = new CANSparkMax(6, MotorType.kBrushless);
+		  leftSpark = new CANSparkMax(5, MotorType.kBrushless);
+		  rightSpark = new CANSparkMax(6, MotorType.kBrushless);
 
-		//   rightSpark.setInverted(true);
+		 // rightSpark.setInverted(true);
 
 		  // Setup a SpeedControllerGroup for the left and right H drive motors.
-	    //   hDrive = new SpeedControllerGroup(leftSpark, rightSpark);
+		   hDrive = new SpeedControllerGroup(leftSpark, rightSpark);
+		   hDrive.setInverted(true);
 	      
-		//   leftWinch = new WPI_VictorSPX(7);
-		//   rightWinch = new WPI_VictorSPX(8);
-		//  pickupMotor = new WPI_VictorSPX(9);
-		//  ballSpit = new WPI_VictorSPX(10);
+		  leftWinch = new WPI_VictorSPX(7);
+		  rightWinch = new WPI_VictorSPX(8);
+		 pickupMotor = new WPI_VictorSPX(9);
+		 ballSpit = new WPI_VictorSPX(10);
 
 		
 
-		//   hatchWinch = new Talon(0);
+		   //hatchWinch = new Talon(0);
 
 		
 		  
-		//   leftWinch.setNeutralMode(NeutralMode.Brake);
-		//   rightWinch.setNeutralMode(NeutralMode.Brake);
+		  leftWinch.setNeutralMode(NeutralMode.Brake);
+		  rightWinch.setNeutralMode(NeutralMode.Brake);
 		  
-		//   rightWinch.setInverted(true);
+		  rightWinch.setInverted(true);
 
-		//   pickupMotor.setNeutralMode(NeutralMode.Brake);
-		//   ballSpit.setNeutralMode(NeutralMode.Brake);
+		  pickupMotor.setNeutralMode(NeutralMode.Brake);
+		  ballSpit.setNeutralMode(NeutralMode.Brake);
 
 		  // Setup a SpeedControllerGroup for the left and right winch drive motors.
-	    // winchDrive = new SpeedControllerGroup(leftWinch, rightWinch);
+	    winchDrive = new SpeedControllerGroup(leftWinch, rightWinch);
 	  }
 
 	  // Initialize and Log status indication from CANTalon. If we see an exception
