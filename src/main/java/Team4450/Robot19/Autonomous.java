@@ -81,7 +81,10 @@ public class Autonomous
 		autoChooser.addOption("Down Far", AutoProgram.RocketDownFar);
 		autoChooser.addOption("Middle Left", AutoProgram.RocketMiddlePathLeft);
 		autoChooser.addOption("Middle Right", AutoProgram.RocketMiddlePathRight);
+		autoChooser.addOption("Right Cargo", AutoProgram.RocketRightCargo);
+		autoChooser.addOption("Left Cargo", AutoProgram.RocketLeftCargo);
 		autoChooser.addOption("PathFinder Test", AutoProgram.TestPathFinder);
+		
 		
 		SmartDashboard.putData(autoChooser);
 	}
@@ -241,6 +244,32 @@ public class Autonomous
 					break;
 			}
 				break;
+			case RocketRightCargo:
+			switch (robot.alliance){
+					case Red:
+					pathSelector(AutoProgram.RocketRightCargo, DriverStation.Alliance.Red);
+					break;
+					case Blue:
+					pathSelector(AutoProgram.RocketRightCargo, DriverStation.Alliance.Blue);
+					break;
+					case Invalid:
+					Util.consoleLog("Could not find alliance color!");
+					break;
+			}
+				break;
+			case RocketLeftCargo:
+			switch (robot.alliance){
+					case Red:
+					pathSelector(AutoProgram.RocketLeftCargo, DriverStation.Alliance.Red);
+					break;
+					case Blue:
+					pathSelector(AutoProgram.RocketLeftCargo, DriverStation.Alliance.Blue);
+					break;
+					case Invalid:
+					Util.consoleLog("Could not find alliance color!");
+					break;
+			}
+			break;
 			case TestPathFinder:
 					testPathfinder();
 				break;
@@ -388,6 +417,8 @@ public class Autonomous
 		RocketMiddlePathLeft,
 		RocketMiddlePathRight,
 		NoProgram,
+		RocketRightCargo,
+		RocketLeftCargo,
 		TestPathFinder
 	}
 	

@@ -45,7 +45,7 @@ class Teleop
 		frontLift = FrontLift.getInstance(robot);
 		intakeSpit = IntakeAndSpit.getInstance(robot);
 		lift = Lift.getInstance(robot);
-	//	hatch = HatchScoring.getInstance(robot);
+		//hatch = HatchScoring.getInstance(robot);
 		
 		vision = Vision.getInstance(robot);
 	}
@@ -178,17 +178,18 @@ class Teleop
 		{
 			// Get joystick deflection and feed to robot drive object
 			// using calls to our JoyStick class.
+			double correctionFactor = 0.5;
 
 			rightY = stickLogCorrection(rightStick.GetY());	// fwd/back
 			leftY = stickLogCorrection(leftStick.GetY());	// fwd/back
 
-			rightX = stickLogCorrection(rightStick.GetX());	// left/right
+			rightX = correctionFactor * stickLogCorrection(rightStick.GetX());	// left/right
 			leftX = stickLogCorrection(leftStick.GetX());	// left/right
 
 			utilY = utilityStick.GetY();
 			lift.setWinchPower(utilY);
 			
-			LCD.printLine(3, "leftenc=%d  rightenc=%d" , Devices.leftEncoder.get(), Devices.rightEncoder.get());
+			LCD.printLine(3, "leftenc=%d  rightenc=%d hatchenc=%d winchenc=%d" , Devices.leftEncoder.get(), Devices.rightEncoder.get(), Devices.hatchEncoder.get(), Devices.winchEncoder.get());
 			//LCD.printLine(3, "leftY=%.3f  rightY=%.3f  utilY=%.3f", leftStick.GetY(), rightStick.GetY(), utilY);
 			LCD.printLine(4, "leftY=%.3f  rightY=%.3f  utilY=%.3f", leftY, rightY, utilY);
 			LCD.printLine(5, "yaw=%.2f, total=%.2f, rate=%.2f, hdng=%.2f", Devices.navx.getYaw(), 
@@ -482,12 +483,12 @@ class Teleop
 					}
 					else intakeSpit.StopSpit();
 					break;
-				/*case TRIGGER:
-					if(!hatch.isMoving()){
-						hatch.testHatchMotor(0.1);
-					}
-					else hatch.stopHatch();
-					break;*/
+				// case TRIGGER:
+				// 	if(!hatch.isMoving()){
+				// 		hatch.testHatchMotor(0.1);
+				// 	}
+				// 	else hatch.stopHatch();
+				// 	break;
 				default:
 					break;
 			}

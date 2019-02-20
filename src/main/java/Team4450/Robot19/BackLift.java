@@ -52,7 +52,7 @@ public class BackLift {
     }
     public void Extend(){
         
-          //  Devices.rearClimbValve.SetA();
+            //Devices.rearClimbValve.SetA();
             isExtended = true;
             isRetracted = false;
         
@@ -61,7 +61,7 @@ public class BackLift {
 
     public void Retract(){
         
-          //  Devices.rearClimbValve.SetB();
+            //Devices.rearClimbValve.SetB();
             isExtended = false;
             isRetracted = true;
         

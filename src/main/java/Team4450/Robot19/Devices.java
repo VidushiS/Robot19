@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.VictorSP;
 
 public class Devices
 {
@@ -36,7 +37,7 @@ public class Devices
 	   static WPI_VictorSPX		leftWinch, rightWinch;	
 	  static WPI_VictorSPX pickupMotor, ballSpit;
 		public static CANSparkMax			leftSpark, rightSpark; //Be careful, the firmware needs updating
-	  //public static Talon				hatchWinch;
+	 // public static VictorSP				hatchWinch;
 	  public static DifferentialDrive		robotDrive;
 	   public static	SpeedControllerGroup 	hDrive;
 	   public static SpeedControllerGroup	winchDrive;
@@ -70,7 +71,7 @@ public class Devices
 
 	  // Encoder (regular type) is plugged into dio port n:
 	  // orange=+5v blue=signal, dio port n+1: black=gnd yellow=signal. 
-	// public final static Encoder		hatchEncoder = new Encoder(2, 3, true, EncodingType.k4X);
+	 public final static Encoder		hatchEncoder = new Encoder(2, 3, true, EncodingType.k4X);
 	  
 	 
 	 // public static DigitalInput		winchSwitch = new DigitalInput(4);
@@ -151,7 +152,7 @@ public class Devices
 		  leftSpark = new CANSparkMax(5, MotorType.kBrushless);
 		  rightSpark = new CANSparkMax(6, MotorType.kBrushless);
 
-		 // rightSpark.setInverted(true);
+		 
 
 		  // Setup a SpeedControllerGroup for the left and right H drive motors.
 		   hDrive = new SpeedControllerGroup(leftSpark, rightSpark);
@@ -164,7 +165,7 @@ public class Devices
 
 		
 
-		   //hatchWinch = new Talon(0);
+		 //  hatchWinch = new VictorSP(0);
 
 		
 		  
