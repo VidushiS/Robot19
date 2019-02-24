@@ -81,6 +81,11 @@ Utility Joystick
 Button Name				Function
 -----------------------------------------------------------------------------------
 Y Axis					Lift winch motors. +/back goes up.
+TOP_LEFT                Runs Intake motors to intake the ball. (Verified correct direction)       
+TOP_RIGHT               Runs BallSpit Motor to spit out the ball. (Verified correct direction)
+
+TOP_MIDDLE              Runs AutoIntake() Thread. (Still needs testing)
+TRIGGER                 Runs Hatchmotor at 0.1 speed. (Need to test right direction)
 
 
 LaunchPad
@@ -90,6 +95,9 @@ BUTTON_RED				Shift gears.
 BUTTON_GREEN			Reset wheel encoder.
 ROCKER_LEFT_FRONT		Switch Cameras.
 ROCKER_LEFT_BACK		Toggle drive talon brake mode.
+
+BUTTON_RED_RIGHT        Toggle retracting and extending the pistons on the back (Need to test if toggle works)
+BUTTON BLUE             Toggle retracting and extending the pistons on the front (Need to test if toggle works)
 
 
 Dashboard Indicators/Controls

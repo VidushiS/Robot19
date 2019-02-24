@@ -28,7 +28,7 @@ class Teleop
 	private FrontLift			frontLift;
 	private IntakeAndSpit		intakeSpit;
 	private Lift				lift;
-//	private HatchScoring		hatch;
+	private HatchScoring		hatch;
 	// Constructor.
 
 	Teleop(Robot robot)
@@ -45,7 +45,7 @@ class Teleop
 		frontLift = FrontLift.getInstance(robot);
 		intakeSpit = IntakeAndSpit.getInstance(robot);
 		lift = Lift.getInstance(robot);
-		//hatch = HatchScoring.getInstance(robot);
+		hatch = HatchScoring.getInstance(robot);
 		
 		vision = Vision.getInstance(robot);
 	}
@@ -62,7 +62,7 @@ class Teleop
 		if (launchPad != null) launchPad.dispose();
 		if (gearBox != null) gearBox.dispose();
 		if(intakeSpit != null) intakeSpit.dispose();
-	//	if(hatch != null) hatch.dispose();
+		if(hatch != null) hatch.dispose();
 		if(backLift != null) backLift.dispose();
 		if(frontLift != null) frontLift.dispose();
 	}
@@ -337,18 +337,20 @@ class Teleop
 					Devices.leftEncoder.reset();
 					Devices.rightEncoder.reset();
 					break;
-				// case BUTTON_BLUE:
-				// 	if(!backLift.isExtended){
-				// 		backLift.Extend();
-				// 	}
-				// 	else backLift.Retract();
-				// 	break;
-				// case BUTTON_RED_RIGHT:
-				// 	if(!frontLift.isExtended){
-				// 		frontLift.Extend();
-				// 	}
-				// 	else frontLift.Retract();
-				// 	break;
+
+				case BUTTON_BLUE:
+					if(!backLift.isExtended){
+						backLift.Extend();
+					}
+					else backLift.Retract();
+					break;
+					
+				case BUTTON_RED_RIGHT:
+					if(!frontLift.isExtended){
+						frontLift.Extend();
+					}
+					else frontLift.Retract();
+					break;
 				
 					
 				default:
@@ -483,12 +485,21 @@ class Teleop
 					}
 					else intakeSpit.StopSpit();
 					break;
-				// case TRIGGER:
-				// 	if(!hatch.isMoving()){
-				// 		hatch.testHatchMotor(0.1);
-				// 	}
-				// 	else hatch.stopHatch();
-				// 	break;
+
+				case TRIGGER:
+					if(!hatch.isMoving()){
+						hatch.testHatchMotor(0.1);
+					}
+					else hatch.stopHatch();
+					break;
+				
+				case TOP_MIDDLE:
+					if(!intakeSpit.ISTHREADRUNNING()){
+						intakeSpit.StartAutoIntake();
+					}
+					else intakeSpit.StopAutoIntake();
+					break;
+
 				default:
 					break;
 			}

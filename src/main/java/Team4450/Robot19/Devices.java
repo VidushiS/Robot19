@@ -37,7 +37,7 @@ public class Devices
 	   static WPI_VictorSPX		leftWinch, rightWinch;	
 	  static WPI_VictorSPX pickupMotor, ballSpit;
 		public static CANSparkMax			leftSpark, rightSpark; //Be careful, the firmware needs updating
-	 // public static VictorSP				hatchWinch;
+	  public static VictorSP				hatchWinch;
 	  public static DifferentialDrive		robotDrive;
 	   public static	SpeedControllerGroup 	hDrive;
 	   public static SpeedControllerGroup	winchDrive;
@@ -53,9 +53,7 @@ public class Devices
 	  public final static ValveDA		frontClimbValve = new ValveDA(2);	// For front lift.
 	  public final static ValveDA		rearClimbValve = new ValveDA(4);	// For rear lift.
 	  public final static ValveDA		pickupValve = new ValveDA(6);		// For pickup arm.
-	  public final static ValveSA		hatchKickValve = new ValveSA(1, 4);	// Kick of hatch.
-	  
-	  public final static Servo			hatchDeployServo = new Servo(0);	// PWM port 0.
+	  public final static ValveSA		hatchKickValve = new ValveSA(1, 2);	// Kick of hatch.
 
 	  public final static AnalogInput	pressureSensor = new AnalogInput(0);
 	  
@@ -74,8 +72,8 @@ public class Devices
 	 public final static Encoder		hatchEncoder = new Encoder(2, 3, true, EncodingType.k4X);
 	  
 	 
-	 // public static DigitalInput		winchSwitch = new DigitalInput(4);
-	//  public static DigitalInput		ballSwitch = new DigitalInput(5);
+	 public static DigitalInput		winchSwitch = new DigitalInput(4);
+	 public static DigitalInput		ballSwitch = new DigitalInput(5);
 	  // SRX magnetic encoder plugged into a CAN Talon.
 	  
 	  public static SRXMagneticEncoderRelative	leftEncoder, rightEncoder;
@@ -165,7 +163,7 @@ public class Devices
 
 		
 
-		 //  hatchWinch = new VictorSP(0);
+		   hatchWinch = new VictorSP(0);
 
 		
 		  

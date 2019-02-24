@@ -11,15 +11,16 @@ import Team4450.Lib.Util;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * Add your docs here.
+ * THIS CLASS IS FOR THE EXTENSION OF THE PISTON TO RAISE THE BACK OF THE ROBOT OFF 
+ * THE GROUND FOR ENDGAME. 
+ * See docs below for more info
  */
 
-//THIS CLASS IS FOR THE EXTENSION OF THE PISTONS TO RAISE THE ROBOT OFF THE GROUND FOR ENDGAME 
 public class BackLift {
 
     Robot robot;
-    public boolean isExtended;
-    public boolean isRetracted;
+    public boolean isExtended = false;
+    public boolean isRetracted = true;
 
     public static BackLift backLift = null;
 
@@ -37,9 +38,6 @@ public class BackLift {
     //REMEMBER TO SET THE BOOLEAN VALUES IN THE CONSTRUCTOR OTHERWISE FACE ERRORS
      private BackLift(Robot robot){
         this.robot = robot;
-        isExtended = false;
-        isRetracted = true;
-        /*Retract();*/
         Util.consoleLog("The rear climb pistons have been created");
         
      }
@@ -52,16 +50,19 @@ public class BackLift {
     }
     public void Extend(){
         
-            //Devices.rearClimbValve.SetA();
+        //Should extend the pistons
+            Devices.rearClimbValve.SetA();
             isExtended = true;
             isRetracted = false;
         
         Display();
     }
 
+    
     public void Retract(){
         
-            //Devices.rearClimbValve.SetB();
+        //Should retract the robot
+            Devices.rearClimbValve.SetB();
             isExtended = false;
             isRetracted = true;
         
