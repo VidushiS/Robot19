@@ -4,6 +4,7 @@ package Team4450.Robot19;
 import Team4450.Lib.*;
 import Team4450.Robot19.Devices;
 
+
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -13,6 +14,8 @@ import jaci.pathfinder.followers.EncoderFollower;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import java.io.File;
+import Team4450.Lib.LaunchPad.*;
+
 
 public class Autonomous
 {
@@ -21,10 +24,12 @@ public class Autonomous
 	//private int					program = (int) SmartDashboard.getNumber("AutoProgramSelect",0);
 	
 	//Not an integer anymore, we are using the enum AutoProgram instead
-	private AutoProgram					program;
+	private AutoProgram			program;
 	private final GearBox		gearBox;
 
-	private Notifier m_follower_notifier;
+	private LaunchPad 			lp;
+	private Notifier 			m_follower_notifier;
+
 	
 
 	
@@ -45,6 +50,7 @@ public class Autonomous
 		Util.consoleLog();
 		
 		if (gearBox != null) gearBox.dispose();
+		if (lp != null) lp.dispose();
 	}
 	
 	private boolean isAutoActive()
@@ -128,7 +134,16 @@ public class Autonomous
 		
 		// Set Talon ramp rate for smooth acceleration from stop. Determine by observation.
 		Devices.SetCANTalonRampRate(1.0);
-		
+
+		//Initialize LaunchPad to make a kill switch
+		lp = new LaunchPad(Devices.launchPad, LaunchPadControlIDs.BUTTON_RED, this);
+
+		lp.AddControl(LaunchPadControlIDs.BUTTON_RED);
+
+		lp.addLaunchPadEventListener(new LaunchPadListener());
+		lp.Start();
+		//Finish initialization
+
 		// Determine which auto program to run as indicated by driver station.
 		switch (program)
 		{
@@ -1018,5 +1033,42 @@ public class Autonomous
 		dontStop,
 		stop
 	}
-	
+
+	public class LaunchPadListener implements LaunchPadEventListener 
+	{
+		public void ButtonDown(LaunchPadEvent launchPadEvent) 
+		{
+			LaunchPadControl	control = launchPadEvent.control;
+			Util.consoleLog("%s, latchedState=%b", control.id.name(),  control.latchedState);
+
+			switch(control.id)
+			{
+				case BUTTON_RED:
+					if (isAutoActive()){
+						dispose();
+						Util.consoleLog("Disposed of Autonomous");
+						Util.consoleLog("Starting teleop");
+						robot.operatorControl();
+
+					}
+			
+		    		else
+		    			Util.consoleLog("Autonomous hasn't even started yet, chill out");
+					
+					break;
+				default:
+				break;
+			}
+		}
+		public void ButtonUp(LaunchPadEvent launchPadEvent) 
+		{
+			//Util.consoleLog("%s, latchedState=%b", launchPadEvent.control.name(),  launchPadEvent.control.latchedState);
+		}
+
+		public void SwitchChange(LaunchPadEvent launchPadEvent) 
+		{
+			//Just need the empty method due to implement 
+		}
+	}
+		
 }

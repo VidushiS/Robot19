@@ -326,6 +326,7 @@ class Teleop
 
 			Util.consoleLog("%s, latchedState=%b", control.id.name(),  control.latchedState);
 
+
 			switch(control.id)
 			{
 				case BUTTON_RED:
@@ -354,7 +355,6 @@ class Teleop
 					}
 					else frontLift.Retract();
 					break;
-				
 					
 				default:
 					break;
