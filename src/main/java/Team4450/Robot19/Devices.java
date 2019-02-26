@@ -176,7 +176,8 @@ public class Devices
 		  ballSpit.setNeutralMode(NeutralMode.Brake);
 
 		  // Setup a SpeedControllerGroup for the left and right winch drive motors.
-	    winchDrive = new SpeedControllerGroup(leftWinch, rightWinch);
+		winchDrive = new SpeedControllerGroup(leftWinch, rightWinch);
+		winchDrive.setInverted(true);
 	  }
 
 	  // Initialize and Log status indication from CANTalon. If we see an exception

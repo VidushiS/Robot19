@@ -80,24 +80,30 @@ X Axis					Left/Right H driving.
 Utility Joystick
 Button Name				Function
 -----------------------------------------------------------------------------------
-Y Axis					Lift winch motors. +/back goes up.
+Y Axis					Lift winch motors. +/back goes up. While TOP_BACK, run hatchMotor (Need to test right direction)
 TOP_LEFT                Runs Intake motors to intake the ball. (Verified correct direction)       
 TOP_RIGHT               Runs BallSpit Motor to spit out the ball. (Verified correct direction)
 
 TOP_MIDDLE              Runs AutoIntake() Thread. (Still needs testing)
-TRIGGER                 Runs Hatchmotor at 0.1 speed. (Need to test right direction)
+TRIGGER                 Hatch piston (toggle out and in) (still needs to be tested)
+TOP_BACK                While pressed allow for hatchWinch to be controlled (Needs testing)
 
 
 LaunchPad
 Button Name				Function
 -----------------------------------------------------------------------------------
-BUTTON_RED				Shift gears.
-BUTTON_GREEN			Reset wheel encoder.
-ROCKER_LEFT_FRONT		Switch Cameras.
-ROCKER_LEFT_BACK		Toggle drive talon brake mode.
+BUTTON_RED				Abort autonomous
+BUTTON_GREEN			Switch Gears
+BUTTON_RED_RIGHT        Set lift position to 3rd level
+BUTTON_YELLOW           Set lift position to 2nd level
+BUTTON_BLUE_RIGHT       Set lift position to 1st level
 
-BUTTON_RED_RIGHT        Toggle retracting and extending the pistons on the back (Need to test if toggle works)
+ROCKER_LEFT_BACK        Toggle between cameras on pi and roboRio (Needs testing)
+ROCKER_RIGHT            Set hatchMotor to out of the way or for scoring (Needs testing)
+
+BUTTON_BLACK            Toggle retracting and extending the pistons on the back (Need to test if toggle works)
 BUTTON BLUE             Toggle retracting and extending the pistons on the front (Need to test if toggle works)
+
 
 
 Dashboard Indicators/Controls
