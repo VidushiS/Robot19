@@ -34,12 +34,12 @@ public class Devices
 	  // Motor CAN ID/PWM port assignments (1=left-front, 2=left-rear, 3=right-front, 4=right-rear)
 	  public static WPI_TalonSRX		LFCanTalon, LRCanTalon, RFCanTalon, RRCanTalon;
 	  
-	   static WPI_VictorSPX		leftWinch, rightWinch;	
-	  static WPI_VictorSPX pickupMotor, ballSpit;
-		public static CANSparkMax			leftSpark, rightSpark; //Be careful, the firmware needs updating
-	  public static VictorSP				hatchWinch;
+	  static WPI_VictorSPX		leftWinch, rightWinch;	
+	  static WPI_VictorSPX 		pickupMotor, ballSpit;
+	//public static CANSparkMax			leftSpark, rightSpark; //Be careful, the firmware needs updating
+	 public static VictorSP				hatchWinch;
 	  public static DifferentialDrive		robotDrive;
-	   public static	SpeedControllerGroup 	hDrive;
+	  public static	SpeedControllerGroup 	hDrive;
 	   public static SpeedControllerGroup	winchDrive;
 	  
 	  public final static Joystick      utilityStick = new Joystick(2);	
@@ -49,11 +49,12 @@ public class Devices
 
 	  public final static Compressor	compressor = new Compressor(0);	// Compressor class represents the PCM.
 
-	  public final static ValveDA		highLowValve = new ValveDA(0);		// For gearbox.
+	   public final static ValveDA		highLowValve = new ValveDA(0);		// For gearbox.
 	  public final static ValveDA		frontClimbValve = new ValveDA(2);	// For front lift.
 	  public final static ValveDA		rearClimbValve = new ValveDA(4);	// For rear lift.
-	  public final static ValveDA		pickupValve = new ValveDA(6);		// For pickup arm.
+	  public final static ValveDA		pickupValve = new ValveDA(1, 0);		// For pickup arm.
 	  public final static ValveSA		hatchKickValve = new ValveSA(1, 2);	// Kick of hatch.
+ public final static ValveDA		unusedValve = new ValveDA(6);
 
 	  public final static AnalogInput	pressureSensor = new AnalogInput(0);
 	  
@@ -64,7 +65,7 @@ public class Devices
 	  public static NavX				navx;
 
 	  // Touchless Encoder uses single channel on dio port 0.
-	  public final static Counter		winchEncoder = new Counter(0);
+	  public final static Encoder		winchEncoder = new Encoder(0, 1, true, EncodingType.k4X);
 	  public static boolean				winchEncoderEnabled = true;
 
 	  // Encoder (regular type) is plugged into dio port n:
@@ -147,14 +148,14 @@ public class Devices
 		  //robotDrive = new DifferentialDrive(LeftGroup, RightGroup);
 		  robotDrive = new DifferentialDrive(LRCanTalon, RRCanTalon);
 		  
-		  leftSpark = new CANSparkMax(5, MotorType.kBrushless);
-		  rightSpark = new CANSparkMax(6, MotorType.kBrushless);
+		//   leftSpark = new CANSparkMax(5, MotorType.kBrushless);
+		//   rightSpark = new CANSparkMax(6, MotorType.kBrushless);
 
 		 
 
-		  // Setup a SpeedControllerGroup for the left and right H drive motors.
-		   hDrive = new SpeedControllerGroup(leftSpark, rightSpark);
-		   hDrive.setInverted(true);
+		//   // Setup a SpeedControllerGroup for the left and right H drive motors.
+		//    hDrive = new SpeedControllerGroup(leftSpark, rightSpark);
+		//    hDrive.setInverted(true);
 	      
 		  leftWinch = new WPI_VictorSPX(7);
 		  rightWinch = new WPI_VictorSPX(8);
@@ -175,9 +176,10 @@ public class Devices
 		  pickupMotor.setNeutralMode(NeutralMode.Brake);
 		  ballSpit.setNeutralMode(NeutralMode.Brake);
 
-		  // Setup a SpeedControllerGroup for the left and right winch drive motors.
+		//   // Setup a SpeedControllerGroup for the left and right winch drive motors.
 		winchDrive = new SpeedControllerGroup(leftWinch, rightWinch);
 		winchDrive.setInverted(true);
+
 	  }
 
 	  // Initialize and Log status indication from CANTalon. If we see an exception

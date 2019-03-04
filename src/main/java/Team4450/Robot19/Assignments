@@ -92,11 +92,11 @@ TOP_BACK                While pressed allow for hatchWinch to be controlled (Nee
 LaunchPad
 Button Name				Function
 -----------------------------------------------------------------------------------
-BUTTON_RED				Abort autonomous
+BUTTON_RED				Abort autonomous (During teleop for the time being it resets the encoders)
 BUTTON_GREEN			Switch Gears
-BUTTON_RED_RIGHT        Set lift position to 3rd level
-BUTTON_YELLOW           Set lift position to 2nd level
-BUTTON_BLUE_RIGHT       Set lift position to 1st level
+BUTTON_RED_RIGHT        Set lift position to 3rd level (Need to get encoder counts)
+BUTTON_YELLOW           Set lift position to 2nd level (Need to get encoder counts)
+BUTTON_BLUE_RIGHT       Toggle between intake pistons
 
 ROCKER_LEFT_BACK        Toggle between cameras on pi and roboRio (Needs testing)
 ROCKER_RIGHT            Set hatchMotor to out of the way or for scoring (Needs testing)

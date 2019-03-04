@@ -29,6 +29,7 @@ class Teleop
 	private IntakeAndSpit		intakeSpit;
 	private Lift				lift;
 	private HatchScoring		hatch;
+	private PickUpArm			pickupArm;
 	// Constructor.
 
 	Teleop(Robot robot)
@@ -46,6 +47,7 @@ class Teleop
 		intakeSpit = IntakeAndSpit.getInstance(robot);
 		lift = Lift.getInstance(robot);
 		hatch = HatchScoring.getInstance(robot);
+		pickupArm = PickUpArm.getInstance(robot);
 		
 		vision = Vision.getInstance(robot);
 	}
@@ -103,7 +105,7 @@ class Teleop
 		launchPad.AddControl(LaunchPadControlIDs.BUTTON_RED_RIGHT);
 		launchPad.AddControl(LaunchPadControlIDs.BUTTON_BLUE);
 		launchPad.AddControl(LaunchPadControlIDs.BUTTON_BLUE_RIGHT);
-		launchPad.AddControl(LaunchPadControlIDs.BUTTON_RED);
+		//launchPad.AddControl(LaunchPadControlIDs.BUTTON_RED);
 		launchPad.AddControl(LaunchPadControlIDs.BUTTON_YELLOW);
 		launchPad.AddControl(LaunchPadControlIDs.ROCKER_LEFT_BACK);
 		launchPad.AddControl(LaunchPadControlIDs.ROCKER_LEFT_FRONT);
@@ -190,13 +192,15 @@ class Teleop
 			leftX = stickLogCorrection(leftStick.GetX());	// left/right
 
 			utilY = utilityStick.GetY();
-			lift.setWinchPower(utilY);
+			
 			
 			LCD.printLine(3, "leftenc=%d  rightenc=%d hatchenc=%d winchenc=%d" , Devices.leftEncoder.get(), Devices.rightEncoder.get(), Devices.hatchEncoder.get(), Devices.winchEncoder.get());
+			// 
 			//LCD.printLine(3, "leftY=%.3f  rightY=%.3f  utilY=%.3f", leftStick.GetY(), rightStick.GetY(), utilY);
 			LCD.printLine(4, "leftY=%.3f  rightY=%.3f  utilY=%.3f", leftY, rightY, utilY);
 			LCD.printLine(5, "yaw=%.2f, total=%.2f, rate=%.2f, hdng=%.2f", Devices.navx.getYaw(), 
 					Devices.navx.getTotalYaw(), Devices.navx.getYawRate(), Devices.navx.getHeading());
+			LCD.printLine(7, "winchSwitch =%b ballSwitch =%b", Devices.winchSwitch.get(), Devices.ballSwitch.get());
 			LCD.printLine(10, "pressureV=%.2f  psi=%d", robot.monitorCompressorThread.getVoltage(), 
 					robot.monitorCompressorThread.getPressure());
 
@@ -252,10 +256,15 @@ class Teleop
 				// 	SmartDashboard.putBoolean("SteeringAssist", steeringAssistMode);
 				// }
 				// else
-				if(rightStick.GetCurrentState(JoyStickButtonIDs.TRIGGER)){
-					Devices.hDrive.set(rightX);
+				// if(rightStick.GetCurrentState(JoyStickButtonIDs.TRIGGER)){
+				// 	Devices.hDrive.set(rightX);
+				// }
+				// else {Devices.hDrive.set(0);}
+
+				if(utilityStick.GetCurrentState(JoyStickButtonIDs.TOP_BACK)){
+					hatch.testHatchMotor(utilY);
 				}
-				else {Devices.hDrive.set(0);}
+				else lift.setWinchPower(utilY);
 
 				Devices.robotDrive.tankDrive(leftY, rightY);		// Normal tank drive.
 				
@@ -280,7 +289,7 @@ class Teleop
 
 		// ensure we start next time in low gear.
 	}
-		gearBox.lowSpeed();
+		//gearBox.lowSpeed();
 		
 		Util.consoleLog("end");
 					
@@ -329,33 +338,40 @@ class Teleop
 
 			switch(control.id)
 			{
-				case BUTTON_RED:
+				case BUTTON_RED: //Will be used to abort auto in the auto
+					Devices.leftEncoder.reset();
+					Devices.rightEncoder.reset();
+					Devices.hatchEncoder.reset();
+					Devices.winchEncoder.reset();
+					break;
+					
+				case BUTTON_GREEN:
 					if (gearBox.isLowSpeed())
 		    			gearBox.highSpeed();
 		    		else
 		    			gearBox.lowSpeed();
 					
 					break;
-					
-				case BUTTON_GREEN:
-					Devices.leftEncoder.reset();
-					Devices.rightEncoder.reset();
-					break;
 
-				case BUTTON_BLUE:
+				case BUTTON_BLACK:
 					if(!backLift.isExtended){
 						backLift.Extend();
 					}
 					else backLift.Retract();
 					break;
 					
-				case BUTTON_RED_RIGHT:
+				case BUTTON_BLUE:
 					if(!frontLift.isExtended){
 						frontLift.Extend();
 					}
 					else frontLift.Retract();
 					break;
-					
+				
+				case BUTTON_BLUE_RIGHT:
+					if(!pickupArm.isExtended()){
+						pickupArm.Extend();
+					}
+					else pickupArm.Retract();
 				default:
 					break;
 			}
@@ -444,13 +460,13 @@ class Teleop
 
 			switch(button.id)
 			{
-				case TRIGGER:
-					if (gearBox.isLowSpeed())
-	    				gearBox.highSpeed();
-	    			else
-	    				gearBox.lowSpeed();
+				// case TRIGGER:
+				// 	if (gearBox.isLowSpeed())
+	    		// 		gearBox.highSpeed();
+	    		// 	else
+	    		// 		gearBox.lowSpeed();
 
-					break;
+				// 	break;
 					
 				default:
 					break;
@@ -484,16 +500,16 @@ class Teleop
 
 				case TOP_RIGHT:
 					if(!intakeSpit.isSpitting()){
-						intakeSpit.Spit(0.3);
+						intakeSpit.Spit(0.4);
 					}
 					else intakeSpit.StopSpit();
 					break;
 
 				case TRIGGER:
-					if(!hatch.isMoving()){
-						hatch.testHatchMotor(0.1);
+					if(!hatch.isExtended()){
+						hatch.HatchKickOut();
 					}
-					else hatch.stopHatch();
+					else hatch.HatchKickIn();
 					break;
 				
 				case TOP_MIDDLE:

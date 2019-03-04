@@ -54,14 +54,14 @@ public class IntakeAndSpit {
         
         Devices.ballSpit.set(power);
         isSpitting = true;
-        // isIntaking = false;
+        isIntaking = false;
         Util.consoleLog("The motor is moving");
         Display();
     }
 
     public void Intake(double power){
        Devices.pickupMotor.set(power);
-    //    isSpitting = false;
+       isSpitting = false;
        isIntaking = true;
        Util.consoleLog("The motor is intaking");
        Display();
@@ -73,7 +73,7 @@ public class IntakeAndSpit {
        Display();
    }
    public void StopSpit(){
-       Devices.ballSpit.set(0);
+      Devices.ballSpit.set(0);
        isSpitting = false;
        Display();
    }
@@ -111,37 +111,39 @@ public class IntakeAndSpit {
             try{
                 //Intake the ball for 2.5 seconds
                 Intake(0.8);
-                Timer.delay(2.5);
+                Spit(0.1);
+                Timer.delay(4.5);
                 //Stop running the intake motors 
                 StopIntake();
-
+                StopSpit();
                 //See boolean doneIntaking in this thread. It essentially says keep
                 //this loop running until the intake is over. 
-                while(!doneIntaking){
+                while(!doneIntaking && !interrupted()){
+                
                     //If the switch is not pressed...
-                    if(!Devices.ballSwitch.get()){
-                        //And the ball hasn't passed over the switch already
+                    if(Devices.ballSwitch.get()){
+                //         //And the ball hasn't passed over the switch already
                         if(switchPressed == false){
                             //Keep the ball spit motor running
-                            Spit(0.3);
+                            Spit(0.1);
                             switchPressed = false;
                         }
-                        //And the ball has passed over the switch already
+                //         //And the ball has passed over the switch already
                         else if(switchPressed == true){
-                            //Stop the motor
+                //             //Stop the motor
                             StopSpit();
-                            //Set doneIntaking to true so that we can break out of this loop
+                //             //Set doneIntaking to true so that we can break out of this loop
                             doneIntaking = true;
                         }
                     
                     }
                     //If the switch is being pressed by the ball
-                    else if(Devices.ballSwitch.get()){
+                    else if(!Devices.ballSwitch.get()){
                         //Set switchPressed to true so that we know that the ball
                         //has passed over the switch
                         switchPressed = true;
                     }
-                }
+                 }
             
                 //Alerts when its done
                 if(!interrupted() && robot.isEnabled()) {
@@ -154,12 +156,16 @@ public class IntakeAndSpit {
             //If we terminate the thread early this saves us
             catch (InterruptedException e) {
                 Devices.pickupMotor.set(0);
+                Devices.ballSpit.set(0);
                 Util.consoleLog("Over so soon?");
 			}
 			catch (Throwable e) { e.printStackTrace(Util.logPrintStream); }
             
             //Runs this code even after the thread is interrupted
-            finally {Devices.pickupMotor.set(0);}
+            finally {
+                Devices.pickupMotor.set(0);
+                Devices.ballSpit.set(0);
+            }
             
             //You want to set this to null so we can recreate it again. 
 			autoIntakeThread = null;

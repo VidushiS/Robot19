@@ -35,6 +35,7 @@ public class FrontLift {
     private FrontLift(Robot robot){
         Util.consoleLog(); 
         this.robot = robot;
+        Retract();
         Util.consoleLog("The front climb pistons have been created");
     }
     public void dispose(){

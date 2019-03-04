@@ -36,6 +36,7 @@ public class HatchScoring {
 
     public void dispose(){
         Util.consoleLog();
+        HatchKickIn();
         // hatchPidController.disable();
         // hatchPidController.close();
 
@@ -71,25 +72,28 @@ public class HatchScoring {
     public boolean isMoving(){
         return isMoving;
     }
-    // public void HatchKickOut(){
-    //         Devices.hatchKickValve.Open();
-    //         isExtended = true;
-    //         isRetracted = false;
+    public void HatchKickOut(){
+            Devices.hatchKickValve.Open();
+            isExtended = true;
+            isRetracted = false;
         
         
-    //     Display();
+        Display();
         
-    // }
-    // public void HatchKickIn(){
+    }
+    public void HatchKickIn(){
 
         
-    //         Devices.hatchKickValve.Close();
-    //         isExtended = false;
-    //         isRetracted = true;
+            Devices.hatchKickValve.Close();
+            isExtended = false;
+            isRetracted = true;
 
-    //     Display();
+        Display();
 
-    // }
+    }
+    public boolean isExtended(){
+        return isExtended;
+    }
     //CHANGE THIS UP COMPLETELY
     // public void setHeight(int count)
 	// {

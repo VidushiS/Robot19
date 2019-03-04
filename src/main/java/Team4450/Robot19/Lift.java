@@ -35,7 +35,7 @@ public class Lift {
         this.robot = robot;
         liftPidController = new PIDController(0.0, 0.0, 0.0, Devices.winchEncoder, Devices.winchDrive);
         Devices.winchEncoder.reset();
-        updateDS();
+        //updateDS();
         Util.consoleLog("Lift Created!");
     }
     public void dispose(){
@@ -52,25 +52,26 @@ public class Lift {
     }
     public void setWinchPower(double power)
 	{
-		if (isHoldingHeight()) return;
+		// if (isHoldingHeight()) return;
 		
-		if (Devices.winchEncoderEnabled)
-		{
-		//	limit switch and hall effect sensor read in reverse so two sets of code.
-				// limit switch form.
-				if ((power > 0 && Devices.winchEncoder.get() < 14000) ||	// 10800
-					(power < 0 && !Devices.winchSwitch.get()))
-					Devices.winchDrive.set(power);
-				else
-				{
-					if (Devices.winchSwitch.get()) Devices.winchEncoder.reset();
+		// if (Devices.winchEncoderEnabled)
+		// {
+		// //	limit switch and hall effect sensor read in reverse so two sets of code.
+		// 		// limit switch form.
+		// 		if ((power > 0 && Devices.winchEncoder.get() < 14000) ||	// 10800
+		// 			(power < 0 && !Devices.winchSwitch.get()))
+		// 			Devices.winchDrive.set(power);
+		// 		else
+		// 		{
+		// 			if (Devices.winchSwitch.get()) Devices.winchEncoder.reset();
 					
-					Devices.winchDrive.set(0);
-				}
-		}
-		else
+		// 			Devices.winchDrive.set(0);
+		// 		}
+		// }
+		// else
+		// 	Devices.winchDrive.set(power);
+			
 			Devices.winchDrive.set(power);
-			//Devices.winchDrive.set(power);
 	 }
     public void setHeight(int count)
 	{
@@ -122,10 +123,10 @@ public class Lift {
 		{
 			if (isHoldingHeight()) setHeight(-1);
 			
-	// 		// p,i,d values are a guess.
-	// 		// f value is the base motor speed, which is where (power) we want to hold position.
-	// 		// Setpoint is current encoder count.
-	// 		// The idea is that any encoder motion will alter motor base speed to hold position.
+			// p,i,d values are a guess.
+			// f value is the base motor speed, which is where (power) we want to hold position.
+			// Setpoint is current encoder count.
+			// The idea is that any encoder motion will alter motor base speed to hold position.
 			liftPidController.setPID(0.0003, 0.00001, 0.0003, speed);
 			liftPidController.setSetpoint(Devices.winchEncoder.get());
 			liftPidController.setPercentTolerance(1);	// % error.

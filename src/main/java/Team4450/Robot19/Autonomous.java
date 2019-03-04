@@ -25,9 +25,9 @@ public class Autonomous
 	
 	//Not an integer anymore, we are using the enum AutoProgram instead
 	private AutoProgram			program;
-	private final GearBox		gearBox;
+//	private final GearBox		gearBox;
 
-	private LaunchPad 			lp;
+	//private LaunchPad 			lp;
 	private Notifier 			m_follower_notifier;
 
 	
@@ -42,15 +42,15 @@ public class Autonomous
 		
 		this.robot = robot;
 		
-		gearBox = new GearBox(robot);
+		//gearBox = new GearBox(robot);
 	}
 
 	public void dispose()
 	{
 		Util.consoleLog();
 		
-		if (gearBox != null) gearBox.dispose();
-		if (lp != null) lp.dispose();
+		//if (gearBox != null) gearBox.dispose();
+		//if (lp != null) lp.dispose();
 	}
 	
 	private boolean isAutoActive()
@@ -136,18 +136,17 @@ public class Autonomous
 		Devices.SetCANTalonRampRate(1.0);
 
 		//Initialize LaunchPad to make a kill switch
-		lp = new LaunchPad(Devices.launchPad, LaunchPadControlIDs.BUTTON_RED, this);
+		// lp = new LaunchPad(Devices.launchPad, LaunchPadControlIDs.BUTTON_RED, this);
 
-		lp.AddControl(LaunchPadControlIDs.BUTTON_RED);
-
-		lp.addLaunchPadEventListener(new LaunchPadListener());
-		lp.Start();
+		// if(lp.GetLatchedState(LaunchPadControlIDs.BUTTON_RED))
+		
 		//Finish initialization
 
 		// Determine which auto program to run as indicated by driver station.
 		switch (program)
 		{
 			case NoProgram:		// No auto program.
+				//startTeleop();
 				break;
 			case RocketUpClose:
 				switch (robot.alliance){
@@ -319,6 +318,13 @@ public class Autonomous
 	 * and accurately.
 	 */
 
+	 private void startTeleop(){
+		// if(lp != null) lp.dispose();
+		// lp = null;
+		 Util.consoleLog("Starting Teleop");
+		 robot.operatorControl();
+
+	 }
 	 private void testPathfinder(){
 		 Pathfinder.setTrace(true);
 		 Util.consoleLog("Pathfinder Trace =%b", Pathfinder.isTracing());
@@ -1034,41 +1040,5 @@ public class Autonomous
 		stop
 	}
 
-	public class LaunchPadListener implements LaunchPadEventListener 
-	{
-		public void ButtonDown(LaunchPadEvent launchPadEvent) 
-		{
-			LaunchPadControl	control = launchPadEvent.control;
-			Util.consoleLog("%s, latchedState=%b", control.id.name(),  control.latchedState);
-
-			switch(control.id)
-			{
-				case BUTTON_RED:
-					if (isAutoActive()){
-						dispose();
-						Util.consoleLog("Disposed of Autonomous");
-						Util.consoleLog("Starting teleop");
-						robot.operatorControl();
-
-					}
-			
-		    		else
-		    			Util.consoleLog("Autonomous hasn't even started yet, chill out");
-					
-					break;
-				default:
-				break;
-			}
-		}
-		public void ButtonUp(LaunchPadEvent launchPadEvent) 
-		{
-			//Util.consoleLog("%s, latchedState=%b", launchPadEvent.control.name(),  launchPadEvent.control.latchedState);
-		}
-
-		public void SwitchChange(LaunchPadEvent launchPadEvent) 
-		{
-			//Just need the empty method due to implement 
-		}
-	}
 		
 }
