@@ -36,7 +36,7 @@ public class Devices
 	  
 	  static WPI_VictorSPX		leftWinch, rightWinch;	
 	  static WPI_VictorSPX 		pickupMotor, ballSpit;
-	//public static CANSparkMax			leftSpark, rightSpark; //Be careful, the firmware needs updating
+	public static CANSparkMax			leftSpark, rightSpark; //Be careful, the firmware needs updating
 	 public static VictorSP				hatchWinch;
 	  public static DifferentialDrive		robotDrive;
 	  public static	SpeedControllerGroup 	hDrive;
@@ -148,14 +148,14 @@ public class Devices
 		  //robotDrive = new DifferentialDrive(LeftGroup, RightGroup);
 		  robotDrive = new DifferentialDrive(LRCanTalon, RRCanTalon);
 		  
-		//   leftSpark = new CANSparkMax(5, MotorType.kBrushless);
-		//   rightSpark = new CANSparkMax(6, MotorType.kBrushless);
+		  leftSpark = new CANSparkMax(5, MotorType.kBrushless);
+		  rightSpark = new CANSparkMax(6, MotorType.kBrushless);
 
 		 
 
-		//   // Setup a SpeedControllerGroup for the left and right H drive motors.
-		//    hDrive = new SpeedControllerGroup(leftSpark, rightSpark);
-		//    hDrive.setInverted(true);
+		  // Setup a SpeedControllerGroup for the left and right H drive motors.
+		   hDrive = new SpeedControllerGroup(leftSpark, rightSpark);
+		   hDrive.setInverted(true);
 	      
 		  leftWinch = new WPI_VictorSPX(7);
 		  rightWinch = new WPI_VictorSPX(8);

@@ -25,9 +25,10 @@ public class Autonomous
 	
 	//Not an integer anymore, we are using the enum AutoProgram instead
 	private AutoProgram			program;
-//	private final GearBox		gearBox;
+	private final GearBox		gearBox;
+	private boolean				endAuto = false;
 
-	//private LaunchPad 			lp;
+	private LaunchPad 			lp;
 	private Notifier 			m_follower_notifier;
 
 	
@@ -42,15 +43,15 @@ public class Autonomous
 		
 		this.robot = robot;
 		
-		//gearBox = new GearBox(robot);
+		gearBox = new GearBox(robot);
 	}
 
 	public void dispose()
 	{
 		Util.consoleLog();
 		
-		//if (gearBox != null) gearBox.dispose();
-		//if (lp != null) lp.dispose();
+		if (gearBox != null) gearBox.dispose();
+		if (lp != null) lp.dispose();
 	}
 	
 	private boolean isAutoActive()
@@ -71,7 +72,7 @@ public class Autonomous
 		autoChooser = new SendableChooser<AutoProgram>();
 		
 		autoChooser.setName("Auto Program");
-		autoChooser.addDefault("No Program", AutoProgram.NoProgram);
+		autoChooser.addDefault("No Program", AutoProgram.TeleOp);
 
 		//The naming convention is Upper/Lower Rocket and The side of the rocket the robot is going to 
 		//from the perspective of the driver station
@@ -136,17 +137,17 @@ public class Autonomous
 		Devices.SetCANTalonRampRate(1.0);
 
 		//Initialize LaunchPad to make a kill switch
-		// lp = new LaunchPad(Devices.launchPad, LaunchPadControlIDs.BUTTON_RED, this);
+		lp = new LaunchPad(Devices.launchPad, LaunchPadControlIDs.BUTTON_RED, this);
 
-		// if(lp.GetLatchedState(LaunchPadControlIDs.BUTTON_RED))
+		 if(lp.GetLatchedState(LaunchPadControlIDs.BUTTON_RED)) endAuto = true;
 		
 		//Finish initialization
 
 		// Determine which auto program to run as indicated by driver station.
 		switch (program)
 		{
-			case NoProgram:		// No auto program.
-				//startTeleop();
+			case TeleOp:		// No auto program.
+				startTeleop();
 				break;
 			case RocketUpClose:
 				switch (robot.alliance){
@@ -285,10 +286,12 @@ public class Autonomous
 			}
 			break;
 			case TestPathFinder:
-					testPathfinder();
+					//testPathfinder();
 				break;
 
 		}
+
+		if(endAuto) startTeleop();
 		
 		// Update the robot heading indicator on the DS.
 
@@ -319,114 +322,13 @@ public class Autonomous
 	 */
 
 	 private void startTeleop(){
-		// if(lp != null) lp.dispose();
-		// lp = null;
+		if(lp != null) lp.dispose();
+		lp = null;
 		 Util.consoleLog("Starting Teleop");
 		 robot.operatorControl();
 
 	 }
-	 private void testPathfinder(){
-		 Pathfinder.setTrace(true);
-		 Util.consoleLog("Pathfinder Trace =%b", Pathfinder.isTracing());
-		double wheel_diameter = Util.inchesToMeters(5.8);
-		double max_velocity = 1.86; //1.86 m/s was the actual velocity
-		int encoder_counts = 4096;
-
-		//File middleTrajectoryCSV = new File("TestPath.pf1.csv");
-		File leftTrajectoryCSV = new File("/home/lvuser/output/PortablePath.right.pf1.csv");
-		File rightTrajectoryCSV = new File("/home/lvuser/output/PortablePath.left.pf1.csv");
-	
-		Util.consoleLog("I made the CSV files into java.io files");
-
-		//Trajectory path = Pathfinder.readFromCSV(middleTrajectoryCSV);
-		Trajectory rightPath = Pathfinder.readFromCSV(rightTrajectoryCSV);
-		Trajectory leftPath = Pathfinder.readFromCSV(leftTrajectoryCSV);
-
-		
-		
-		Util.consoleLog("I read the files");
-		EncoderFollower left = new EncoderFollower(leftPath, "left");
-		EncoderFollower right = new EncoderFollower(rightPath, "right");
-
-		
-		left.configureEncoder(Devices.leftEncoder.get(), encoder_counts, wheel_diameter);
-		right.configureEncoder(Devices.rightEncoder.get(), encoder_counts, wheel_diameter);
-
-		//NOTE TO SELF, FIND MAX VELOCITY
-		left.configurePIDVA(0.5, 0.0, 0.0, 1/max_velocity, 0.0);
-		right.configurePIDVA(0.5, 0.0, 0.0, 1/max_velocity, 0.0);
-		
-
-		//Initialize segment tracker variable
-		int SegCount = 0;
-		double totalTime = 0;
-		Util.consoleLog("I reset the total time");
-		Timer.delay(0.01);
-		double elapsedTime = 0;
-		double elapsedSegmentTime = 0;
-		double totalSegmentTime = 0;
-		double averageElapsedTime = 0;
-
-		//This is the delay I am setting
-		double delay = 0;
-		Util.getElaspedTime();
-		while(isAutoActive() && (SegCount < leftPath.length())){
-
-			//Keeping Track of Segments
-			elapsedTime = Util.getElaspedTime();
-			totalTime += elapsedTime;
-
-			elapsedSegmentTime = leftPath.get(SegCount).dt;
-			totalSegmentTime += elapsedSegmentTime;
-			
-			double leftSpeed = left.calculate(Devices.leftEncoder.get(), SegCount);
-			double rightSpeed = right.calculate(Devices.rightEncoder.get(), SegCount);
-
-			Util.consoleLog("lp= %.4f rp=%.4f SegCount=%d", leftSpeed, rightSpeed, SegCount);
-			
-			double gyro_heading = Devices.navx.getHeading();
-			//NOTE TO SELF, getHeadingR RETURNS THE HEADING IN RADIANS DESPITE THE DOCUMENTATION
-			double segment_heading = Pathfinder.r2d(left.getHeading());
-
-			double angleDifference = Pathfinder.boundHalfDegrees(segment_heading - gyro_heading);
-
-			double turn = 0.8 *(1.0/80.0) *angleDifference;
-
-			leftSpeed = Util.clampValue(leftSpeed + turn, 1);
-			rightSpeed = Util.clampValue(rightSpeed - turn, 1);
-
-			Util.consoleLog("le=%.4f lp=%.2f  re==%.4f rp=%.2f  dhdg=%.0f  hdg=%.0f ad=%.2f  turn=%.5f  time=%.3f totalelaspedtime = %.3f segmentTime = %.3f totalSegmentTime = %.3f", 
-							Util.inchesToMeters(Devices.leftEncoder.getDistance()), leftSpeed, Util.inchesToMeters(Devices.rightEncoder.getDistance()), rightSpeed, 
-							segment_heading, gyro_heading, angleDifference, turn,  elapsedTime, totalTime, elapsedSegmentTime, totalSegmentTime);
-			
-			
-
-			Devices.robotDrive.tankDrive(leftSpeed, rightSpeed);
-
-			
-			//Difference between the total time the loop has been running and the total time the segments have been running
-			delay = totalSegmentTime - totalTime;
-			//Set the delay to be a minimum of 0, can't set the delay to be a negative number
-			if(delay < 0.00){
-				delay = 0.00;
-			}
-			Util.consoleLog("delay =%.3f", delay);
-
-			//Set the delay 
-			Timer.delay(delay);
-
-			//Increment the Segment the robot is on
-			SegCount++;
-		}
-		
-		if(isAutoActive()){
-			Util.consoleLog("The Trajectory is Complete");
-			averageElapsedTime = totalTime/SegCount;
-			Util.consoleLog("averageTime =%.3f", averageElapsedTime);
-			
-		}
-		Devices.robotDrive.stopMotor();
-	 }
+	 
 
 	 public enum AutoProgram{
 		RocketUpClose,
@@ -437,7 +339,7 @@ public class Autonomous
 		RocketDownFar,
 		RocketMiddlePathLeft,
 		RocketMiddlePathRight,
-		NoProgram,
+		TeleOp,
 		RocketRightCargo,
 		RocketLeftCargo,
 		TestPathFinder
@@ -504,7 +406,7 @@ public class Autonomous
 	   //This is the delay I am setting
 	   double delay = 0;
 	   Util.getElaspedTime();
-	   while(isAutoActive() && (SegCount < leftPath.length())){
+	   while(isAutoActive() && !endAuto && (SegCount < leftPath.length())){
 
 		   //Keeping Track of Segments
 		   elapsedTime = Util.getElaspedTime();

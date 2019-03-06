@@ -14,8 +14,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class PickUpArm {
     Robot robot;
-    public boolean isExtended;
-    public boolean isRetracted;
+    public boolean isExtended = false;
+    public boolean isRetracted = true;
 
     public static PickUpArm pickupArm = null;
 
@@ -34,12 +34,18 @@ public class PickUpArm {
         Util.consoleLog();
         pickupArm = null;
     }
+
+    public void display(){
+        SmartDashboard.putBoolean("Extended", isExtended);
+        SmartDashboard.putBoolean("Retracted", isRetracted);
+    }
     public void Extend(){
         
         //Should extend the pistons
             Devices.pickupValve.SetA();
             isExtended = true;
             isRetracted = false;
+            display();
         
         
     }
@@ -51,6 +57,7 @@ public class PickUpArm {
             Devices.pickupValve.SetB();
             isExtended = false;
             isRetracted = true;
+            display();
         
 
     }

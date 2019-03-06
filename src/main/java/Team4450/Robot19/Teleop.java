@@ -179,7 +179,7 @@ class Teleop
 
 		Util.consoleLog("enter driving loop");
 		
-		while (robot.isEnabled() && robot.isOperatorControl())
+		while (robot.isEnabled())
 		{
 			// Get joystick deflection and feed to robot drive object
 			// using calls to our JoyStick class.
@@ -256,10 +256,16 @@ class Teleop
 				// 	SmartDashboard.putBoolean("SteeringAssist", steeringAssistMode);
 				// }
 				// else
-				// if(rightStick.GetCurrentState(JoyStickButtonIDs.TRIGGER)){
-				// 	Devices.hDrive.set(rightX);
-				// }
-				// else {Devices.hDrive.set(0);}
+				if(rightStick.GetCurrentState(JoyStickButtonIDs.TRIGGER) && !leftStick.GetCurrentState(JoyStickButtonIDs.TRIGGER)){
+					Devices.hDrive.set(0.5);
+				}
+				else {Devices.hDrive.set(0);}
+
+
+				if(leftStick.GetCurrentState(JoyStickButtonIDs.TRIGGER) && !rightStick.GetCurrentState(JoyStickButtonIDs.TRIGGER)){
+					Devices.hDrive.set(-0.5);
+				}
+				else {Devices.hDrive.set(0);}
 
 				if(utilityStick.GetCurrentState(JoyStickButtonIDs.TOP_BACK)){
 					hatch.testHatchMotor(utilY);
@@ -372,6 +378,22 @@ class Teleop
 						pickupArm.Extend();
 					}
 					else pickupArm.Retract();
+					break;
+				
+				case BUTTON_YELLOW:
+					if(!lift.isHoldingHeight()){
+						lift.setHeight(400);
+					}
+					else lift.setHeight(-1);
+					break;
+				
+				case BUTTON_RED_RIGHT:
+					if(!lift.isHoldingHeight()){
+						lift.setHeight(700);
+					}
+					else lift.setHeight(-1);
+					break;
+
 				default:
 					break;
 			}
