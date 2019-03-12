@@ -75,6 +75,7 @@ Button Name				Function
 TRIGGER					Toggle alternate driving mode.
 Y Axis					Forward/Backward tank driving.
 X Axis					Left/Right H driving.
+TOP_MIDDLE              Reverse Spit (use in event ball is stuck) (Verfied correct)
 
 
 Utility Joystick

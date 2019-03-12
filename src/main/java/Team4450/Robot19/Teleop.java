@@ -489,9 +489,6 @@ class Teleop
 				else intakeSpit.StopIntake();
 				break;
 
-				case TOP_LEFT:
-				
-				break;
 
 				// case TOP_BACK:
 				// 	if(button.latchedState){
