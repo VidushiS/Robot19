@@ -136,6 +136,8 @@ public class Autonomous
 		// Set Talon ramp rate for smooth acceleration from stop. Determine by observation.
 		Devices.SetCANTalonRampRate(1.0);
 
+		Devices.unusedValve.Close();
+
 		//Initialize LaunchPad to make a kill switch
 		lp = new LaunchPad(Devices.launchPad, LaunchPadControlIDs.BUTTON_RED, this);
 

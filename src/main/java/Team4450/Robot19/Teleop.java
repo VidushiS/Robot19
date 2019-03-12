@@ -67,6 +67,7 @@ class Teleop
 		if(hatch != null) hatch.dispose();
 		if(backLift != null) backLift.dispose();
 		if(frontLift != null) frontLift.dispose();
+		if(lift != null) lift.dispose();
 	}
 
 	void OperatorControl() throws Exception
@@ -114,38 +115,42 @@ class Teleop
 		launchPad.addLaunchPadEventListener(new LaunchPadListener());
 		launchPad.Start();
 
-		leftStick = new JoyStick(Devices.leftStick, "LeftStick", JoyStickButtonIDs.TRIGGER, this);
+		leftStick = new JoyStick(Devices.leftStick, "LeftStick", this);
 		//Example on how to track button:
 		//leftStick.AddButton(JoyStickButtonIDs.BUTTON_NAME_HERE);
-		leftStick.AddButton(JoyStickButtonIDs.TRIGGER);
-		leftStick.AddButton(JoyStickButtonIDs.TOP_RIGHT);
-		leftStick.AddButton(JoyStickButtonIDs.TOP_MIDDLE);
-		leftStick.AddButton(JoyStickButtonIDs.TOP_LEFT);
-		leftStick.AddButton(JoyStickButtonIDs.TOP_RIGHT);
-		leftStick.AddButton(JoyStickButtonIDs.TOP_BACK);
-		leftStick.AddButton(JoyStickButtonIDs.RIGHT_REAR);
+		// leftStick.AddButton(JoyStickButtonIDs.TRIGGER);
+		// leftStick.AddButton(JoyStickButtonIDs.TOP_RIGHT);
+		// leftStick.AddButton(JoyStickButtonIDs.TOP_MIDDLE);
+		// leftStick.AddButton(JoyStickButtonIDs.TOP_LEFT);
+		// //leftStick.AddButton(JoyStickButtonIDs.TOP_RIGHT);
+		// leftStick.AddButton(JoyStickButtonIDs.TOP_BACK);
+		// leftStick.AddButton(JoyStickButtonIDs.RIGHT_REAR);
 		leftStick.addJoyStickEventListener(new LeftStickListener());
-		leftStick.Start();
+		//leftStick.Start();
 
-		rightStick = new JoyStick(Devices.rightStick, "RightStick", JoyStickButtonIDs.TRIGGER, this);
+		rightStick = new JoyStick(Devices.rightStick, "RightStick", this);
 		//Example on how to track button:
 		//rightStick.AddButton(JoyStickButtonIDs.BUTTON_NAME_HERE);
-		rightStick.AddButton(JoyStickButtonIDs.TRIGGER);
+		// rightStick.AddButton(JoyStickButtonIDs.TRIGGER);
+		// rightStick.AddButton(JoyStickButtonIDs.TOP_MIDDLE);
+		// rightStick.AddButton(JoyStickButtonIDs.TOP_BACK);
+		// rightStick.AddButton(JoyStickButtonIDs.TOP_LEFT);
+		// rightStick.AddButton(JoyStickButtonIDs.TOP_RIGHT);
 		rightStick.addJoyStickEventListener(new RightStickListener());
-		rightStick.Start();
+		//rightStick.Start();
 
-		utilityStick = new JoyStick(Devices.utilityStick, "UtilityStick", JoyStickButtonIDs.TRIGGER, this);
+		utilityStick = new JoyStick(Devices.utilityStick, "UtilityStick", this);
 		//Example on how to track button:
 		//utilityStick.AddButton(JoyStickButtonIDs.TOP_MIDDLE);
-		utilityStick.AddButton(JoyStickButtonIDs.TRIGGER);
-		utilityStick.AddButton(JoyStickButtonIDs.TOP_RIGHT);
-		utilityStick.AddButton(JoyStickButtonIDs.TOP_MIDDLE);
-		utilityStick.AddButton(JoyStickButtonIDs.TOP_LEFT);
-		utilityStick.AddButton(JoyStickButtonIDs.TOP_RIGHT);
-		utilityStick.AddButton(JoyStickButtonIDs.TOP_BACK);
-		utilityStick.AddButton(JoyStickButtonIDs.RIGHT_REAR);
+		// utilityStick.AddButton(JoyStickButtonIDs.TRIGGER);
+		// utilityStick.AddButton(JoyStickButtonIDs.TOP_RIGHT);
+		// utilityStick.AddButton(JoyStickButtonIDs.TOP_MIDDLE);
+		// utilityStick.AddButton(JoyStickButtonIDs.TOP_LEFT);
+		// utilityStick.AddButton(JoyStickButtonIDs.TOP_RIGHT);
+		// utilityStick.AddButton(JoyStickButtonIDs.TOP_BACK);
+		// utilityStick.AddButton(JoyStickButtonIDs.RIGHT_REAR);
 		utilityStick.addJoyStickEventListener(new UtilityStickListener());
-		utilityStick.Start();
+		//utilityStick.Start();
 
 		// Invert driving joy sticks Y axis so + values mean forward.
 		leftStick.invertY(true);
@@ -175,7 +180,12 @@ class Teleop
 		// Motor safety turned on.
 		Devices.robotDrive.setSafetyEnabled(true);
 
+		Devices.unusedValve.Close();
+
 		// Driving loop runs until teleop is over.
+
+		//Changes camera i guess..?
+		//robot.cameraThread.ChangeCamera();
 
 		Util.consoleLog("enter driving loop");
 		
@@ -184,12 +194,18 @@ class Teleop
 			// Get joystick deflection and feed to robot drive object
 			// using calls to our JoyStick class.
 			double correctionFactor = 0.5;
+			double stickFactor = 0.9;
 
-			rightY = stickLogCorrection(rightStick.GetY());	// fwd/back
-			leftY = stickLogCorrection(leftStick.GetY());	// fwd/back
+			rightY = stickLogCorrection(rightStick.GetY()) * stickFactor;	// fwd/back
+			leftY = stickLogCorrection(leftStick.GetY()) * stickFactor;	// fwd/back
+			// rightY = rightStick.GetY();
+			// leftY = leftStick.GetY();
 
 			rightX = correctionFactor * stickLogCorrection(rightStick.GetX());	// left/right
-			leftX = stickLogCorrection(leftStick.GetX());	// left/right
+			// leftX = stickLogCorrection(leftStick.GetX());	// left/right
+
+			//rightX = rightStick.GetX() * correctionFactor;
+			leftX = leftStick.GetX();
 
 			utilY = utilityStick.GetY();
 			
@@ -201,6 +217,7 @@ class Teleop
 			LCD.printLine(5, "yaw=%.2f, total=%.2f, rate=%.2f, hdng=%.2f", Devices.navx.getYaw(), 
 					Devices.navx.getTotalYaw(), Devices.navx.getYawRate(), Devices.navx.getHeading());
 			LCD.printLine(7, "winchSwitch =%b ballSwitch =%b", Devices.winchSwitch.get(), Devices.ballSwitch.get());
+			//ballSwitch2 =%b Devices.ballSwitch2.get()
 			LCD.printLine(10, "pressureV=%.2f  psi=%d", robot.monitorCompressorThread.getVoltage(), 
 					robot.monitorCompressorThread.getPressure());
 
@@ -256,23 +273,38 @@ class Teleop
 				// 	SmartDashboard.putBoolean("SteeringAssist", steeringAssistMode);
 				// }
 				// else
-				if(rightStick.GetCurrentState(JoyStickButtonIDs.TRIGGER) && !leftStick.GetCurrentState(JoyStickButtonIDs.TRIGGER)){
-					Devices.hDrive.set(0.5);
-				}
-				else {Devices.hDrive.set(0);}
+				// if(rightStick.GetCurrentState(JoyStickButtonIDs.TRIGGER) && !leftStick.GetCurrentState(JoyStickButtonIDs.TRIGGER)){
+				// 	Devices.hDrive.set(0.5);
+				// }
+				// else {Devices.hDrive.set(0);}
 
 
-				if(leftStick.GetCurrentState(JoyStickButtonIDs.TRIGGER) && !rightStick.GetCurrentState(JoyStickButtonIDs.TRIGGER)){
-					Devices.hDrive.set(-0.5);
-				}
-				else {Devices.hDrive.set(0);}
+				// if(leftStick.GetCurrentState(JoyStickButtonIDs.TRIGGER) && !rightStick.GetCurrentState(JoyStickButtonIDs.TRIGGER)){
+				// 	Devices.hDrive.set(-0.5);
+				// }
+				// else {Devices.hDrive.set(0);}
 
-				if(utilityStick.GetCurrentState(JoyStickButtonIDs.TOP_BACK)){
-					hatch.testHatchMotor(utilY);
+				if (rightStick.GetCurrentState(JoyStickButtonIDs.TRIGGER)){
+					Devices.hDrive.set(rightX);
 				}
-				else lift.setWinchPower(utilY);
+				else Devices.hDrive.set(0);
+
+				//lift.setWinchPower(squaredInput(utilY));
 
 				Devices.robotDrive.tankDrive(leftY, rightY);		// Normal tank drive.
+
+				if(utilityStick.GetCurrentState(JoyStickButtonIDs.TOP_BACK)){
+					// if(utilY < 0.0){
+					// 	utilY = -0.20;
+					// }
+					// else utilY = 0.20;
+					utilY = utilY * 0.15;
+					Devices.hatchWinch.set(utilY);
+				}
+				else{
+					Devices.hatchWinch.set(0.0);
+					lift.setWinchPower(squaredInput(utilY));
+				} 
 				
 					// This shows how to use curvature drive mode, toggled by trigger (for testing).
 					//Devices.robotDrive.curvatureDrive(rightY, rightX, rightStick.GetLatchedState(JoyStickButtonIDs.TRIGGER));
@@ -295,7 +327,7 @@ class Teleop
 
 		// ensure we start next time in low gear.
 	}
-		//gearBox.lowSpeed();
+		gearBox.lowSpeed();
 		
 		Util.consoleLog("end");
 					
@@ -306,6 +338,9 @@ class Teleop
 		if (Math.abs(left - right) <= (1 * (percent / 100))) return true;
 
 		return false;
+	}
+	private double squaredInput(double input){
+		return Math.copySign(input * input, input);
 	}
 
 	// Custom base logarithm.
@@ -345,17 +380,14 @@ class Teleop
 			switch(control.id)
 			{
 				case BUTTON_RED: //Will be used to abort auto in the auto
-					Devices.leftEncoder.reset();
-					Devices.rightEncoder.reset();
-					Devices.hatchEncoder.reset();
-					Devices.winchEncoder.reset();
+					// Devices.leftEncoder.reset();
+					// Devices.rightEncoder.reset();
+					// Devices.hatchEncoder.reset();
+					// Devices.winchEncoder.reset();
 					break;
 					
 				case BUTTON_GREEN:
-					if (gearBox.isLowSpeed())
-		    			gearBox.highSpeed();
-		    		else
-		    			gearBox.lowSpeed();
+					
 					
 					break;
 
@@ -382,14 +414,18 @@ class Teleop
 				
 				case BUTTON_YELLOW:
 					if(!lift.isHoldingHeight()){
-						lift.setHeight(400);
+						lift.setHeight(750);
 					}
 					else lift.setHeight(-1);
 					break;
 				
 				case BUTTON_RED_RIGHT:
+					// if(!lift.isHoldingHeight()){
+					// 	lift.setHeight(1349);
+					// }
+					// else lift.setHeight(-1);
 					if(!lift.isHoldingHeight()){
-						lift.setHeight(700);
+						lift.setHeight(350);
 					}
 					else lift.setHeight(-1);
 					break;
@@ -422,7 +458,7 @@ class Teleop
     				break;
     				
 	    		case ROCKER_LEFT_FRONT:
-					if (robot.cameraThread != null) robot.cameraThread.ChangeCamera();
+					//if (robot.cameraThread != null) robot.cameraThread.ChangeCamera();
 					//invertDrive = !invertDrive;
 	    			break;
 	    			
@@ -445,9 +481,26 @@ class Teleop
 
 			switch(button.id)
 			{
-				case TRIGGER:
-					autoTarget = !autoTarget;
-					break;
+
+				case TOP_MIDDLE:
+				if(!intakeSpit.isReverseIntaking()){
+					intakeSpit.ReverseIntake(-0.7);
+				}
+				else intakeSpit.StopIntake();
+				break;
+
+				case TOP_LEFT:
+				
+				break;
+
+				// case TOP_BACK:
+				// 	if(button.latchedState){
+				// 		hatch.setHeight(528);
+				// 	}
+				// 	else hatch.setHeight(803);
+				// 	break;
+
+				
 
 			//Example of Joystick Button case:
 			/*
@@ -482,13 +535,13 @@ class Teleop
 
 			switch(button.id)
 			{
-				// case TRIGGER:
-				// 	if (gearBox.isLowSpeed())
-	    		// 		gearBox.highSpeed();
-	    		// 	else
-	    		// 		gearBox.lowSpeed();
+				case TRIGGER:
+					if (gearBox.isLowSpeed())
+	    				gearBox.highSpeed();
+	    			else
+	    				gearBox.lowSpeed();
 
-				// 	break;
+					break;
 					
 				default:
 					break;
@@ -515,23 +568,23 @@ class Teleop
 			{
 				case TOP_LEFT:
 					if (!intakeSpit.isIntaking()){
-						intakeSpit.Intake(0.8);
+						intakeSpit.Intake(0.7);
 					}
 					else intakeSpit.StopIntake();
 					break;
 
 				case TOP_RIGHT:
 					if(!intakeSpit.isSpitting()){
-						intakeSpit.Spit(0.4);
+						intakeSpit.Spit(0.6);
 					}
 					else intakeSpit.StopSpit();
 					break;
 
 				case TRIGGER:
-					if(!hatch.isExtended()){
-						hatch.HatchKickOut();
-					}
-					else hatch.HatchKickIn();
+					// if(!hatch.isExtended()){
+					// 	hatch.HatchKickOut();
+					// }
+					// else hatch.HatchKickIn();
 					break;
 				
 				case TOP_MIDDLE:

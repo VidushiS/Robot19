@@ -22,7 +22,7 @@ public class Lift {
     private boolean				holdingPosition, holdingHeight;
     private final PIDController liftPidController;
 
-    private int MAXENCODERCOUNTS = 1600;
+    private int MAXENCODERCOUNTS = 1400;
     public static Lift lift = null;
 
     public static Lift getInstance(Robot robot){
@@ -62,7 +62,7 @@ public class Lift {
 		{
 		//	limit switch and hall effect sensor read in reverse so two sets of code.
 				// limit switch form.
-				if ((power > 0 && Devices.winchEncoder.get() < MAXENCODERCOUNTS) ||	// 10800
+				if ((power > 0 && Devices.winchEncoder.get() < MAXENCODERCOUNTS) ||	// 1400
 					(power < 0 && Devices.winchSwitch.get()))
 					Devices.winchDrive.set(power);
 				else
@@ -90,7 +90,7 @@ public class Lift {
 			// The idea is that the difference between the current encoder count and the
 			// target count will apply power to bring the two counts together and stay there.
 			liftPidController.setPID(0.002, 0.00005, 0.0003, 0.0);
-			liftPidController.setPID(0.0003, 0.0, 0.0, 0.0);
+			//liftPidController.setPID(0.0003, 0.0, 0.0, 0.0);
 			liftPidController.setOutputRange(-1, 1);
 			liftPidController.setSetpoint(count);
 			liftPidController.setPercentTolerance(1);	// % error.

@@ -20,11 +20,12 @@ public class HatchScoring {
     //Make sure you have the right modifier... they can be globally accessed right now
     private boolean isExtended;
     private boolean isRetracted;
-    //private boolean				holdingPosition, holdingHeight;
-    private boolean hatchHoldingHeight;
+    private boolean				holdingPosition;
+    private boolean             holdingHeight = false;
+    private boolean hatchHoldingHeight = false;
     private boolean isMoving = false;
 
-    //private final PIDController hatchPidController;
+    private final PIDController hatchPidController;
     public static HatchScoring hatchScoring = null;
 
     public static HatchScoring getInstance(Robot robot){
@@ -37,18 +38,22 @@ public class HatchScoring {
     public void dispose(){
         Util.consoleLog();
         HatchKickIn();
-        // hatchPidController.disable();
-        // hatchPidController.close();
+        // Devices.hatchEncoder.reset();
+        hatchPidController.disable();
+        hatchPidController.close();
 
         hatchScoring = null;
     }
     private HatchScoring(Robot robot){
         this.robot = robot;
-        // hatchPidController = new PIDController(0.0, 0.0, 0.0, Devices.hatchEncoder, Devices.hatchWinch);
+        hatchPidController = new PIDController(0.0, 0.0, 0.0, Devices.hatchEncoder, Devices.hatchWinch);
         // isExtended = true;
         // isRetracted = false;
         
         //HatchKickIn();
+
+        //setHeight(-1400);
+        Devices.hatchEncoder.reset();
         Util.consoleLog("The Hatch Has been created");
     }
     //AGAIN DOUBLE CHECK FOR THIS ONE IF IT WILL BE SUITABLE TO KICK IN THE HATCH DURING TELEOP AND AUTO OR IF WE NEED IT
@@ -95,31 +100,35 @@ public class HatchScoring {
         return isExtended;
     }
     //CHANGE THIS UP COMPLETELY
-    // public void setHeight(int count)
-	// {
-	// 	Util.consoleLog("%d", count);
+    public void setHeight(int count)
+	{
+		Util.consoleLog("%d", count);
 		
-	// 	if (count >= 0)
-	// 	{			
-	// 		// p,i,d values are a guess.
-	// 		// f value is the motor power to apply to move to encoder target count.
-	// 		// Setpoint is the target encoder count.
-	// 		// The idea is that the difference between the current encoder count and the
-	// 		// target count will apply power to bring the two counts together and stay there.
-	// 		hatchPidController.setPID(0.0003, 0.00001, 0.0003, 0.0);
-	// 		//liftPidController.setPID(0.0003, 0.0, 0.0, 0.0);
-	// 		hatchPidController.setOutputRange(-1, 1);
-	// 		hatchPidController.setSetpoint(count);
-	// 		hatchPidController.setPercentTolerance(1);	// % error.
-	// 		hatchPidController.enable();
-	// 		hatchHoldingHeight = true;
-	// 	}
-	// 	else
-	// 	{
-	// 		hatchPidController.disable();
-	// 		hatchHoldingHeight = false;
-	// 	}
+		if (count >= 0)
+		{			
+			// p,i,d values are a guess.
+			// f value is the motor power to apply to move to encoder target count.
+			// Setpoint is the target encoder count.
+			// The idea is that the difference between the current encoder count and the
+			// target count will apply power to bring the two counts together and stay there.
+			hatchPidController.setPID(0.0003, 0.00001, 0.0003, 0.0);
+			//liftPidController.setPID(0.0003, 0.0, 0.0, 0.0);
+			hatchPidController.setOutputRange(-1, 1);
+			hatchPidController.setSetpoint(count);
+			hatchPidController.setPercentTolerance(1);	// % error.
+			hatchPidController.enable();
+			hatchHoldingHeight = true;
+		}
+		else
+		{
+			hatchPidController.disable();
+			hatchHoldingHeight = false;
+		}
 		
-	// 	 Display();
-	// }
+		 Display();
+    }
+    
+    public boolean hatchHoldingHeight(){
+        return hatchHoldingHeight;
+    }
 }

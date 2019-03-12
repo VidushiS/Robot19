@@ -55,6 +55,7 @@ public class Devices
 	  public final static ValveDA		pickupValve = new ValveDA(1, 0);		// For pickup arm.
 	  public final static ValveSA		hatchKickValve = new ValveSA(1, 2);	// Kick of hatch.
  public final static ValveDA		unusedValve = new ValveDA(6);
+	
 
 	  public final static AnalogInput	pressureSensor = new AnalogInput(0);
 	  
@@ -67,14 +68,17 @@ public class Devices
 	  // Touchless Encoder uses single channel on dio port 0.
 	  public final static Encoder		winchEncoder = new Encoder(0, 1, true, EncodingType.k4X);
 	  public static boolean				winchEncoderEnabled = true;
+	  
 
 	  // Encoder (regular type) is plugged into dio port n:
 	  // orange=+5v blue=signal, dio port n+1: black=gnd yellow=signal. 
 	 public final static Encoder		hatchEncoder = new Encoder(2, 3, true, EncodingType.k4X);
+	 
 	  
 	 
 	 public static DigitalInput		winchSwitch = new DigitalInput(4);
 	 public static DigitalInput		ballSwitch = new DigitalInput(5);
+	 //public static DigitalInput 		ballSwitch2 = new DigitalInput(6);
 	  // SRX magnetic encoder plugged into a CAN Talon.
 	  
 	  public static SRXMagneticEncoderRelative	leftEncoder, rightEncoder;
@@ -162,6 +166,10 @@ public class Devices
 		 pickupMotor = new WPI_VictorSPX(9);
 		 ballSpit = new WPI_VictorSPX(10);
 
+		 //Added this in for the comp bot, I guess we will see how it goes?
+
+		 winchEncoder.setReverseDirection(true);
+
 		
 
 		   hatchWinch = new VictorSP(0);
@@ -178,7 +186,15 @@ public class Devices
 
 		//   // Setup a SpeedControllerGroup for the left and right winch drive motors.
 		winchDrive = new SpeedControllerGroup(leftWinch, rightWinch);
-		winchDrive.setInverted(true);
+		winchDrive.setInverted(false);
+
+		unusedValve.solenoidSlideTime = 0.1;
+		//unusedValve.Close();
+
+		frontClimbValve.solenoidSlideTime = 0.1;
+		rearClimbValve.solenoidSlideTime = 0.1;
+		pickupValve.solenoidSlideTime = 0.1;
+		highLowValve.solenoidSlideTime = 0.1;
 
 	  }
 

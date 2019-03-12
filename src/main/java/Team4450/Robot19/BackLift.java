@@ -33,6 +33,7 @@ public class BackLift {
 
     public void dispose(){
         Util.consoleLog();
+        Retract();
         backLift = null;
     }
     //REMEMBER TO SET THE BOOLEAN VALUES IN THE CONSTRUCTOR OTHERWISE FACE ERRORS
@@ -40,8 +41,8 @@ public class BackLift {
         this.robot = robot;
         Retract();
         Util.consoleLog("SHould retract");
-       Devices.unusedValve.SetB();
-        Util.consoleLog("Set unused to valve b");
+       //Devices.unusedValve.SetB();
+       // Util.consoleLog("Set unused to valve b");
         Util.consoleLog("The rear climb pistons have been created");
         
      }

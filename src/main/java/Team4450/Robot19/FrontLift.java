@@ -40,6 +40,7 @@ public class FrontLift {
     }
     public void dispose(){
         Util.consoleLog();
+        Retract();
         frontLift = null;
     }
 

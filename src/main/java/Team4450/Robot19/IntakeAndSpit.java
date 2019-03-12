@@ -22,6 +22,7 @@ public class IntakeAndSpit {
     Robot robot;
     public  boolean isSpitting = false;
     public  boolean isIntaking = false;
+    public boolean reverseIntaking = false;
      
     public static IntakeAndSpit intakeSpit = null;
     private Thread autoIntakeThread = null;
@@ -44,7 +45,10 @@ public class IntakeAndSpit {
         Devices.pickupMotor.free();
         Devices.ballSpit.disable();
         Devices.ballSpit.free();
+        StopAutoIntake();
+        intakeSpit = null;
     }
+
     private void Display(){
         SmartDashboard.putBoolean("isSpitting", isSpitting);
         SmartDashboard.putBoolean("isIntaking", isIntaking);
@@ -54,6 +58,7 @@ public class IntakeAndSpit {
     public void Spit(double power){
         
         Devices.ballSpit.set(power);
+       
         isSpitting = true;
         isIntaking = false;
         Display();
@@ -65,15 +70,23 @@ public class IntakeAndSpit {
        isIntaking = true;
        Display();
     }
+    public void ReverseIntake(double power){
+        Devices.pickupMotor.set(power);
+        reverseIntaking = true;
+        //Display();
+    }
 
    public void StopIntake(){
        Devices.pickupMotor.set(0);
+       reverseIntaking = false;
        isIntaking = false;
        Display();
    }
    public void StopSpit(){
       Devices.ballSpit.set(0);
+      
        isSpitting = false;
+       
        Display();
    }
    public boolean isIntaking(){
@@ -82,11 +95,16 @@ public class IntakeAndSpit {
    public boolean isSpitting(){
        return isSpitting;
    }
+   public boolean isReverseIntaking(){
+       return reverseIntaking;
+   }
     public void StartAutoIntake(){
         if(autoIntakeThread != null) return;
         autoIntakeThread = new AutoIntake();
         autoIntakeThread.start();
         Util.consoleLog("Started the thread");
+        ISTHREADRUNNING = true;
+                Display();
         
     }
     public void StopAutoIntake(){
@@ -94,7 +112,7 @@ public class IntakeAndSpit {
             autoIntakeThread.interrupt();
         }
         autoIntakeThread = null;
-        //ISTHREADRUNNING = false;
+        ISTHREADRUNNING = false;
     }
     public boolean ISTHREADRUNNING(){
         return ISTHREADRUNNING;
@@ -108,26 +126,25 @@ public class IntakeAndSpit {
             boolean doneIntaking = false;
            
             try{
-
-                ISTHREADRUNNING = true;
-                Display();
-                //Intake the ball for 2.5 seconds
+                PickUpArm.pickupArm.Extend();
+                PickUpArm.pickupArm.display();
                 
                 while(!doneIntaking && !interrupted()){
-                    Intake(0.8);
+                    Intake(0.7);
                     //If the switch is not pressed...
+                    //Devices.ballSwitch2.get()
                     if(Devices.ballSwitch.get()){
                 //         //And the ball hasn't passed over the switch already
                         if(switchPressed == false){
                             //Keep the ball spit motor running
-                            Spit(0.3);
+                            Spit(0.2);
                            // switchPressed = false;
                         }
                 //         //And the ball has passed over the switch already
                         else if(switchPressed == true){
                 //             //Stop the motor
                             Spit(-0.05);
-                            Timer.delay(1.0);
+                            // Timer.delay(1.0);
                 //             //Set doneIntaking to true so that we can break out of this loop
                             doneIntaking = true;
                             
@@ -139,8 +156,9 @@ public class IntakeAndSpit {
                         //Set switchPressed to true so that we know that the ball
                         //has passed over the switch
                         switchPressed = true;
-                        Spit(0.2);
+                        Spit(0.20);
                     }
+                    sleep(30);
                  }
             
                 //Alerts when its done
@@ -155,6 +173,8 @@ public class IntakeAndSpit {
             catch (InterruptedException e) {
                 Devices.pickupMotor.set(0);
                 Devices.ballSpit.set(0);
+                PickUpArm.pickupArm.Retract();
+                PickUpArm.pickupArm.display();
                 Util.consoleLog("Over so soon?");
 			}
 			catch (Throwable e) { e.printStackTrace(Util.logPrintStream); }
@@ -163,11 +183,14 @@ public class IntakeAndSpit {
             finally {
                 Devices.pickupMotor.set(0);
                 Devices.ballSpit.set(-0.05);
+                PickUpArm.pickupArm.Retract();
+                PickUpArm.pickupArm.display();
+                ISTHREADRUNNING = false;
                 
             }
             
-            ISTHREADRUNNING = false;
-            Display();
+            // ISTHREADRUNNING = false;
+            // Display();
             //You want to set this to null so we can recreate it again. 
 			autoIntakeThread = null;
         }
