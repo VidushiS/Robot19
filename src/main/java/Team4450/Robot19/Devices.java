@@ -58,6 +58,7 @@ public class Devices
 	
 
 	  public final static AnalogInput	pressureSensor = new AnalogInput(0);
+	  public final static AnalogInput	ballLightSensor = new AnalogInput(1);
 	  
 	  public final static PowerDistributionPanel	pdp = new PowerDistributionPanel();
 
@@ -93,108 +94,106 @@ public class Devices
 	  
 	  public static void InitializeCANTalonDrive()
 	  {
-		  Util.consoleLog();
+			Util.consoleLog();
 
-		  LFCanTalon = new WPI_TalonSRX(1);
-		  LRCanTalon = new WPI_TalonSRX(2);
-		  RFCanTalon = new WPI_TalonSRX(3);	
-		  RRCanTalon = new WPI_TalonSRX(4);	
-		  
-	      // Initialize CAN Talons and write status to log so we can verify
-	      // all the Talons are connected.
-	      InitializeCANTalon(LFCanTalon);
-	      InitializeCANTalon(LRCanTalon);
-	      InitializeCANTalon(RFCanTalon);
-	      InitializeCANTalon(RRCanTalon);
+			LFCanTalon = new WPI_TalonSRX(1);
+			LRCanTalon = new WPI_TalonSRX(2);
+			RFCanTalon = new WPI_TalonSRX(3);	
+			RRCanTalon = new WPI_TalonSRX(4);	
+			
+			// Initialize CAN Talons and write status to log so we can verify
+			// all the Talons are connected.
+			InitializeCANTalon(LFCanTalon);
+			InitializeCANTalon(LRCanTalon);
+			InitializeCANTalon(RFCanTalon);
+			InitializeCANTalon(RRCanTalon);
 
-	      // Configure CAN Talons with correct inversions.
-	      LFCanTalon.setInverted(true);
-		  LRCanTalon.setInverted(true);
-		  
-		  RFCanTalon.setInverted(true);
-		  RRCanTalon.setInverted(true);
+			// Configure CAN Talons with correct inversions.
+			LFCanTalon.setInverted(true);
+			LRCanTalon.setInverted(true);
+			
+			RFCanTalon.setInverted(true);
+			RRCanTalon.setInverted(true);
 
-	      // Turn on brake mode for drive CAN Talons.
-	      SetCANTalonBrakeMode(true);
-	      
-	      // Setup the SpeedControllerGroups for the left and right set of motors.
-	      // Groups allow 4 motors to be used with DifferentialDrive. You can also
-	      // use follower mode where one motor on a side follows the other on the
-	      // same side.
-	    //   SpeedControllerGroup LeftGroup = new SpeedControllerGroup(LFCanTalon, LRCanTalon);
+			// Turn on brake mode for drive CAN Talons.
+			SetCANTalonBrakeMode(true);
+			
+			// Setup the SpeedControllerGroups for the left and right set of motors.
+			// Groups allow 4 motors to be used with DifferentialDrive. You can also
+			// use follower mode where one motor on a side follows the other on the
+			// same side.
+		//   SpeedControllerGroup LeftGroup = new SpeedControllerGroup(LFCanTalon, LRCanTalon);
 		//   SpeedControllerGroup RightGroup = new SpeedControllerGroup(RFCanTalon, RRCanTalon);
-		  
-		  // Since encoder is on rear motor talon, set front talons to follow the rears when
-		  // we do closed loop control using the rear talons. In closed loop control the
-		  // talon is set to some setpoint and will move to that point using the encoder or
-	      // you set a velocity setpoint and talon will run at that velocity. This is
-		  // onboard PID control.
-	      
-	      // For 2019 robot, put rear talons into a differential drive object and set the
-	      // front talons to follow the rears. Not going to get to closed loop control...
-		  
-		  LFCanTalon.set(ControlMode.Follower, LRCanTalon.getDeviceID());
-		  RFCanTalon.set(ControlMode.Follower, RRCanTalon.getDeviceID());
-		  
-		  // Configure SRX encoders as needed for measuring velocity and distance. 
-		  // 5.8 is wheel diameter in inches. Adjust for each years robot.
-		  rightEncoder = new SRXMagneticEncoderRelative(RRCanTalon, 5.8);
-		  leftEncoder = new SRXMagneticEncoderRelative(LRCanTalon, 5.8);
-		  
-		  leftEncoder.setInverted(true);
-		  leftEncoder.setMaxPeriod(1);
-		  rightEncoder.setMaxPeriod(1);
-		  leftEncoder.setPIDSourceType(PIDSourceType.kRate);
-		  leftEncoder.setPIDRateType(PIDRateType.RPM);
-		  rightEncoder.setPIDSourceType(PIDSourceType.kRate);
-		  rightEncoder.setPIDRateType(PIDRateType.RPM);
-		  
-		  //robotDrive = new DifferentialDrive(LeftGroup, RightGroup);
-		  robotDrive = new DifferentialDrive(LRCanTalon, RRCanTalon);
-		  
-		  leftSpark = new CANSparkMax(5, MotorType.kBrushless);
-		  rightSpark = new CANSparkMax(6, MotorType.kBrushless);
+			
+			// Since encoder is on rear motor talon, set front talons to follow the rears when
+			// we do closed loop control using the rear talons. In closed loop control the
+			// talon is set to some setpoint and will move to that point using the encoder or
+			// you set a velocity setpoint and talon will run at that velocity. This is
+			// onboard PID control.
+			
+			// For 2019 robot, put rear talons into a differential drive object and set the
+			// front talons to follow the rears. Not going to get to closed loop control...
+			
+			LFCanTalon.set(ControlMode.Follower, LRCanTalon.getDeviceID());
+			RFCanTalon.set(ControlMode.Follower, RRCanTalon.getDeviceID());
+			
+			// Configure SRX encoders as needed for measuring velocity and distance. 
+			// 5.8 is wheel diameter in inches. Adjust for each years robot.
+			rightEncoder = new SRXMagneticEncoderRelative(RRCanTalon, 5.8);
+			leftEncoder = new SRXMagneticEncoderRelative(LRCanTalon, 5.8);
+			
+			leftEncoder.setInverted(true);
+			leftEncoder.setMaxPeriod(1);
+			rightEncoder.setMaxPeriod(1);
+			leftEncoder.setPIDSourceType(PIDSourceType.kRate);
+			leftEncoder.setPIDRateType(PIDRateType.RPM);
+			rightEncoder.setPIDSourceType(PIDSourceType.kRate);
+			rightEncoder.setPIDRateType(PIDRateType.RPM);
+			
+			//robotDrive = new DifferentialDrive(LeftGroup, RightGroup);
+			robotDrive = new DifferentialDrive(LRCanTalon, RRCanTalon);
+			
+			leftSpark = new CANSparkMax(5, MotorType.kBrushless);
+			rightSpark = new CANSparkMax(6, MotorType.kBrushless);
 
-		 
+				
 
-		  // Setup a SpeedControllerGroup for the left and right H drive motors.
-		   hDrive = new SpeedControllerGroup(leftSpark, rightSpark);
-		   hDrive.setInverted(true);
-	      
-		  leftWinch = new WPI_VictorSPX(7);
-		  rightWinch = new WPI_VictorSPX(8);
-		 pickupMotor = new WPI_VictorSPX(9);
-		 ballSpit = new WPI_VictorSPX(10);
+			// Setup a SpeedControllerGroup for the left and right H drive motors.
+			hDrive = new SpeedControllerGroup(leftSpark, rightSpark);
+			hDrive.setInverted(true);
+			
+			leftWinch = new WPI_VictorSPX(7);
+			rightWinch = new WPI_VictorSPX(8);
+			pickupMotor = new WPI_VictorSPX(9);
+			ballSpit = new WPI_VictorSPX(10);
 
-		 //Added this in for the comp bot, I guess we will see how it goes?
+			//Added this in for the comp bot, I guess we will see how it goes?
 
-		 winchEncoder.setReverseDirection(true);
+			winchEncoder.setReverseDirection(true);
 
-		
+			hatchWinch = new VictorSP(0);
 
-		   hatchWinch = new VictorSP(0);
+			leftWinch.setNeutralMode(NeutralMode.Brake);
+			rightWinch.setNeutralMode(NeutralMode.Brake);
 
-		
-		  
-		  leftWinch.setNeutralMode(NeutralMode.Brake);
-		  rightWinch.setNeutralMode(NeutralMode.Brake);
-		  
-		  rightWinch.setInverted(true);
+			leftWinch.configOpenloopRamp(2.0);
+			leftWinch.configOpenloopRamp(2.0);
+			
+			rightWinch.setInverted(true);
 
-		  pickupMotor.setNeutralMode(NeutralMode.Brake);
-		  ballSpit.setNeutralMode(NeutralMode.Brake);
+			pickupMotor.setNeutralMode(NeutralMode.Brake);
+			ballSpit.setNeutralMode(NeutralMode.Brake);
 
-		//   // Setup a SpeedControllerGroup for the left and right winch drive motors.
-		winchDrive = new SpeedControllerGroup(leftWinch, rightWinch);
-		winchDrive.setInverted(false);
+			// Setup a SpeedControllerGroup for the left and right winch drive motors.
+			winchDrive = new SpeedControllerGroup(leftWinch, rightWinch);
+			winchDrive.setInverted(false);
 
-		unusedValve.solenoidSlideTime = 0.1;
-		//unusedValve.Close();
-
-		frontClimbValve.solenoidSlideTime = 0.1;
-		rearClimbValve.solenoidSlideTime = 0.1;
-		pickupValve.solenoidSlideTime = 0.1;
-		highLowValve.solenoidSlideTime = 0.1;
+			unusedValve.solenoidSlideTime = 0.1;
+	
+			frontClimbValve.solenoidSlideTime = 0.1;
+			rearClimbValve.solenoidSlideTime = 0.1;
+			pickupValve.solenoidSlideTime = 0.1;
+			highLowValve.solenoidSlideTime = 0.1;
 
 	  }
 

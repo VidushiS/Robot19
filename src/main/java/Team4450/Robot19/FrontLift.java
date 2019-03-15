@@ -26,6 +26,8 @@ public class FrontLift {
 
     
     public static FrontLift getInstance(Robot robot){
+        Util.consoleLog();
+
         if(frontLift == null){
             frontLift = new FrontLift(robot);
         }

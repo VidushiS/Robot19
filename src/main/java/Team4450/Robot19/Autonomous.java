@@ -80,12 +80,12 @@ public class Autonomous
 		//Instead of numbers we are using the constants within the enum now
 		//If you want to add another option, make sure to add in the name of the choice into
 		//the AutoProgram enum
-		autoChooser.addOption("Upper Close", AutoProgram.RocketUpClose);
-		autoChooser.addOption("Upper Middle", AutoProgram.RocketUpMiddle);
-		autoChooser.addOption("Upper Far", AutoProgram.RocketUpFar);
-		autoChooser.addOption("Down Close", AutoProgram.RocketDownClose);
-		autoChooser.addOption("Down Middle", AutoProgram.RocketDownMiddle);
-		autoChooser.addOption("Down Far", AutoProgram.RocketDownFar);
+		autoChooser.addOption("Left Close", AutoProgram.RocketLeftClose);
+		autoChooser.addOption("Left Middle", AutoProgram.RocketLeftMiddle);
+		autoChooser.addOption("Left Far", AutoProgram.RocketLeftFar);
+		autoChooser.addOption("Right Close", AutoProgram.RocketRightClose);
+		autoChooser.addOption("Right Middle", AutoProgram.RocketRightMiddle);
+		autoChooser.addOption("Right Far", AutoProgram.RocketRightFar);
 		autoChooser.addOption("Middle Left", AutoProgram.RocketMiddlePathLeft);
 		autoChooser.addOption("Middle Right", AutoProgram.RocketMiddlePathRight);
 		autoChooser.addOption("Right Cargo", AutoProgram.RocketRightCargo);
@@ -151,142 +151,46 @@ public class Autonomous
 			case TeleOp:		// No auto program.
 				startTeleop();
 				break;
-			case RocketUpClose:
-				switch (robot.alliance){
-					case Red:
-					pathSelector(AutoProgram.RocketUpClose, DriverStation.Alliance.Red);
-					break;
-					case Blue:
-					pathSelector(AutoProgram.RocketUpClose, DriverStation.Alliance.Blue);
-					break;
-					case Invalid:
-					Util.consoleLog("Could not find alliance color!");
-					break;
-				}
-		
+			case RocketLeftClose:
+				pathSelector(AutoProgram.RocketLeftClose);	
 				break;
 
-			case RocketUpMiddle:
-			switch (robot.alliance){
-					case Red:
-					pathSelector(AutoProgram.RocketUpMiddle, DriverStation.Alliance.Red);
-					break;
-					case Blue:
-					pathSelector(AutoProgram.RocketUpMiddle, DriverStation.Alliance.Blue);
-					break;
-					case Invalid:
-					Util.consoleLog("Could not find alliance color!");
-					break;
-			}
+			case RocketLeftMiddle:
+				pathSelector(AutoProgram.RocketLeftMiddle);
 				break;
 
-			case RocketUpFar:
-			switch (robot.alliance){
-					case Red:
-					pathSelector(AutoProgram.RocketUpFar, DriverStation.Alliance.Red);
-					break;
-					case Blue:
-					pathSelector(AutoProgram.RocketUpFar, DriverStation.Alliance.Blue);
-					break;
-					case Invalid:
-					Util.consoleLog("Could not find alliance color!");
-					break;
-			}
+			case RocketLeftFar:
+				pathSelector(AutoProgram.RocketLeftFar);
 				break;
 			
-			case RocketDownClose:
-			switch (robot.alliance){
-					case Red:
-					pathSelector(AutoProgram.RocketDownClose, DriverStation.Alliance.Red);
-					break;
-					case Blue:
-					pathSelector(AutoProgram.RocketDownClose, DriverStation.Alliance.Blue);
-					break;
-					case Invalid:
-					Util.consoleLog("Could not find alliance color!");
-					break;
-			}
+			case RocketRightClose:
+				pathSelector(AutoProgram.RocketRightClose);
 				break;
 			
-			case RocketDownMiddle:
-			switch (robot.alliance){
-					case Red:
-					pathSelector(AutoProgram.RocketDownMiddle, DriverStation.Alliance.Red);
-					break;
-					case Blue:
-					pathSelector(AutoProgram.RocketDownMiddle, DriverStation.Alliance.Blue);
-					break;
-					case Invalid:
-					Util.consoleLog("Could not find alliance color!");
-					break;
+			case RocketRightMiddle:
+				pathSelector(AutoProgram.RocketRightMiddle);
+				break;
 
-			}
+			case RocketRightFar:
+				pathSelector(AutoProgram.RocketRightFar);
 				break;
-			case RocketDownFar:
-			switch (robot.alliance){
-					case Red:
-					pathSelector(AutoProgram.RocketDownFar, DriverStation.Alliance.Red);
-					break;
-					case Blue:
-					pathSelector(AutoProgram.RocketDownFar, DriverStation.Alliance.Blue);
-					break;
-					case Invalid:
-					Util.consoleLog("Could not find alliance color!");
-					break;
-			}
-				break;
+
 			case RocketMiddlePathLeft:
-			switch (robot.alliance){
-					case Red:
-					pathSelector(AutoProgram.RocketMiddlePathLeft, DriverStation.Alliance.Red);
-					break;
-					case Blue:
-					pathSelector(AutoProgram.RocketMiddlePathLeft, DriverStation.Alliance.Blue);
-					break;
-					case Invalid:
-					Util.consoleLog("Could not find alliance color!");
-					break;
-			}
+				pathSelector(AutoProgram.RocketMiddlePathLeft);
 				break;
+
 			case RocketMiddlePathRight:
-			switch (robot.alliance){
-					case Red:
-					pathSelector(AutoProgram.RocketMiddlePathRight, DriverStation.Alliance.Red);
-					break;
-					case Blue:
-					pathSelector(AutoProgram.RocketMiddlePathRight, DriverStation.Alliance.Blue);
-					break;
-					case Invalid:
-					Util.consoleLog("Could not find alliance color!");
-					break;
-			}
+				pathSelector(AutoProgram.RocketMiddlePathRight);
 				break;
+
 			case RocketRightCargo:
-			switch (robot.alliance){
-					case Red:
-					pathSelector(AutoProgram.RocketRightCargo, DriverStation.Alliance.Red);
-					break;
-					case Blue:
-					pathSelector(AutoProgram.RocketRightCargo, DriverStation.Alliance.Blue);
-					break;
-					case Invalid:
-					Util.consoleLog("Could not find alliance color!");
-					break;
-			}
+				pathSelector(AutoProgram.RocketRightCargo);
 				break;
+
 			case RocketLeftCargo:
-			switch (robot.alliance){
-					case Red:
-					pathSelector(AutoProgram.RocketLeftCargo, DriverStation.Alliance.Red);
-					break;
-					case Blue:
-					pathSelector(AutoProgram.RocketLeftCargo, DriverStation.Alliance.Blue);
-					break;
-					case Invalid:
-					Util.consoleLog("Could not find alliance color!");
-					break;
-			}
+				pathSelector(AutoProgram.RocketLeftCargo);
 			break;
+
 			case TestPathFinder:
 					//testPathfinder();
 				break;
@@ -333,22 +237,22 @@ public class Autonomous
 	 
 
 	 public enum AutoProgram{
-		RocketUpClose,
-		RocketUpMiddle,
-		RocketUpFar,
-		RocketDownClose,
-		RocketDownMiddle,
-		RocketDownFar,
 		RocketMiddlePathLeft,
 		RocketMiddlePathRight,
 		TeleOp,
 		RocketRightCargo,
 		RocketLeftCargo,
-		TestPathFinder
+		TestPathFinder,
+		RocketLeftClose,
+		RocketLeftMiddle, 
+		RocketLeftFar,
+		RocketRightClose,
+		RocketRightMiddle,
+		RocketRightFar
 	}
 	
 
-	private void pathSelector(AutoProgram pathName,  DriverStation.Alliance allianceColor){
+	private void pathSelector(AutoProgram pathName){
 		String rightPathFile;
 		String leftPathFile;
 
@@ -356,8 +260,8 @@ public class Autonomous
 		//I REALIZED THAT THE DIRECTORIES ARE THE SAME FOR EVERY PATH
 		//SO GUESS WHAT I AM ADDING ALL THE STRINGS TOGETHER INSTEAD TO SAVE ME SOME TIME
 		
-		rightPathFile = "/home/lvuser/output/" + allianceColor.toString() + pathName.toString()+ ".left.pf1.csv";
-		leftPathFile = "/home/lvuser/output/" + allianceColor.toString() + pathName.toString() + ".right.pf1.csv";
+		rightPathFile = "/home/lvuser/output/" + pathName.toString()+ ".left.pf1.csv";
+		leftPathFile = "/home/lvuser/output/"  + pathName.toString() + ".right.pf1.csv";
 		
 		Util.consoleLog("Left Path chose =%s Right Path chose =%s", leftPathFile, rightPathFile);
 		PathfinderAuto(rightPathFile, leftPathFile);	

@@ -54,7 +54,7 @@ public class Lift {
     public void setWinchPower(double power)
 	{
 		if(power < 0){
-			power = power * 0.5;
+			power = -0.10;
 		}
 		if (isHoldingHeight()) return;
 		

@@ -25,6 +25,7 @@ public class BackLift {
     public static BackLift backLift = null;
 
     public static BackLift getInstance(Robot robot){
+        Util.consoleLog();
         if(backLift == null){
             backLift = new BackLift(robot);
         }
@@ -41,8 +42,6 @@ public class BackLift {
         this.robot = robot;
         Retract();
         Util.consoleLog("SHould retract");
-       //Devices.unusedValve.SetB();
-       // Util.consoleLog("Set unused to valve b");
         Util.consoleLog("The rear climb pistons have been created");
         
      }

@@ -124,28 +124,35 @@ public class IntakeAndSpit {
         public void run(){
             boolean switchPressed = false;
             boolean doneIntaking = false;
+            int lightLevel = Devices.ballLightSensor.getValue();
+
+ 	    	Util.consoleLog("%d", lightLevel);
+
+ 	    	lightLevel -= 200;
            
             try{
                 PickUpArm.pickupArm.Extend();
-                PickUpArm.pickupArm.display();
                 
                 while(!doneIntaking && !interrupted()){
                     Intake(0.7);
-                    //If the switch is not pressed...
-                    //Devices.ballSwitch2.get()
+
+                    if(PickUpArm.pickupArm.isExtended() && Devices.ballLightSensor.getValue() < lightLevel){
+                       
+                        Util.consoleLog("ball passed=%d", Devices.ballLightSensor.getValue());
+                        PickUpArm.pickupArm.Retract();
+                    }
                     if(Devices.ballSwitch.get()){
-                //         //And the ball hasn't passed over the switch already
+                         //And the ball hasn't passed over the switch already
                         if(switchPressed == false){
                             //Keep the ball spit motor running
                             Spit(0.2);
-                           // switchPressed = false;
                         }
-                //         //And the ball has passed over the switch already
+                         //And the ball has passed over the switch already
                         else if(switchPressed == true){
-                //             //Stop the motor
+                             //Stop the motor
                             Spit(-0.05);
-                            // Timer.delay(1.0);
-                //             //Set doneIntaking to true so that we can break out of this loop
+            
+                             //Set doneIntaking to true so that we can break out of this loop
                             doneIntaking = true;
                             
                         }
@@ -174,7 +181,6 @@ public class IntakeAndSpit {
                 Devices.pickupMotor.set(0);
                 Devices.ballSpit.set(0);
                 PickUpArm.pickupArm.Retract();
-                PickUpArm.pickupArm.display();
                 Util.consoleLog("Over so soon?");
 			}
 			catch (Throwable e) { e.printStackTrace(Util.logPrintStream); }
@@ -184,7 +190,6 @@ public class IntakeAndSpit {
                 Devices.pickupMotor.set(0);
                 Devices.ballSpit.set(-0.05);
                 PickUpArm.pickupArm.Retract();
-                PickUpArm.pickupArm.display();
                 ISTHREADRUNNING = false;
                 
             }

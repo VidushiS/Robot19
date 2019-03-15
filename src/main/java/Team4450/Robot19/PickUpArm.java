@@ -20,6 +20,8 @@ public class PickUpArm {
     public static PickUpArm pickupArm = null;
 
     public static PickUpArm getInstance(Robot robot){
+        Util.consoleLog();
+        
         if(pickupArm == null){
             pickupArm = new PickUpArm(robot);
         }

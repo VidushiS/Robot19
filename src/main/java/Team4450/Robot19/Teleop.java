@@ -92,52 +92,54 @@ class Teleop
 
 		// Configure LaunchPad and Joystick event handlers.
 
-		launchPad = new LaunchPad(Devices.launchPad, LaunchPadControlIDs.BUTTON_RED, this);
+		launchPad = new LaunchPad(Devices.launchPad, this);
 
-		LaunchPadControl lpControl = launchPad.AddControl(LaunchPadControlIDs.ROCKER_LEFT_BACK);
-		lpControl.controlType = LaunchPadControlTypes.SWITCH;
+		// launchPad = new LaunchPad(Devices.launchPad, LaunchPadControlIDs.BUTTON_RED, this);
 
-		lpControl = launchPad.AddControl(LaunchPadControlIDs.ROCKER_LEFT_FRONT);
-		lpControl.controlType = LaunchPadControlTypes.SWITCH;
+		// LaunchPadControl lpControl = launchPad.AddControl(LaunchPadControlIDs.ROCKER_LEFT_BACK);
+		// lpControl.controlType = LaunchPadControlTypes.SWITCH;
 
-		//Example on how to track more buttons:
-		launchPad.AddControl(LaunchPadControlIDs.BUTTON_GREEN);
-		launchPad.AddControl(LaunchPadControlIDs.BUTTON_BLACK);
-		launchPad.AddControl(LaunchPadControlIDs.BUTTON_RED_RIGHT);
-		launchPad.AddControl(LaunchPadControlIDs.BUTTON_BLUE);
-		launchPad.AddControl(LaunchPadControlIDs.BUTTON_BLUE_RIGHT);
-		//launchPad.AddControl(LaunchPadControlIDs.BUTTON_RED);
-		launchPad.AddControl(LaunchPadControlIDs.BUTTON_YELLOW);
-		launchPad.AddControl(LaunchPadControlIDs.ROCKER_LEFT_BACK);
-		launchPad.AddControl(LaunchPadControlIDs.ROCKER_LEFT_FRONT);
-		launchPad.AddControl(LaunchPadControlIDs.ROCKER_RIGHT);
+		// lpControl = launchPad.AddControl(LaunchPadControlIDs.ROCKER_LEFT_FRONT);
+		// lpControl.controlType = LaunchPadControlTypes.SWITCH;
+
+		// //Example on how to track more buttons:
+		// launchPad.AddControl(LaunchPadControlIDs.BUTTON_GREEN);
+		// launchPad.AddControl(LaunchPadControlIDs.BUTTON_BLACK);
+		// launchPad.AddControl(LaunchPadControlIDs.BUTTON_RED_RIGHT);
+		// launchPad.AddControl(LaunchPadControlIDs.BUTTON_BLUE);
+		// launchPad.AddControl(LaunchPadControlIDs.BUTTON_BLUE_RIGHT);
+		// //launchPad.AddControl(LaunchPadControlIDs.BUTTON_RED);
+		// launchPad.AddControl(LaunchPadControlIDs.BUTTON_YELLOW);
+		// launchPad.AddControl(LaunchPadControlIDs.ROCKER_LEFT_BACK);
+		// launchPad.AddControl(LaunchPadControlIDs.ROCKER_LEFT_FRONT);
+		// launchPad.AddControl(LaunchPadControlIDs.ROCKER_RIGHT);
 		
 		launchPad.addLaunchPadEventListener(new LaunchPadListener());
-		launchPad.Start();
+		// launchPad.Start();
 
-		leftStick = new JoyStick(Devices.leftStick, "LeftStick", this);
+		leftStick = new JoyStick(Devices.leftStick, "LeftStick", JoyStickButtonIDs.TRIGGER, this);
 		//Example on how to track button:
 		//leftStick.AddButton(JoyStickButtonIDs.BUTTON_NAME_HERE);
-		// leftStick.AddButton(JoyStickButtonIDs.TRIGGER);
+		 //leftStick.AddButton(JoyStickButtonIDs.TRIGGER);
 		// leftStick.AddButton(JoyStickButtonIDs.TOP_RIGHT);
 		// leftStick.AddButton(JoyStickButtonIDs.TOP_MIDDLE);
 		// leftStick.AddButton(JoyStickButtonIDs.TOP_LEFT);
 		// //leftStick.AddButton(JoyStickButtonIDs.TOP_RIGHT);
-		// leftStick.AddButton(JoyStickButtonIDs.TOP_BACK);
+		 leftStick.AddButton(JoyStickButtonIDs.TOP_BACK);
 		// leftStick.AddButton(JoyStickButtonIDs.RIGHT_REAR);
 		leftStick.addJoyStickEventListener(new LeftStickListener());
-		//leftStick.Start();
+		leftStick.Start();
 
-		rightStick = new JoyStick(Devices.rightStick, "RightStick", this);
+		rightStick = new JoyStick(Devices.rightStick, "RightStick", JoyStickButtonIDs.TRIGGER, this);
 		//Example on how to track button:
 		//rightStick.AddButton(JoyStickButtonIDs.BUTTON_NAME_HERE);
 		// rightStick.AddButton(JoyStickButtonIDs.TRIGGER);
-		// rightStick.AddButton(JoyStickButtonIDs.TOP_MIDDLE);
+		 rightStick.AddButton(JoyStickButtonIDs.TOP_MIDDLE);
 		// rightStick.AddButton(JoyStickButtonIDs.TOP_BACK);
 		// rightStick.AddButton(JoyStickButtonIDs.TOP_LEFT);
 		// rightStick.AddButton(JoyStickButtonIDs.TOP_RIGHT);
 		rightStick.addJoyStickEventListener(new RightStickListener());
-		//rightStick.Start();
+		rightStick.Start();
 
 		utilityStick = new JoyStick(Devices.utilityStick, "UtilityStick", this);
 		//Example on how to track button:
@@ -155,7 +157,8 @@ class Teleop
 		// Invert driving joy sticks Y axis so + values mean forward.
 		leftStick.invertY(true);
 		rightStick.invertY(true);
-
+		
+		utilityStick.deadZoneY(0.20);
 		// Set CAN Talon brake mode by rocker switch setting.
 		// We do this here so that the Utility stick thread has time to read the initial state
 		// of the rocker switch. Depends on lpcontrol being the last control defined for the 
@@ -188,23 +191,16 @@ class Teleop
 		//robot.cameraThread.ChangeCamera();
 
 		Util.consoleLog("enter driving loop");
-		
+		boolean firsttime = true;
 		while (robot.isEnabled())
 		{
 			// Get joystick deflection and feed to robot drive object
 			// using calls to our JoyStick class.
-			double correctionFactor = 0.5;
-			double stickFactor = 0.9;
+			rightY = rightStick.GetY(); // fwd/back
+			leftY = leftStick.GetY(); // fwd/back
 
-			rightY = stickLogCorrection(rightStick.GetY()) * stickFactor;	// fwd/back
-			leftY = stickLogCorrection(leftStick.GetY()) * stickFactor;	// fwd/back
-			// rightY = rightStick.GetY();
-			// leftY = leftStick.GetY();
-
-			rightX = correctionFactor * stickLogCorrection(rightStick.GetX());	// left/right
-			// leftX = stickLogCorrection(leftStick.GetX());	// left/right
-
-			//rightX = rightStick.GetX() * correctionFactor;
+			rightX =  rightStick.GetX();	// left/right
+			
 			leftX = leftStick.GetX();
 
 			utilY = utilityStick.GetY();
@@ -216,7 +212,7 @@ class Teleop
 			LCD.printLine(4, "leftY=%.3f  rightY=%.3f  utilY=%.3f", leftY, rightY, utilY);
 			LCD.printLine(5, "yaw=%.2f, total=%.2f, rate=%.2f, hdng=%.2f", Devices.navx.getYaw(), 
 					Devices.navx.getTotalYaw(), Devices.navx.getYawRate(), Devices.navx.getHeading());
-			LCD.printLine(7, "winchSwitch =%b ballSwitch =%b", Devices.winchSwitch.get(), Devices.ballSwitch.get());
+			LCD.printLine(7, "winchSwitch =%b ballSwitch =%b ballSensor =%d", Devices.winchSwitch.get(), Devices.ballSwitch.get(), Devices.ballLightSensor.getValue());
 			//ballSwitch2 =%b Devices.ballSwitch2.get()
 			LCD.printLine(10, "pressureV=%.2f  psi=%d", robot.monitorCompressorThread.getVoltage(), 
 					robot.monitorCompressorThread.getPressure());
@@ -228,76 +224,67 @@ class Teleop
 
 			// Two drive modes, full tank and alternate. Switch on right stick trigger.
 
-			// if (!autoTarget) 
-			// {
-			// 	if (altDriveMode)
-			// 	{	// normal tank with straight drive assist when sticks within 10% of each other and
-					// right stick power is greater than 50%.
-					//NEW CODE FOR H-DRIVE RIGHT HERE
-					//Devices.hDrive.set(speed);
+			if (!autoTarget) 
+			{
+				if (altDriveMode)
+				{	// normal tank with straight drive assist when sticks within 10% of each other and
+					if (isLeftRightEqual(leftY, rightY, 10) && Math.abs(rightY) > .50)
+					{
+						// Reset angle measurement when entering this code first time after mode is enabled.
+						if (!steeringAssistMode) Devices.navx.resetYaw();
 
-					// if (isLeftRightEqual(leftY, rightY, 10) && Math.abs(rightY) > .50)
-					// {
-					// 	// Reset angle measurement when entering this code first time after mode is enabled.
-					// 	if (!steeringAssistMode) Devices.navx.resetYaw();
+						// Angle is negative if robot veering left, positive if veering right when going forward.
+						// It is opposite when going backward.
 
-					// 	// Angle is negative if robot veering left, positive if veering right when going forward.
-					// 	// It is opposite when going backward.
+						angle = (int) Devices.navx.getYaw();
 
-					// 	angle = (int) Devices.navx.getYaw();
+						LCD.printLine(5, "angle=%d", angle);
 
-					// 	LCD.printLine(5, "angle=%d", angle);
+						// Invert angle for backwards movemment.
 
-					// 	// Invert angle for backwards movemment.
+						if (rightY < 0) angle = -angle;
 
-					// 	if (rightY < 0) angle = -angle;
+						//Util.consoleLog("angle=%d", angle);
 
-					// 	//Util.consoleLog("angle=%d", angle);
-
-					// 	// Note we invert sign on the angle because we want the robot to turn in the opposite
-					// 	// direction than it is currently going to correct it. So a + angle says robot is veering
-					// 	// right so we set the turn value to - because - is a turn left which corrects our right
-					// 	// drift.
+						// Note we invert sign on the angle because we want the robot to turn in the opposite
+						// direction than it is currently going to correct it. So a + angle says robot is veering
+						// right so we set the turn value to - because - is a turn left which corrects our right
+						// drift.
 						
-					// 	Devices.robotDrive.curvatureDrive(rightY, -angle * gain, false);
+						Devices.robotDrive.curvatureDrive(rightY, -angle * gain, false);
 						
 
-					// 	steeringAssistMode = true;
-					// }
-					// else
-					// {
-					// 	steeringAssistMode = false;
-					// 	Devices.robotDrive.tankDrive(leftY, rightY);		// Normal tank drive.
-					// }
+						steeringAssistMode = true;
+					}
+					else
+					{
+						steeringAssistMode = false;
+						Devices.robotDrive.tankDrive(leftY, rightY);		// Normal tank drive.
+					}
 
-				// 	SmartDashboard.putBoolean("SteeringAssist", steeringAssistMode);
-				// }
-				// else
-				// if(rightStick.GetCurrentState(JoyStickButtonIDs.TRIGGER) && !leftStick.GetCurrentState(JoyStickButtonIDs.TRIGGER)){
-				// 	Devices.hDrive.set(0.5);
-				// }
-				// else {Devices.hDrive.set(0);}
+					SmartDashboard.putBoolean("SteeringAssist", steeringAssistMode);
+				}
+				else Devices.robotDrive.tankDrive(leftY, rightY);
+			}
 
-
-				// if(leftStick.GetCurrentState(JoyStickButtonIDs.TRIGGER) && !rightStick.GetCurrentState(JoyStickButtonIDs.TRIGGER)){
-				// 	Devices.hDrive.set(-0.5);
-				// }
-				// else {Devices.hDrive.set(0);}
+				if (firsttime) Util.consoleLog("after tank drive");
+				
+				firsttime = false;
 
 				if (rightStick.GetCurrentState(JoyStickButtonIDs.TRIGGER)){
-					Devices.hDrive.set(rightX);
+					
+					Devices.hDrive.set(rightX * 0.50);
+
+						if (rightX < 0)
+							leftY = .34;
+						else
+							rightY = .34;
 				}
 				else Devices.hDrive.set(0);
 
-				//lift.setWinchPower(squaredInput(utilY));
-
-				Devices.robotDrive.tankDrive(leftY, rightY);		// Normal tank drive.
+						// Normal tank drive.
 
 				if(utilityStick.GetCurrentState(JoyStickButtonIDs.TOP_BACK)){
-					// if(utilY < 0.0){
-					// 	utilY = -0.20;
-					// }
-					// else utilY = 0.20;
 					utilY = utilY * 0.15;
 					Devices.hatchWinch.set(utilY);
 				}
@@ -308,7 +295,7 @@ class Teleop
 				
 					// This shows how to use curvature drive mode, toggled by trigger (for testing).
 					//Devices.robotDrive.curvatureDrive(rightY, rightX, rightStick.GetLatchedState(JoyStickButtonIDs.TRIGGER));
-		//	}
+			
 
 			// Update the robot heading indicator on the DS. Only for labview DB.
 
@@ -326,12 +313,13 @@ class Teleop
 		// End of teleop mode.
 
 		// ensure we start next time in low gear.
-	}
+		}
 		gearBox.lowSpeed();
 		
 		Util.consoleLog("end");
 					
 	}
+
 
 	private boolean isLeftRightEqual(double left, double right, double percent)
 	{
@@ -374,7 +362,7 @@ class Teleop
 		{
 			LaunchPadControl	control = launchPadEvent.control;
 
-			Util.consoleLog("%s, latchedState=%b", control.id.name(),  control.latchedState);
+			Util.consoleLog("%s, latchedState=%b ord=%d hc=%d %s", control.id.name(),  control.latchedState, control.id.ordinal(), control.id.hashCode(), control.id.getClass().toString());
 
 
 			switch(control.id)
@@ -458,8 +446,8 @@ class Teleop
     				break;
     				
 	    		case ROCKER_LEFT_FRONT:
-					//if (robot.cameraThread != null) robot.cameraThread.ChangeCamera();
-					//invertDrive = !invertDrive;
+					if (robot.cameraThread != null) robot.cameraThread.ChangeCamera();
+					
 	    			break;
 	    			
 				default:
@@ -538,6 +526,10 @@ class Teleop
 	    			else
 	    				gearBox.lowSpeed();
 
+					break;
+				
+				case TOP_BACK:
+					altDriveMode = !altDriveMode;
 					break;
 					
 				default:
