@@ -136,7 +136,7 @@ public class IntakeAndSpit {
                 while(!doneIntaking && !interrupted()){
                     Intake(0.7);
 
-                    if(PickUpArm.pickupArm.isExtended() && Devices.ballLightSensor.getValue() < lightLevel){
+                    if(PickUpArm.pickupArm.isExtended() && Devices.ballLightSensor.getValue() < 1000){
                        
                         Util.consoleLog("ball passed=%d", Devices.ballLightSensor.getValue());
                         PickUpArm.pickupArm.Retract();
@@ -165,7 +165,7 @@ public class IntakeAndSpit {
                         switchPressed = true;
                         Spit(0.20);
                     }
-                    sleep(30);
+                    sleep(10);
                  }
             
                 //Alerts when its done

@@ -2,6 +2,7 @@ package Team4450.Robot19;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.ctre.phoenix.motorcontrol.can.*;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -51,10 +52,10 @@ public class Devices
 
 	   public final static ValveDA		highLowValve = new ValveDA(0);		// For gearbox.
 	  public final static ValveDA		frontClimbValve = new ValveDA(2);	// For front lift.
-	  public final static ValveDA		rearClimbValve = new ValveDA(4);	// For rear lift.
+	  public final static ValveDA		rearClimbValve = new ValveDA(6);	// For rear lift.
 	  public final static ValveDA		pickupValve = new ValveDA(1, 0);		// For pickup arm.
 	  public final static ValveSA		hatchKickValve = new ValveSA(1, 2);	// Kick of hatch.
- public final static ValveDA		unusedValve = new ValveDA(6);
+ public final static ValveDA		unusedValve = new ValveDA(4);
 	
 
 	  public final static AnalogInput	pressureSensor = new AnalogInput(0);
@@ -156,11 +157,16 @@ public class Devices
 			leftSpark = new CANSparkMax(5, MotorType.kBrushless);
 			rightSpark = new CANSparkMax(6, MotorType.kBrushless);
 
-				
+		// 	leftSpark.setIdleMode(IdleMode.kBrake);
+		//   rightSpark.setIdleMode(IdleMode.kBrake);
+		  
+		//   leftSpark.setOpenLoopRampRate(2.0);
+		//   rightSpark.setOpenLoopRampRate(2.0);
 
 			// Setup a SpeedControllerGroup for the left and right H drive motors.
 			hDrive = new SpeedControllerGroup(leftSpark, rightSpark);
 			hDrive.setInverted(true);
+
 			
 			leftWinch = new WPI_VictorSPX(7);
 			rightWinch = new WPI_VictorSPX(8);
@@ -168,8 +174,10 @@ public class Devices
 			ballSpit = new WPI_VictorSPX(10);
 
 			//Added this in for the comp bot, I guess we will see how it goes?
+			//NEED FOR COMP BOT
+			winchEncoder.setReverseDirection(false);
 
-			winchEncoder.setReverseDirection(true);
+			hatchEncoder.setReverseDirection(true);
 
 			hatchWinch = new VictorSP(0);
 
@@ -186,8 +194,10 @@ public class Devices
 
 			// Setup a SpeedControllerGroup for the left and right winch drive motors.
 			winchDrive = new SpeedControllerGroup(leftWinch, rightWinch);
-			winchDrive.setInverted(false);
+			//winchDrive.setInverted(false);
 
+			//INVERTING HATCH MOTOR HERE
+			hatchWinch.setInverted(true);
 			unusedValve.solenoidSlideTime = 0.1;
 	
 			frontClimbValve.solenoidSlideTime = 0.1;

@@ -20,6 +20,7 @@ public class HatchScoring {
     //Make sure you have the right modifier... they can be globally accessed right now
     private boolean isExtended;
     private boolean isRetracted;
+    private boolean initPosition = false;
     private boolean				holdingPosition;
     private boolean             holdingHeight = false;
     private boolean hatchHoldingHeight = false;
@@ -102,18 +103,23 @@ public class HatchScoring {
     //CHANGE THIS UP COMPLETELY
     public void setHeight(int count)
 	{
-		Util.consoleLog("%d", count);
+        Util.consoleLog("%d", count);
+        if(count == 20000){
+            initPosition = true;
+        }
+        else initPosition = false;
 		
 		if (count >= 0)
 		{			
+            
 			// p,i,d values are a guess.
 			// f value is the motor power to apply to move to encoder target count.
 			// Setpoint is the target encoder count.
 			// The idea is that the difference between the current encoder count and the
 			// target count will apply power to bring the two counts together and stay there.
-			hatchPidController.setPID(0.0003, 0.00001, 0.0003, 0.0);
+            hatchPidController.setPID(0.00003, 0.00001, 0.0003, 0.0);
 			//liftPidController.setPID(0.0003, 0.0, 0.0, 0.0);
-			hatchPidController.setOutputRange(-1, 1);
+			hatchPidController.setOutputRange(-0.1, 0.1);
 			hatchPidController.setSetpoint(count);
 			hatchPidController.setPercentTolerance(1);	// % error.
 			hatchPidController.enable();
@@ -126,6 +132,9 @@ public class HatchScoring {
 		}
 		
 		 Display();
+    }
+    public boolean initPosition(){
+        return initPosition;
     }
     
     public boolean hatchHoldingHeight(){

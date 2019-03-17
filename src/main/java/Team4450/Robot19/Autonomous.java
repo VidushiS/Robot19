@@ -86,8 +86,8 @@ public class Autonomous
 		autoChooser.addOption("Right Close", AutoProgram.RocketRightClose);
 		autoChooser.addOption("Right Middle", AutoProgram.RocketRightMiddle);
 		autoChooser.addOption("Right Far", AutoProgram.RocketRightFar);
-		autoChooser.addOption("Middle Left", AutoProgram.RocketMiddlePathLeft);
-		autoChooser.addOption("Middle Right", AutoProgram.RocketMiddlePathRight);
+		autoChooser.addOption("Middle Cargo Left", AutoProgram.RocketMiddlePathLeft);
+		autoChooser.addOption("Middle Cargo Right", AutoProgram.RocketMiddlePathRight);
 		autoChooser.addOption("Right Cargo", AutoProgram.RocketRightCargo);
 		autoChooser.addOption("Left Cargo", AutoProgram.RocketLeftCargo);
 		autoChooser.addOption("PathFinder Test", AutoProgram.TestPathFinder);

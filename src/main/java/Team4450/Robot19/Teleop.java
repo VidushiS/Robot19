@@ -223,6 +223,13 @@ class Teleop
 			//if (!autoTarget) robot.robotDrive.tankDrive(leftY, rightY);
 
 			// Two drive modes, full tank and alternate. Switch on right stick trigger.
+			if (rightStick.GetCurrentState(JoyStickButtonIDs.TRIGGER)){
+					
+				Devices.hDrive.set(rightX * 0.95);
+
+					if (rightX > 0) rightY = .30;
+			}
+			else Devices.hDrive.set(0);
 
 			if (!autoTarget) 
 			{
@@ -271,27 +278,26 @@ class Teleop
 				
 				firsttime = false;
 
-				if (rightStick.GetCurrentState(JoyStickButtonIDs.TRIGGER)){
-					
-					Devices.hDrive.set(rightX * 0.50);
-
-						if (rightX < 0)
-							leftY = .34;
-						else
-							rightY = .34;
-				}
-				else Devices.hDrive.set(0);
+				
 
 						// Normal tank drive.
 
-				if(utilityStick.GetCurrentState(JoyStickButtonIDs.TOP_BACK)){
-					utilY = utilY * 0.15;
-					Devices.hatchWinch.set(utilY);
-				}
-				else{
-					Devices.hatchWinch.set(0.0);
+				// if(utilityStick.GetCurrentState(JoyStickButtonIDs.TOP_BACK)){
+
+				// 	if(utilY < 0){
+				// 		utilY = 0.10;
+				// 	}
+				// 	else if(utilY > 0){
+				// 		utilY = -0.10;
+				// 	}
+
+				// 	//utilY = utilY * 0.15;
+				// 	Devices.hatchWinch.set(utilY);
+				// }
+				// else{
+				// 	Devices.hatchWinch.set(0.0);
 					lift.setWinchPower(squaredInput(utilY));
-				} 
+				//} 
 				
 					// This shows how to use curvature drive mode, toggled by trigger (for testing).
 					//Devices.robotDrive.curvatureDrive(rightY, rightX, rightStick.GetLatchedState(JoyStickButtonIDs.TRIGGER));
@@ -408,12 +414,8 @@ class Teleop
 					break;
 				
 				case BUTTON_RED_RIGHT:
-					// if(!lift.isHoldingHeight()){
-					// 	lift.setHeight(1349);
-					// }
-					// else lift.setHeight(-1);
 					if(!lift.isHoldingHeight()){
-						lift.setHeight(350);
+						lift.setHeight(1349);
 					}
 					else lift.setHeight(-1);
 					break;
@@ -476,16 +478,13 @@ class Teleop
 				}
 				else intakeSpit.StopIntake();
 				break;
-
-
-				// case TOP_BACK:
-				// 	if(button.latchedState){
-				// 		hatch.setHeight(528);
-				// 	}
-				// 	else hatch.setHeight(803);
-				// 	break;
-
 				
+				case TOP_LEFT:
+				if(!lift.isHoldingHeight()){
+					lift.setHeight(350);
+				}
+				else lift.setHeight(-1);
+				break;
 
 			//Example of Joystick Button case:
 			/*
@@ -582,6 +581,13 @@ class Teleop
 					}
 					else intakeSpit.StopAutoIntake();
 					break;
+
+				case TOP_BACK:
+					if(!hatch.initPosition()){
+						hatch.setHeight(20000);
+					}
+					else hatch.setHeight(41000);
+				break;
 
 				default:
 					break;
