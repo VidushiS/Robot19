@@ -127,7 +127,7 @@ public class Robot extends SampleRobot
    		
    		// Configure motor controllers and RobotDrive.
    		
-   		Devices.InitializeCANTalonDrive();
+   		Devices.InitializeCANTalonDrive(this);
 
    		// Configure starting motor safety;
    		

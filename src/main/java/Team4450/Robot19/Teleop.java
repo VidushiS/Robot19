@@ -183,7 +183,7 @@ class Teleop
 		// Motor safety turned on.
 		Devices.robotDrive.setSafetyEnabled(true);
 
-		Devices.unusedValve.Close();
+		//Devices.unusedValve.Close();
 
 		// Driving loop runs until teleop is over.
 
@@ -282,22 +282,22 @@ class Teleop
 
 						// Normal tank drive.
 
-				// if(utilityStick.GetCurrentState(JoyStickButtonIDs.TOP_BACK)){
+				if(utilityStick.GetCurrentState(JoyStickButtonIDs.TOP_BACK)){
 
-				// 	if(utilY < 0){
-				// 		utilY = 0.10;
-				// 	}
-				// 	else if(utilY > 0){
-				// 		utilY = -0.10;
-				// 	}
+					if(utilY < 0){
+						utilY = 0.10;
+					}
+					else if(utilY > 0){
+						utilY = -0.20;
+					}
 
-				// 	//utilY = utilY * 0.15;
-				// 	Devices.hatchWinch.set(utilY);
-				// }
-				// else{
-				// 	Devices.hatchWinch.set(0.0);
+					//utilY = utilY * 0.15;
+					Devices.hatchWinch.set(utilY);
+				}
+				else{
+					Devices.hatchWinch.set(0.0);
 					lift.setWinchPower(squaredInput(utilY));
-				//} 
+				} 
 				
 					// This shows how to use curvature drive mode, toggled by trigger (for testing).
 					//Devices.robotDrive.curvatureDrive(rightY, rightX, rightStick.GetLatchedState(JoyStickButtonIDs.TRIGGER));
@@ -415,7 +415,7 @@ class Teleop
 				
 				case BUTTON_RED_RIGHT:
 					if(!lift.isHoldingHeight()){
-						lift.setHeight(1349);
+						lift.setHeight(1400);
 					}
 					else lift.setHeight(-1);
 					break;
@@ -569,10 +569,14 @@ class Teleop
 					break;
 
 				case TRIGGER:
-					// if(!hatch.isExtended()){
-					// 	hatch.HatchKickOut();
-					// }
-					// else hatch.HatchKickIn();
+					if(!hatch.isExtended()){
+						hatch.HatchKickOut();
+						//hatch.setHeight(20000);
+					}
+					else {
+						hatch.HatchKickIn();
+						//hatch.setHeight(24500);
+					}
 					break;
 				
 				case TOP_MIDDLE:
@@ -582,12 +586,12 @@ class Teleop
 					else intakeSpit.StopAutoIntake();
 					break;
 
-				case TOP_BACK:
-					if(!hatch.initPosition()){
-						hatch.setHeight(20000);
-					}
-					else hatch.setHeight(41000);
-				break;
+				// case TOP_BACK:
+				// 	if(!hatch.initPosition()){
+				// 		hatch.setHeight(20000);
+				// 	}
+				// 	else hatch.setHeight(41000);
+				// break;
 
 				default:
 					break;

@@ -52,10 +52,10 @@ public class Devices
 
 	   public final static ValveDA		highLowValve = new ValveDA(0);		// For gearbox.
 	  public final static ValveDA		frontClimbValve = new ValveDA(2);	// For front lift.
-	  public final static ValveDA		rearClimbValve = new ValveDA(6);	// For rear lift.
+	  public final static ValveDA		rearClimbValve = new ValveDA(4);	// For rear lift.
 	  public final static ValveDA		pickupValve = new ValveDA(1, 0);		// For pickup arm.
-	  public final static ValveSA		hatchKickValve = new ValveSA(1, 2);	// Kick of hatch.
- public final static ValveDA		unusedValve = new ValveDA(4);
+	  public final static ValveDA		hatchKickValve = new ValveDA(6);	// Kick of hatch.
+ //public final static ValveDA		unusedValve = new ValveDA(4);
 	
 
 	  public final static AnalogInput	pressureSensor = new AnalogInput(0);
@@ -93,7 +93,7 @@ public class Devices
 	  
 	  // Initialize motor controllers, groups and encoders.
 	  
-	  public static void InitializeCANTalonDrive()
+	  public static void InitializeCANTalonDrive(Robot robot)
 	  {
 			Util.consoleLog();
 
@@ -175,9 +175,14 @@ public class Devices
 
 			//Added this in for the comp bot, I guess we will see how it goes?
 			//NEED FOR COMP BOT
-			winchEncoder.setReverseDirection(false);
 
-			hatchEncoder.setReverseDirection(true);
+			if(robot.isComp){
+				winchEncoder.setReverseDirection(true);
+			}
+			else winchEncoder.setReverseDirection(false);
+			
+
+			hatchEncoder.setReverseDirection(false);
 
 			hatchWinch = new VictorSP(0);
 
@@ -198,7 +203,7 @@ public class Devices
 
 			//INVERTING HATCH MOTOR HERE
 			hatchWinch.setInverted(true);
-			unusedValve.solenoidSlideTime = 0.1;
+			hatchKickValve.solenoidSlideTime = 0.1;
 	
 			frontClimbValve.solenoidSlideTime = 0.1;
 			rearClimbValve.solenoidSlideTime = 0.1;

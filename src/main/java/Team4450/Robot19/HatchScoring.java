@@ -48,12 +48,7 @@ public class HatchScoring {
     private HatchScoring(Robot robot){
         this.robot = robot;
         hatchPidController = new PIDController(0.0, 0.0, 0.0, Devices.hatchEncoder, Devices.hatchWinch);
-        // isExtended = true;
-        // isRetracted = false;
-        
-        //HatchKickIn();
-
-        //setHeight(-1400);
+        HatchKickOut();
         Devices.hatchEncoder.reset();
         Util.consoleLog("The Hatch Has been created");
     }
@@ -62,7 +57,7 @@ public class HatchScoring {
     public void Display(){
         Util.consoleLog("IstheHatchOut =%b IstheHatchIn =%b", isExtended, isRetracted);
         SmartDashboard.putBoolean("HatchExtended", isExtended);
-        SmartDashboard.putBoolean("HatchRetracted", isRetracted);
+       // SmartDashboard.putBoolean("HatchRetracted", isRetracted);
 
         //COME UP WITH A BETTER NAME...
         SmartDashboard.putBoolean("Hatch Set Position", hatchHoldingHeight);
@@ -79,9 +74,9 @@ public class HatchScoring {
         return isMoving;
     }
     public void HatchKickOut(){
-            Devices.hatchKickValve.Open();
+            Devices.hatchKickValve.SetA();
             isExtended = true;
-            isRetracted = false;
+           // isRetracted = false;
         
         
         Display();
@@ -89,10 +84,10 @@ public class HatchScoring {
     }
     public void HatchKickIn(){
 
-        
-            Devices.hatchKickValve.Close();
+            Devices.hatchKickValve.SetB();
+
             isExtended = false;
-            isRetracted = true;
+           // isRetracted = true;
 
         Display();
 
@@ -119,7 +114,7 @@ public class HatchScoring {
 			// target count will apply power to bring the two counts together and stay there.
             hatchPidController.setPID(0.00003, 0.00001, 0.0003, 0.0);
 			//liftPidController.setPID(0.0003, 0.0, 0.0, 0.0);
-			hatchPidController.setOutputRange(-0.1, 0.1);
+			hatchPidController.setOutputRange(-0.2, 0.1);
 			hatchPidController.setSetpoint(count);
 			hatchPidController.setPercentTolerance(1);	// % error.
 			hatchPidController.enable();

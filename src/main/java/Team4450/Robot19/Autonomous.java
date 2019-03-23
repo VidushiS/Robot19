@@ -56,7 +56,9 @@ public class Autonomous
 	
 	private boolean isAutoActive()
 	{
-		return robot.isEnabled() && robot.isAutonomous();
+		if(lp.GetLatchedState(LaunchPadControlIDs.BUTTON_RED)) endAuto = true;
+
+		return robot.isEnabled() && robot.isAutonomous() && !endAuto;
 	}
 	
 	// Configure SendableChooser with auto program choices and
@@ -136,12 +138,11 @@ public class Autonomous
 		// Set Talon ramp rate for smooth acceleration from stop. Determine by observation.
 		Devices.SetCANTalonRampRate(1.0);
 
-		Devices.unusedValve.Close();
+		//Devices.unusedValve.Close();
 
 		//Initialize LaunchPad to make a kill switch
 		lp = new LaunchPad(Devices.launchPad, LaunchPadControlIDs.BUTTON_RED, this);
-
-		 if(lp.GetLatchedState(LaunchPadControlIDs.BUTTON_RED)) endAuto = true;
+		lp.Start();
 		
 		//Finish initialization
 
@@ -312,7 +313,7 @@ public class Autonomous
 	   //This is the delay I am setting
 	   double delay = 0;
 	   Util.getElaspedTime();
-	   while(isAutoActive() && !endAuto && (SegCount < leftPath.length())){
+	   while(isAutoActive() && (SegCount < leftPath.length())){
 
 		   //Keeping Track of Segments
 		   elapsedTime = Util.getElaspedTime();
@@ -332,7 +333,7 @@ public class Autonomous
 
 		   double angleDifference = Pathfinder.boundHalfDegrees(segment_heading - gyro_heading);
 
-		   double turn = 0.8 *(1.0/80.0) *angleDifference;
+		   double turn = 0.4 *(1.0/80.0) *angleDifference;
 
 		   leftSpeed = Util.clampValue(leftSpeed + turn, 1);
 		   rightSpeed = Util.clampValue(rightSpeed - turn, 1);

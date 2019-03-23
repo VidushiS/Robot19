@@ -22,7 +22,7 @@ public class Lift {
     private boolean				holdingPosition, holdingHeight;
     private final PIDController liftPidController;
 
-    private int MAXENCODERCOUNTS = 1400;
+    private int MAXENCODERCOUNTS = 1500;
     public static Lift lift = null;
 
     public static Lift getInstance(Robot robot){
