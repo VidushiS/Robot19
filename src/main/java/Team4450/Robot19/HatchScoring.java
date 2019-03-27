@@ -48,7 +48,7 @@ public class HatchScoring {
     private HatchScoring(Robot robot){
         this.robot = robot;
         hatchPidController = new PIDController(0.0, 0.0, 0.0, Devices.hatchEncoder, Devices.hatchWinch);
-        HatchKickOut();
+        Devices.hatchKickValve.SetB();
         Devices.hatchEncoder.reset();
         Util.consoleLog("The Hatch Has been created");
     }

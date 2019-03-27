@@ -52,9 +52,9 @@ public class Devices
 
 	   public final static ValveDA		highLowValve = new ValveDA(0);		// For gearbox.
 	  public final static ValveDA		frontClimbValve = new ValveDA(2);	// For front lift.
-	  public final static ValveDA		rearClimbValve = new ValveDA(4);	// For rear lift.
+	  public final static ValveDA		rearClimbValve = new ValveDA(6);	// For rear lift. Swapped with hatchKick
 	  public final static ValveDA		pickupValve = new ValveDA(1, 0);		// For pickup arm.
-	  public final static ValveDA		hatchKickValve = new ValveDA(6);	// Kick of hatch.
+	  public final static ValveDA		hatchKickValve = new ValveDA(4);	// Kick of hatch. Swapped with rearClimb. 
  //public final static ValveDA		unusedValve = new ValveDA(4);
 	
 
@@ -159,9 +159,9 @@ public class Devices
 
 		// 	leftSpark.setIdleMode(IdleMode.kBrake);
 		//   rightSpark.setIdleMode(IdleMode.kBrake);
-		  
-		//   leftSpark.setOpenLoopRampRate(2.0);
-		//   rightSpark.setOpenLoopRampRate(2.0);
+			
+			leftSpark.setOpenLoopRampRate(2.0);
+			rightSpark.setOpenLoopRampRate(2.0);
 
 			// Setup a SpeedControllerGroup for the left and right H drive motors.
 			hDrive = new SpeedControllerGroup(leftSpark, rightSpark);
@@ -189,9 +189,8 @@ public class Devices
 			leftWinch.setNeutralMode(NeutralMode.Brake);
 			rightWinch.setNeutralMode(NeutralMode.Brake);
 
-			leftWinch.configOpenloopRamp(2.0);
-			leftWinch.configOpenloopRamp(2.0);
-			
+			leftWinch.configOpenloopRamp(0);
+			rightWinch.configOpenloopRamp(0);
 			rightWinch.setInverted(true);
 
 			pickupMotor.setNeutralMode(NeutralMode.Brake);
@@ -203,10 +202,10 @@ public class Devices
 
 			//INVERTING HATCH MOTOR HERE
 			hatchWinch.setInverted(true);
-			hatchKickValve.solenoidSlideTime = 0.1;
-	
+			
+			hatchKickValve.solenoidSlideTime = 0.35;
 			frontClimbValve.solenoidSlideTime = 0.1;
-			rearClimbValve.solenoidSlideTime = 0.1;
+			rearClimbValve.solenoidSlideTime = 0.25;
 			pickupValve.solenoidSlideTime = 0.1;
 			highLowValve.solenoidSlideTime = 0.1;
 

@@ -13,7 +13,10 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * Add your docs here.
+ * Class meant for operation of the lift.
+ * The method setWinchPower uses manual control over the lift,
+ * while setHeight uses encoder counts to set the lift to a specific
+ * height. Note that an encoder value of <= -1 will disable the lift
  */
 public class Lift {
 
@@ -89,7 +92,7 @@ public class Lift {
 			// Setpoint is the target encoder count.
 			// The idea is that the difference between the current encoder count and the
 			// target count will apply power to bring the two counts together and stay there.
-			liftPidController.setPID(0.002, 0.00005, 0.0003, 0.0);
+			liftPidController.setPID(0.002, 0.0, 0.0, 0.0); //(0.002, 0.00005, 0.0003, 0.0);
 			//liftPidController.setPID(0.0003, 0.0, 0.0, 0.0);
 			liftPidController.setOutputRange(-1, 1);
 			liftPidController.setSetpoint(count);

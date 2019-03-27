@@ -23,6 +23,7 @@ public class IntakeAndSpit {
     public  boolean isSpitting = false;
     public  boolean isIntaking = false;
     public boolean reverseIntaking = false;
+    public boolean lightSensorEnabled = true;
      
     public static IntakeAndSpit intakeSpit = null;
     private Thread autoIntakeThread = null;
@@ -128,7 +129,7 @@ public class IntakeAndSpit {
 
  	    	Util.consoleLog("%d", lightLevel);
 
- 	    	lightLevel -= 200;
+ 	    	//lightLevel -= 200;
            
             try{
                 PickUpArm.pickupArm.Extend();
@@ -136,11 +137,18 @@ public class IntakeAndSpit {
                 while(!doneIntaking && !interrupted()){
                     Intake(0.7);
 
-                    if(PickUpArm.pickupArm.isExtended() && Devices.ballLightSensor.getValue() < 1000){
+                    //  
+                    //THis is the code for retracting the pickup using the optical sensor
+                    if(PickUpArm.pickupArm.isExtended() && Devices.ballLightSensor.getValue() < 200){
                        
                         Util.consoleLog("ball passed=%d", Devices.ballLightSensor.getValue());
-                        PickUpArm.pickupArm.Retract();
+
+                        if(lightSensorEnabled){
+                            PickUpArm.pickupArm.Retract();
+                        }
+                        
                     }
+
                     if(Devices.ballSwitch.get()){
                          //And the ball hasn't passed over the switch already
                         if(switchPressed == false){
@@ -154,6 +162,8 @@ public class IntakeAndSpit {
             
                              //Set doneIntaking to true so that we can break out of this loop
                             doneIntaking = true;
+                            Util.consoleLog("I have detected the end");
+                            break;
                             
                         }
                     
@@ -162,6 +172,7 @@ public class IntakeAndSpit {
                     else if(!Devices.ballSwitch.get()){
                         //Set switchPressed to true so that we know that the ball
                         //has passed over the switch
+                        Util.consoleLog("The ball is on the switch");
                         switchPressed = true;
                         Spit(0.20);
                     }
@@ -171,7 +182,7 @@ public class IntakeAndSpit {
                 //Alerts when its done
                 if(!interrupted() && robot.isEnabled()) {
                     Util.consoleLog("The ball is ready to be scored");
-                    sleep(500);
+                    //sleep(500);
                 }
 
             }

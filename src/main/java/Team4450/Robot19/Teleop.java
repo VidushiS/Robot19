@@ -123,8 +123,8 @@ class Teleop
 		 //leftStick.AddButton(JoyStickButtonIDs.TRIGGER);
 		// leftStick.AddButton(JoyStickButtonIDs.TOP_RIGHT);
 		// leftStick.AddButton(JoyStickButtonIDs.TOP_MIDDLE);
-		// leftStick.AddButton(JoyStickButtonIDs.TOP_LEFT);
-		// //leftStick.AddButton(JoyStickButtonIDs.TOP_RIGHT);
+		 leftStick.AddButton(JoyStickButtonIDs.TOP_LEFT);
+		leftStick.AddButton(JoyStickButtonIDs.TOP_RIGHT);
 		 leftStick.AddButton(JoyStickButtonIDs.TOP_BACK);
 		// leftStick.AddButton(JoyStickButtonIDs.RIGHT_REAR);
 		leftStick.addJoyStickEventListener(new LeftStickListener());
@@ -136,7 +136,7 @@ class Teleop
 		// rightStick.AddButton(JoyStickButtonIDs.TRIGGER);
 		 rightStick.AddButton(JoyStickButtonIDs.TOP_MIDDLE);
 		// rightStick.AddButton(JoyStickButtonIDs.TOP_BACK);
-		// rightStick.AddButton(JoyStickButtonIDs.TOP_LEFT);
+		 rightStick.AddButton(JoyStickButtonIDs.TOP_LEFT);
 		// rightStick.AddButton(JoyStickButtonIDs.TOP_RIGHT);
 		rightStick.addJoyStickEventListener(new RightStickListener());
 		rightStick.Start();
@@ -408,14 +408,14 @@ class Teleop
 				
 				case BUTTON_YELLOW:
 					if(!lift.isHoldingHeight()){
-						lift.setHeight(750);
+						lift.setHeight(850);
 					}
 					else lift.setHeight(-1);
 					break;
 				
 				case BUTTON_RED_RIGHT:
 					if(!lift.isHoldingHeight()){
-						lift.setHeight(1400);
+						lift.setHeight(1450);
 					}
 					else lift.setHeight(-1);
 					break;
@@ -481,7 +481,7 @@ class Teleop
 				
 				case TOP_LEFT:
 				if(!lift.isHoldingHeight()){
-					lift.setHeight(350);
+					lift.setHeight(400);
 				}
 				else lift.setHeight(-1);
 				break;
@@ -531,6 +531,9 @@ class Teleop
 					altDriveMode = !altDriveMode;
 					break;
 					
+				case TOP_LEFT:
+					intakeSpit.lightSensorEnabled = false;
+					break;
 				default:
 					break;
 			}
@@ -568,16 +571,16 @@ class Teleop
 					else intakeSpit.StopSpit();
 					break;
 
-				case TRIGGER:
-					if(!hatch.isExtended()){
-						hatch.HatchKickOut();
-						//hatch.setHeight(20000);
-					}
-					else {
-						hatch.HatchKickIn();
-						//hatch.setHeight(24500);
-					}
-					break;
+				// case TRIGGER:
+				// 	if(!hatch.isExtended()){
+				// 		hatch.HatchKickOut();
+				// 		//hatch.setHeight(20000);
+				// 	}
+				// 	else {
+				// 		hatch.HatchKickIn();
+				// 		//hatch.setHeight(24500);
+				// 	}
+				// 	break;
 				
 				case TOP_MIDDLE:
 					if(!intakeSpit.ISTHREADRUNNING()){
